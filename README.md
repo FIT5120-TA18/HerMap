@@ -32,20 +32,8 @@
       <br>Python
     </td>
     <td align="center" width="90">
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="React" width="45" height="45"/>
-      <br>React
-    </td>
-    <td align="center" width="90">
       <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" width="45" height="45"/>
       <br>AWS
-    </td>
-    <td align="center" width="90">
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="Amazon EC2" width="45" height="45"/>
-      <br>EC2
-    </td>
-    <td align="center" width="90">
-      <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS RDS" width="45" height="45"/>
-      <br>AWS RDS
     </td>
     <td align="center" width="90">
       <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg" alt="HTML5" width="45" height="45"/>
