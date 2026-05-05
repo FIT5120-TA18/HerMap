@@ -6,6 +6,7 @@ from google import genai
 
 main = Blueprint("main", __name__)
 
+# Access Required for all the pages
 def access_required(route_function):
     @wraps(route_function)
     def wrapper(*args, **kwargs):
@@ -32,7 +33,7 @@ def login():
 
     return render_template("login.html", error="")
 
-# Homepage routing
+# Landing Page
 @main.route("/")
 @access_required
 def landing():
@@ -48,14 +49,11 @@ def quick_profile():
         data = request.form.to_dict()
         session["profile"] = data
 
-        # Debugging locally
+        # LOCAL DEBUG
         # print("FORM DATA:", data)
         # print("SESSION DATA:", dict(session))
-        print(session)
-        print(session.get("profile"))
-
-        # # Move to next page
-        # return redirect(url_for("main.review"))
+        # print(session)
+        # print(session.get("profile"))
     
         # Move to next page
         return redirect(url_for("main.dashboard"))
@@ -64,24 +62,26 @@ def quick_profile():
     profile_data = session.get("profile", {})
     return render_template("profile_build_1.html", profile_data=profile_data)
 
-@main.route("/review")
-@access_required
-def review():
-    profile_data = session.get("profile", {})
+# @main.route("/review")
+# @access_required
+# def review():
+#     profile_data = session.get("profile", {})
 
-    if not profile_data:
-        return redirect(url_for("main.quick_profile"))
+#     if not profile_data:
+#         return redirect(url_for("main.quick_profile"))
 
-    return render_template("review.html", profile_data=profile_data)
+#     return render_template("review.html", profile_data=profile_data)
 
-
+# Google Gemini API
 def generate_financial_fact(profile_data):
     api_key = os.getenv("GEMINI_API_KEY")
 
+    # In case the API is down or Fails
     if not api_key:
         age = profile_data.get("age", "not provided")
         return f"At {age}, your weekly choices matter more than you think. Even small savings or budgeting habits can significantly improve your financial flexibility over time."
 
+    # Dynamic Prompt for the API. Gets data from the Session (User Enterred Data)
     prompt = f"""
     You are writing for a young Australian woman aged 18-22 using a financial literacy web app.
 
@@ -99,6 +99,7 @@ def generate_financial_fact(profile_data):
     Do not mention AI.
     """
 
+    # Gemini Configuration
     try:
         client = genai.Client(api_key=api_key)
 
@@ -109,10 +110,12 @@ def generate_financial_fact(profile_data):
 
         return response.text.strip()
 
+    # Fallback in case of error
     except Exception as error:
         age = profile_data.get("age", "not provided")
         return f"At {age}, your weekly choices matter more than you think. Even small savings or budgeting habits can significantly improve your financial flexibility over time."
 
+# Route to Dashboard
 @main.route("/dashboard")
 @access_required
 def dashboard():
@@ -129,6 +132,7 @@ def dashboard():
         financial_fact=financial_fact
     )
 
+# Route to the Rent Comparison Map
 @main.route("/rent_comparison")
 @access_required
 def rent_comparison():
@@ -139,6 +143,7 @@ def rent_comparison():
 
     return render_template("rent_comparison.html", profile_data=profile_data)
 
+# Route to the Income Comparison Map
 @main.route("/income_comparison")
 @access_required
 def income_comparison():
