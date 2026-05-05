@@ -75,3 +75,27 @@ pip install -r requirements.txt
 ```
 python run.py
 ```
+
+## Website Access
+
+Currently, the project is still under development. However, you can access the website once live on:
+
+<a href="https://hermap.live" target="_blank" rel="noreferrer">
+  hermap.live
+</a>
+
+## Project Journey
+
+### Iteration - 1 Delivery
+
+<ol>
+  <li>Created a landing page for the application.</li>
+  <li>Added a profile builder section to collect user inputs.</li>
+</ol>
+
+### Iteration - 2 Delivery
+
+<ol>
+  <li>Added maps based visualizations</li>
+  <li>Financial snapshot provided using Google Gemini API</li>
+</ol>
