@@ -50,18 +50,28 @@
 
 Follow the steps below to run this project locally:
 
-```bash
-# 1. Clone the main branch of the repository
+1. Clone the main branch of the repository
+
+```
 git clone -b main <repository-url>
+```
 
-# 2. Move into the project directory
+2. Move into the project directory
+
+```
 cd Main-Project
+```
 
-# 3. Install the required dependencies
+3. Install the required dependencies
+
+```
 pip install -r requirements.txt
+```
 
-# 4. Add the required environment variables to a .env file
+4. Add the required environment variables to a .env file
 
-# 5. Run the Flask application
+5. Run the Flask application
+
+```
 python run.py
 ```
