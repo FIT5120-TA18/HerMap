@@ -7,8 +7,6 @@
 <p>As a result, 60% of young women feel overwhelmed by money decisions and 38% report the highest anxiety levels, leading to delayed independence and entrenched economic vulnerability.<p>
 <p>How we might help: Support Australian women aged 18–22 to navigate first-time financial decisions such as moving out and starting work so they can understand what is actually affordable, recognise hidden costs like compounding credit card debt and missed BNPL instalments, and build the confidence to make informed financial choices before they commit.<p>
 
-<br>
-
 ## Team working on Development
 
 <li>Akshat Dawange - Masters of Data Science</li>
@@ -47,3 +45,23 @@
     </td>
   </tr>
 </table>
+
+### How to run this project
+
+Follow the steps below to run this project locally:
+
+```bash
+# 1. Clone the main branch of the repository
+git clone -b main <repository-url>
+
+# 2. Move into the project directory
+cd Main-Project
+
+# 3. Install the required dependencies
+pip install -r requirements.txt
+
+# 4. Add the required environment variables to a .env file
+
+# 5. Run the Flask application
+python run.py
+```
