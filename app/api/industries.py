@@ -1,6 +1,6 @@
 # Importing Dependencies
 from flask import Blueprint, jsonify
-from db_conn import connection
+from models import IndustryBasedAverageEarnings
 
 # API Identifier for Data Retrieval
 industries_api = Blueprint("industries_api", __name__, url_prefix="/api")
@@ -9,63 +9,53 @@ industries_api = Blueprint("industries_api", __name__, url_prefix="/api")
 @industries_api.route("/industries", methods=["GET"])
 def get_industries():
     """Return all distinct industry names for the profile form dropdown."""
-    conn = connection()
 
-    try:
-        with conn.cursor() as cursor:
-            sql = """
-                SELECT DISTINCT industry
-                FROM hermap.industry_based_average_earnings
-                WHERE industry IS NOT NULL
-                AND industry != ''
-                ORDER BY industry
-            """
+    rows = (
+        IndustryBasedAverageEarnings.query
+        .with_entities(IndustryBasedAverageEarnings.industry)
+        .filter(
+            IndustryBasedAverageEarnings.industry.isnot(None),
+            IndustryBasedAverageEarnings.industry != ""
+        )
+        .distinct()
+        .order_by(IndustryBasedAverageEarnings.industry)
+        .all()
+    )
 
-            cursor.execute(sql)
-            rows = cursor.fetchall()
+    industries = [row.industry for row in rows]
 
-            industries = [row[0] for row in rows]
-
-        return jsonify(industries)
-
-    finally:
-        conn.close()
+    return jsonify(industries)
 
 # API for getting Industries table (Dashboard Chart on load)
 @industries_api.route("/industry-chart", methods=["GET"])
 def get_industry_chart():
     """Return top 5 industries by 2022-23 average earnings for dashboard chart."""
-    conn = connection()
 
-    try:
-        with conn.cursor() as cursor:
-            sql = """
-                SELECT 
-                    industry,
-                    `2021-22`,
-                    `2022-23`
-                FROM hermap.industry_based_average_earnings
-                WHERE industry IS NOT NULL
-                AND industry != ''
-                AND `2021-22` IS NOT NULL
-                AND `2022-23` IS NOT NULL
-                ORDER BY `2022-23` DESC
-                LIMIT 5
-            """
+    rows = (
+        IndustryBasedAverageEarnings.query
+        .with_entities(
+            IndustryBasedAverageEarnings.industry,
+            IndustryBasedAverageEarnings.year_2021_22,
+            IndustryBasedAverageEarnings.year_2022_23
+        )
+        .filter(
+            IndustryBasedAverageEarnings.industry.isnot(None),
+            IndustryBasedAverageEarnings.industry != "",
+            IndustryBasedAverageEarnings.year_2021_22.isnot(None),
+            IndustryBasedAverageEarnings.year_2022_23.isnot(None)
+        )
+        .order_by(IndustryBasedAverageEarnings.year_2022_23.desc())
+        .limit(5)
+        .all()
+    )
 
-            cursor.execute(sql)
-            rows = cursor.fetchall()
+    chart_data = [
+        {
+            "industry": row.industry,
+            "year_2021_22": float(row.year_2021_22),
+            "year_2022_23": float(row.year_2022_23)
+        }
+        for row in rows
+    ]
 
-            chart_data = [
-                {
-                    "industry": row[0],
-                    "year_2021_22": float(row[1]),
-                    "year_2022_23": float(row[2])
-                }
-                for row in rows
-            ]
-
-        return jsonify(chart_data)
-
-    finally:
-        conn.close()
+    return jsonify(chart_data)
