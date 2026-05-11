@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   initTypewriter();
   initIndustryInsightChart();
   initAbsDataModal();
+  initTosModal();
 });
-
 
 /* Profile Builder */
 function initProfileBuilder() {
@@ -805,6 +805,38 @@ function initAbsDataModal() {
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" && !absModal.classList.contains("hidden")) {
       closeModal();
+    }
+  });
+}
+
+function initTosModal() {
+  const trigger = document.getElementById("tosModalTrigger");
+  const modal   = document.getElementById("tosModal");
+  const close   = document.getElementById("tosModalClose");
+
+  if (!trigger || !modal || !close) return;
+
+  trigger.addEventListener("click", function () {
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  });
+
+  close.addEventListener("click", function () {
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
+  });
+
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
     }
   });
 }

@@ -1,51 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <!-- Basic Page Setup -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Income Comparison - Hermap</title>
 
-<head>
-  <!-- Basic Page Setup -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Income Comparison - Hermap</title>
+    <!-- Main CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Leaflet Map CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+  </head>
 
-  <!-- Leaflet Map CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-</head>
-
-<body>
-
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <div class="nav-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-        </a>
-      </div>
-
-      <div class="nav-links">
-        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main Page Content -->
-  <main class="income-comparison-container">
-    <div class="income-comparison-content">
-
-      <!-- Page Header -->
-      <div class="income-header">
-        <div class="income-header-left">
-          <h1>See average income<span class="gradient-text"> in my area</span></h1>
-          <p>Explore young female income patterns across Victorian SA3 areas</p>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
         </div>
 
-        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">Back to Dashboard</a>
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+        </div>
       </div>
+    </nav>
 
-      <!-- User Profile Card
+    <!-- Main Page Content -->
+    <main class="income-comparison-container">
+      <div class="income-comparison-content">
+        <!-- Page Header -->
+        <div class="income-header">
+          <div class="income-header-left">
+            <h1>
+              See average income<span class="gradient-text"> in my area</span>
+            </h1>
+            <p>
+              Explore young female income patterns across Victorian SA3 areas
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.dashboard') }}" class="back-home-btn"
+            >Back to Dashboard</a
+          >
+        </div>
+
+        <!-- User Profile Card
       <div class="income-grid">
         <div class="profile-summary">
           <p class="profile-summary-title">Your Profile</p>
@@ -84,214 +97,291 @@
         </div>
       </div> -->
 
-      <!-- Income Map Layout -->
-      <div class="rent-comparison-grid">
+        <!-- Income Map Layout -->
+        <div class="rent-comparison-grid">
+          <!-- Left Sidebar -->
+          <aside class="rent-sidebar">
+            <!-- SA3 Selection Card -->
+            <div class="rent-filter-card">
+              <p class="filter-title">Select SA3 Area</p>
 
-        <!-- Left Sidebar -->
-        <aside class="rent-sidebar">
-
-          <!-- SA3 Selection Card -->
-          <div class="rent-filter-card">
-            <p class="filter-title">Select SA3 Area</p>
-
-            <div class="info-message">
-              Search an SA3 area to explore young female annual income across Victoria.
-            </div>
-
-            <div class="budget-input-group">
-
-              <!-- Saved User Location -->
-              <label for="profileLocationInput" style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                Your selected location
-              </label>
-
-              <div class="profile-location-display" id="profileLocationInput">
-                {% if profile_data.get('locality') and profile_data.get('postcode') %}
-                  {{ profile_data.get('locality') }} ({{ profile_data.get('postcode') }})
-                {% else %}
-                  No saved location
-                {% endif %}
+              <div class="info-message">
+                Search an SA3 area to explore young female annual income across
+                Victoria.
               </div>
 
-              <!-- SA3 Search Input -->
-              <label for="sa3Input" style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                Statistical Area Level 3 (SA3)
-              </label>
-
-              <div class="lga-input-row">
-                <input
-                  type="text"
-                  id="sa3Input"
-                  class="budget-input"
-                  placeholder="Search SA3 area..."
-                  autocomplete="off"
+              <div class="budget-input-group">
+                <!-- Saved User Location -->
+                <label
+                  for="profileLocationInput"
+                  style="
+                    font-size: 12px;
+                    color: var(--text-muted);
+                    font-weight: 600;
+                  "
                 >
+                  Your selected location
+                </label>
 
-                <button type="button" id="sa3DropdownBtn" class="lga-dropdown-btn">
-                  ▼
+                <div class="profile-location-display" id="profileLocationInput">
+                  {% if profile_data.get('locality') and
+                  profile_data.get('postcode') %} {{
+                  profile_data.get('locality') }} ({{
+                  profile_data.get('postcode') }}) {% else %} No saved location
+                  {% endif %}
+                </div>
+
+                <!-- SA3 Search Input -->
+                <label
+                  for="sa3Input"
+                  style="
+                    font-size: 12px;
+                    color: var(--text-muted);
+                    font-weight: 600;
+                  "
+                >
+                  Statistical Area Level 3 (SA3)
+                </label>
+
+                <div class="lga-input-row">
+                  <input
+                    type="text"
+                    id="sa3Input"
+                    class="budget-input"
+                    placeholder="Search SA3 area..."
+                    autocomplete="off"
+                  />
+
+                  <button
+                    type="button"
+                    id="sa3DropdownBtn"
+                    class="lga-dropdown-btn"
+                  >
+                    ▼
+                  </button>
+                </div>
+
+                <!-- Hidden Selected SA3 Values -->
+                <input type="hidden" id="selectedSa3Input" />
+                <input type="hidden" id="selectedSa3CodeInput" />
+
+                <!-- SA3 Suggestions Dropdown -->
+                <div id="sa3Suggestions" class="location-suggestions"></div>
+              </div>
+            </div>
+
+            <!-- How to Use Card -->
+            <div class="rent-filter-card">
+              <p class="filter-title">ℹ️ How to Use</p>
+
+              <p
+                style="
+                  margin: 0;
+                  font-size: 13px;
+                  color: var(--text-muted);
+                  line-height: 1.6;
+                "
+              >
+                1. View Victorian SA3 areas on the map<br />
+                2. Areas are coloured by comparing SA3 income with your
+                estimated annual income<br />
+                3. Hover over an area to see its SA3 name and income<br />
+                4. Click an SA3 area to view its income details and trend
+              </p>
+            </div>
+          </aside>
+
+          <!-- Right Main Content -->
+          <div class="rent-main">
+            <!-- SA3 Income Map Card -->
+            <div class="map-card">
+              <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600">
+                Victorian SA3 Areas - Young Female Annual Income
+              </h2>
+
+              <div id="incomeMapContainer" class="map-placeholder">
+                <span>Loading Victorian SA3 income map...</span>
+              </div>
+            </div>
+
+            <!-- SA3 Detail Panel -->
+            <div id="sa3DetailPanel" class="lga-detail-panel hidden">
+              <!-- Detail Panel Header -->
+              <div class="lga-detail-header">
+                <h2 class="lga-detail-title" id="sa3DetailName">--</h2>
+                <button class="close-detail-btn" id="closeSa3DetailBtn">
+                  Close
                 </button>
               </div>
 
-              <!-- Hidden Selected SA3 Values -->
-              <input type="hidden" id="selectedSa3Input">
-              <input type="hidden" id="selectedSa3CodeInput">
+              <!-- Income Detail Stats -->
+              <div class="lga-detail-content">
+                <div class="detail-stat">
+                  <div class="detail-stat-label">Average Annual Income</div>
+                  <p class="detail-stat-value" id="detailAverageIncome">--</p>
+                  <p class="detail-stat-sublabel">young females in this SA3</p>
+                </div>
 
-              <!-- SA3 Suggestions Dropdown -->
-              <div id="sa3Suggestions" class="location-suggestions"></div>
-            </div>
-          </div>
+                <div class="detail-stat">
+                  <div class="detail-stat-label">
+                    Your Estimated Annual Income
+                  </div>
+                  <p class="detail-stat-value" id="detailUserIncome">--</p>
+                  <p class="detail-stat-sublabel">
+                    calculated from weekly income
+                  </p>
+                </div>
 
-          <!-- How to Use Card -->
-          <div class="rent-filter-card">
-            <p class="filter-title">ℹ️ How to Use</p>
-
-            <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-              1. View Victorian SA3 areas on the map<br>
-              2. Areas are coloured by comparing SA3 income with your estimated annual income<br>
-              3. Hover over an area to see its SA3 name and income<br>
-              4. Click an SA3 area to view its income details and trend
-            </p>
-          </div>
-
-        </aside>
-
-        <!-- Right Main Content -->
-        <div class="rent-main">
-
-          <!-- SA3 Income Map Card -->
-          <div class="map-card">
-            <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
-              Victorian SA3 Areas - Young Female Annual Income
-            </h2>
-
-            <div id="incomeMapContainer" class="map-placeholder">
-              <span>Loading Victorian SA3 income map...</span>
-            </div>
-          </div>
-
-          <!-- SA3 Detail Panel -->
-          <div id="sa3DetailPanel" class="lga-detail-panel hidden">
-
-            <!-- Detail Panel Header -->
-            <div class="lga-detail-header">
-              <h2 class="lga-detail-title" id="sa3DetailName">--</h2>
-              <button class="close-detail-btn" id="closeSa3DetailBtn">Close</button>
-            </div>
-
-            <!-- Income Detail Stats -->
-            <div class="lga-detail-content">
-
-              <div class="detail-stat">
-                <div class="detail-stat-label">Average Annual Income</div>
-                <p class="detail-stat-value" id="detailAverageIncome">--</p>
-                <p class="detail-stat-sublabel">young females in this SA3</p>
+                <div class="detail-stat">
+                  <div class="detail-stat-label">Income Comparison</div>
+                  <p style="margin: 0; padding: 8px 0">
+                    <span class="affordability-badge" id="incomeComparisonBadge"
+                      >Calculating...</span
+                    >
+                  </p>
+                </div>
               </div>
 
-              <div class="detail-stat">
-                <div class="detail-stat-label">Your Estimated Annual Income</div>
-                <p class="detail-stat-value" id="detailUserIncome">--</p>
-                <p class="detail-stat-sublabel">calculated from weekly income</p>
-              </div>
+              <!-- Income Insight Section -->
+              <div class="trend-section">
+                <p class="trend-title">📊 Income Insight</p>
 
-              <div class="detail-stat">
-                <div class="detail-stat-label">Income Comparison</div>
-                <p style="margin: 0; padding: 8px 0;">
-                  <span class="affordability-badge" id="incomeComparisonBadge">Calculating...</span>
+                <p
+                  style="
+                    font-size: 13px;
+                    color: var(--text-muted);
+                    margin: 0 0 16px 0;
+                  "
+                >
+                  Compare your estimated annual income with young female annual
+                  income in this SA3 area.
                 </p>
+
+                <div
+                  style="
+                    background: var(--surface-offset);
+                    border-radius: var(--radius-md);
+                    padding: 16px;
+                    margin-top: 16px;
+                  "
+                >
+                  <p
+                    style="
+                      margin: 0;
+                      font-size: 13px;
+                      color: var(--text-muted);
+                      line-height: 1.6;
+                    "
+                    id="incomeInsight"
+                  >
+                    Select an SA3 area to view income analysis.
+                  </p>
+                </div>
               </div>
 
-            </div>
+              <!-- Income Trend Section -->
+              <div class="trend-section">
+                <p class="trend-title">📈 Income Trend</p>
 
-            <!-- Income Insight Section -->
-            <div class="trend-section">
-              <p class="trend-title">📊 Income Insight</p>
-
-              <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 16px 0;">
-                Compare your estimated annual income with young female annual income in this SA3 area.
-              </p>
-
-              <div style="background: var(--surface-offset); border-radius: var(--radius-md); padding: 16px; margin-top: 16px;">
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;" id="incomeInsight">
-                  Select an SA3 area to view income analysis.
+                <p
+                  style="
+                    font-size: 13px;
+                    color: var(--text-muted);
+                    margin: 0 0 16px 0;
+                  "
+                >
+                  Annual young female income trend for the selected SA3 area.
                 </p>
+
+                <div style="margin-bottom: 16px">
+                  <div
+                    class="detail-stat-label"
+                    style="text-align: left; margin-bottom: 8px"
+                  >
+                    Trend Status
+                  </div>
+                  <span class="affordability-badge" id="incomeTrendStatusBadge"
+                    >--</span
+                  >
+                </div>
+
+                <div
+                  class="chart-container"
+                  style="height: 300px; margin-bottom: 16px"
+                >
+                  <canvas id="incomeTrendChart"></canvas>
+                </div>
+
+                <div
+                  style="
+                    background: var(--surface-offset);
+                    border-radius: var(--radius-md);
+                    padding: 16px;
+                    margin-top: 16px;
+                  "
+                >
+                  <p
+                    style="
+                      margin: 0;
+                      font-size: 13px;
+                      color: var(--text-muted);
+                      line-height: 1.6;
+                    "
+                    id="incomeTrendInsight"
+                  >
+                    Select an SA3 area to view income trend analysis.
+                  </p>
+                </div>
               </div>
             </div>
-
-            <!-- Income Trend Section -->
-            <div class="trend-section">
-              <p class="trend-title">📈 Income Trend</p>
-
-              <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 16px 0;">
-                Annual young female income trend for the selected SA3 area.
-              </p>
-
-              <div style="margin-bottom: 16px;">
-                <div class="detail-stat-label" style="text-align: left; margin-bottom: 8px;">Trend Status</div>
-                <span class="affordability-badge" id="incomeTrendStatusBadge">--</span>
-              </div>
-
-              <div class="chart-container" style="height: 300px; margin-bottom: 16px;">
-                <canvas id="incomeTrendChart"></canvas>
-              </div>
-
-              <div style="background: var(--surface-offset); border-radius: var(--radius-md); padding: 16px; margin-top: 16px;">
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;" id="incomeTrendInsight">
-                  Select an SA3 area to view income trend analysis.
-                </p>
-              </div>
-            </div>
-
           </div>
-
         </div>
       </div>
+    </main>
 
-    </div>
-  </main>
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-inner">
-
-      <div class="footer-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-        </a>
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">ABS Data Sources</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
       </div>
+    </footer>
 
-      <div class="nav-links">
-        <a href="#" class="nav-link">Privacy Policy</a>
-        <a href="#" class="nav-link">ABS Data Sources</a>
-        <a href="#" class="nav-link">Terms of Service</a>
-      </div>
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    </div>
-  </footer>
+    <!-- Chart.js for income trend line -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 
-  <!-- Leaflet Map JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- User Profile Data from Flask -->
+    <script>
+      window.userProfileData = {
+        age: "{{ profile_data.get('age', '') }}",
+        locality: "{{ profile_data.get('locality', '') }}",
+        postcode: "{{ profile_data.get('postcode', '') }}",
+        state: "{{ profile_data.get('state', 'VIC') }}",
+        workStatus: "{{ profile_data.get('work', '') }}",
+        industry: "{{ profile_data.get('industry', '') }}",
+        income: parseInt("{{ profile_data.get('income', '') }}") || null,
+        rent: parseInt("{{ profile_data.get('rent', '') }}") || null,
+        living: "{{ profile_data.get('living', '') }}",
+      };
+    </script>
 
-  <!-- Chart.js for income trend line -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-
-  <!-- User Profile Data from Flask -->
-  <script>
-    window.userProfileData = {
-      age: "{{ profile_data.get('age', '') }}",
-      locality: "{{ profile_data.get('locality', '') }}",
-      postcode: "{{ profile_data.get('postcode', '') }}",
-      state: "{{ profile_data.get('state', 'VIC') }}",
-      workStatus: "{{ profile_data.get('work', '') }}",
-      industry: "{{ profile_data.get('industry', '') }}",
-      income: parseInt("{{ profile_data.get('income', '') }}") || null,
-      rent: parseInt("{{ profile_data.get('rent', '') }}") || null,
-      living: "{{ profile_data.get('living', '') }}"
-    };
-  </script>
-
-  <!-- Income Comparison JS -->
-  <script src="{{ url_for('static', filename='js/income_comparison.js') }}"></script>
-
-</body>
-
+    <!-- Income Comparison JS -->
+    <script src="{{ url_for('static', filename='js/income_comparison.js') }}"></script>
+  </body>
 </html>
