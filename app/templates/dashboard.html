@@ -104,66 +104,52 @@
             </a>
           </div>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile placeholder-tile"
-          >
-            <div class="dashboard-feature-link">
-              <div class="dashboard-feature-icon">
-                <span class="material-symbols-outlined">savings</span>
+          <div class="insight-graph-card feature-card dashboard-feature-tile">
+            <a href="{{ url_for('main.spending_input') }}" class="dashboard-feature-link">
+              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#f7971e,#ffd200);">
+                <span class="material-symbols-outlined" style="color:#fff;">savings</span>
               </div>
-
               <div class="dashboard-feature-copy">
                 <p class="dashboard-feature-title">Track My Spending</p>
-                <!-- <p class="dashboard-feature-text">Savings insights placeholder</p> -->
+                <p class="dashboard-feature-text">See where your money goes each week</p>
               </div>
-            </div>
+            </a>
           </div>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile placeholder-tile"
-          >
-            <div class="dashboard-feature-link">
-              <div class="dashboard-feature-icon">
-                <span class="material-symbols-outlined">finance</span>
+          <div class="insight-graph-card feature-card dashboard-feature-tile">
+            <a href="{{ url_for('main.debt_awareness') }}" class="dashboard-feature-link">
+              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#e8546a,#c45fa8);">
+                <span class="material-symbols-outlined" style="color:#fff;">finance</span>
               </div>
-
               <div class="dashboard-feature-copy">
                 <p class="dashboard-feature-title">Credit and Debt Awareness</p>
-                <!-- <p class="dashboard-feature-text">Study pathway placeholder</p> -->
+                <p class="dashboard-feature-text">Understand credit cards and BNPL</p>
               </div>
-            </div>
+            </a>
           </div>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile placeholder-tile"
-          >
-            <div class="dashboard-feature-link">
-              <div class="dashboard-feature-icon">
-                <span class="material-symbols-outlined">work</span>
+          <div class="insight-graph-card feature-card dashboard-feature-tile">
+            <a href="{{ url_for('main.career_aspirations') }}" class="dashboard-feature-link">
+              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#4e9af1,#26c6da);">
+                <span class="material-symbols-outlined" style="color:#fff;">work</span>
               </div>
-
               <div class="dashboard-feature-copy">
                 <p class="dashboard-feature-title">Career Aspirations</p>
-                <!-- <p class="dashboard-feature-text">Work readiness placeholder</p> -->
+                <p class="dashboard-feature-text">Explore salaries across industries</p>
               </div>
-            </div>
+            </a>
           </div>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile placeholder-tile"
-          >
-            <div class="dashboard-feature-link">
-              <div class="dashboard-feature-icon">
-                <span class="material-symbols-outlined">school</span>
+          <div class="insight-graph-card feature-card dashboard-feature-tile">
+            <a href="{{ url_for('main.knowledge_hub') }}" class="dashboard-feature-link">
+              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#43a047,#66bb6a);">
+                <span class="material-symbols-outlined" style="color:#fff;">school</span>
               </div>
-
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">
-                  Build My Financial Literacy
-                </p>
-                <!-- <p class="dashboard-feature-text">Study pathway placeholder</p> -->
+                <p class="dashboard-feature-title">Build My Financial Literacy</p>
+                <p class="dashboard-feature-text">Learn budgeting, credit and more</p>
               </div>
-            </div>
+            </a>
           </div>
         </div>
       </section>
