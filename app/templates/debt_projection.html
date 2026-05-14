@@ -35,14 +35,14 @@
         Back
       </a>
       <h1 class="page-inner-title" style="margin-top:20px;">How Debt Could Grow</h1>
-      <p class="page-inner-subtitle">See how a weekly shortfall grows over 6 months when funded by credit or BNPL.</p>
+      <p class="page-inner-subtitle">See how a weekly shortfall grows over time when funded by credit or BNPL.</p>
     </div>
 
     <div class="proj-grid">
       <!-- Left: Chart -->
       <div>
         <div class="proj-card">
-          <h3 class="proj-card-title" id="chartMainTitle">6-Month Debt Projection</h3>
+          <h3 class="proj-card-title" id="chartMainTitle">Debt Projection</h3>
           <p class="proj-card-sub" id="chartSubtitle">Based on your weekly deficit and selected credit type.</p>
 
           <!-- Legend -->
@@ -52,7 +52,7 @@
             <canvas id="debtChart"></canvas>
           </div>
 
-          <div class="key-message" id="keyMessage">
+          <div class="key-message" id="keyMessage" style="display:none;">
             <p>If not paid on time, fees and interest grow faster than you expect.</p>
           </div>
           <p class="source-note">
@@ -63,7 +63,7 @@
           </p>
         </div>
 
-        <div class="cta-box">
+        <div class="cta-box" style="display:none;" id="ctaBox">
           <p>Now that you can see how debt grows, learn about credit products and how to avoid the trap.</p>
           <a href="{{ url_for('main.knowledge_hub') }}#credit" class="cta-link">Learn about credit products →</a>
         </div>
@@ -74,16 +74,12 @@
         <div class="side-card">
           <h4 class="side-card-title">Your Numbers</h4>
           <div class="data-row">
-            <span class="data-label">Weekly deficit</span>
-            <span class="data-value red" id="statDeficit">$—</span>
-          </div>
-          <div class="data-row">
             <span class="data-label">Credit type</span>
             <span class="data-value" id="statCreditType">—</span>
           </div>
           <div class="data-row">
-            <span class="data-label">Month 6 total</span>
-            <span class="data-value red" id="statMonth6">$—</span>
+            <span class="data-label">Current total</span>
+            <span class="data-value red" id="statCurrentTotal">$—</span>
           </div>
         </div>
 
