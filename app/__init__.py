@@ -39,6 +39,6 @@ def create_app():
     app.register_blueprint(main)
     app.register_blueprint(api)
     app.register_blueprint(industries_api)
-    app.register_blueprint(gender_api)
+    app.register_blueprint(gender_api, url_prefix="/api")
 
     return app
