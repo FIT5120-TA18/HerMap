@@ -62,16 +62,6 @@ def quick_profile():
     profile_data = session.get("profile", {})
     return render_template("profile_build_1.html", profile_data=profile_data)
 
-# @main.route("/review")
-# @access_required
-# def review():
-#     profile_data = session.get("profile", {})
-
-#     if not profile_data:
-#         return redirect(url_for("main.quick_profile"))
-
-#     return render_template("review.html", profile_data=profile_data)
-
 # Google Gemini API
 def generate_financial_fact(profile_data):
     api_key = os.getenv("GEMINI_API_KEY")

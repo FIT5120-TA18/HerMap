@@ -117,6 +117,7 @@ class IndustryBasedAverageEarnings(db.Model):
 
 class GenderPayGapIndustrySummary(db.Model):
     __tablename__ = "pay_gap_by_industry"
+    __table_args__ = SCHEMA_ARGS
 
     id = db.Column(db.Integer, primary_key=True)
 
