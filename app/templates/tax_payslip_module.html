@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tax & Payslip Explained – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Knowledge Hub CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/knowledge_hub.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="knowledge-detail-page">
+      <div class="container">
+        <!-- Top Row -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Understand My Payslip</h1>
+            <p class="knowledge-detail-subtitle">
+              Learn how to read your payslip, understand tax withheld, and
+              prepare for your tax return with confidence.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- Hero Section -->
+        <section
+          class="payslip-hero-grid payslip-arrow-section"
+          id="payslipArrowSection"
+        >
+          <!-- Arrow SVG layer -->
+          <svg
+            class="payslip-arrow-svg"
+            id="payslipArrowSvg"
+            aria-hidden="true"
+          >
+            <defs>
+              <marker
+                id="arrowHead"
+                markerWidth="10"
+                markerHeight="10"
+                refX="8"
+                refY="3"
+                orient="auto"
+                markerUnits="strokeWidth"
+              >
+                <path d="M0,0 L0,6 L9,3 z" fill="currentColor"></path>
+              </marker>
+            </defs>
+          </svg>
+
+          <!-- Payslip Image -->
+          <div class="payslip-image-card">
+            <div class="payslip-image-wrap">
+              <img
+                src="{{ url_for('static', filename='img/Group 3.png') }}"
+                alt="Example payslip showing gross income, PAYG tax, superannuation and net pay"
+                class="payslip-image"
+              />
+
+              <!-- Move these markers later to align exactly with your image -->
+              <span
+                class="payslip-hotspot hotspot-gross"
+                data-arrow-from="gross"
+                title="Gross income"
+              ></span>
+
+              <span
+                class="payslip-hotspot hotspot-tax"
+                data-arrow-from="tax"
+                title="Tax withheld"
+              ></span>
+
+              <span
+                class="payslip-hotspot hotspot-super"
+                data-arrow-from="super"
+                title="Superannuation"
+              ></span>
+
+              <span
+                class="payslip-hotspot hotspot-net"
+                data-arrow-from="net"
+                title="Net pay"
+              ></span>
+            </div>
+          </div>
+
+          <!-- Explanation List -->
+          <aside class="payslip-explainer-card">
+            <div class="payslip-explainer-item" data-arrow-to="gross">
+              <span class="legend-dot green"></span>
+              <div>
+                <h3>Gross income</h3>
+                <p>
+                  The amount earned before taxes and deductions are applied.
+                  This may include base pay, overtime, tips, bonuses, or
+                  allowances.
+                </p>
+              </div>
+            </div>
+
+            <div class="payslip-explainer-item" data-arrow-to="tax">
+              <span class="legend-dot orange"></span>
+              <div>
+                <h3>Tax withheld (PAYG)</h3>
+                <p>
+                  The amount of tax your employer deducts from your pay and
+                  sends to the Australian Taxation Office on your behalf.
+                </p>
+              </div>
+            </div>
+
+            <div class="payslip-explainer-item" data-arrow-to="super">
+              <span class="legend-dot blue"></span>
+              <div>
+                <h3>Superannuation contribution</h3>
+                <p>
+                  Money paid into your super fund for retirement. This is
+                  generally paid by your employer in addition to your regular
+                  wages.
+                </p>
+              </div>
+            </div>
+
+            <div class="payslip-explainer-item" data-arrow-to="net">
+              <span class="legend-dot yellow"></span>
+              <div>
+                <h3>Net take-home pay</h3>
+                <p>
+                  The amount that reaches your bank account after tax and
+                  deductions have been taken out.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <!-- Main Learning Sections -->
+        <section class="knowledge-detail-grid">
+          <!-- Left Column -->
+          <div class="knowledge-detail-column tax-left-column">
+            <section class="knowledge-info-section">
+              <h2>Tax Return Tips</h2>
+
+              <div class="knowledge-white-card">
+                <p>
+                  A tax refund happens when you have paid more tax during the
+                  financial year than you needed to. After lodging your tax
+                  return, the government may return some of that money to you.
+                </p>
+
+                <p>
+                  If you earned income during the financial year, you may need
+                  to lodge a tax return.
+                </p>
+              </div>
+            </section>
+
+            <section class="knowledge-info-section">
+              <h2>Checklist to Prepare</h2>
+
+              <div class="knowledge-white-card">
+                <ul class="knowledge-checklist">
+                  <li>TFN: Tax File Number</li>
+                  <li>Bank details</li>
+                  <li>Income statement</li>
+                  <li>Receipts for deductions</li>
+                  <li>Super details</li>
+                </ul>
+              </div>
+            </section>
+
+            <a
+              href="https://www.ato.gov.au/individuals-and-families/your-tax-return"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="knowledge-cta-btn"
+            >
+              Visit ATO official guide for tax return help
+            </a>
+          </div>
+
+          <!-- Right Column -->
+          <div class="knowledge-detail-column deductibles-right-column">
+            <section class="knowledge-info-section">
+              <h2>Common Deductibles</h2>
+
+              <div class="deductibles-card">
+                <div class="deductible-group">
+                  <h3>Work Clothing &amp; Uniforms</h3>
+                  <ul>
+                    <li>Protective clothing, such as steel-cap boots</li>
+                    <li>Occupation-specific uniforms</li>
+                    <li>Laundry costs for eligible uniforms</li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Travel &amp; Transport</h3>
+                  <ul>
+                    <li>Work-related car or public transport travel</li>
+                    <li>Parking fees and tolls for work trips</li>
+                    <li>
+                      Regular travel between home and work is usually not
+                      deductible.
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Tools &amp; Equipment</h3>
+                  <ul>
+                    <li>Laptops, tablets, and phones used for work</li>
+                    <li>Work-related software</li>
+                    <li>Tools and equipment needed for your job</li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Working From Home Expenses</h3>
+                  <ul>
+                    <li>Internet usage</li>
+                    <li>Electricity</li>
+                    <li>Home office equipment</li>
+                    <li>Phone expenses</li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Self-Education &amp; Study</h3>
+                  <ul>
+                    <li>Courses related to your current work</li>
+                    <li>Textbooks and study materials</li>
+                    <li>Student union or course fees, where eligible</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+  </body>
+</html>

@@ -153,3 +153,86 @@ class GenderPayGapIndustrySummary(db.Model):
             "estimated_women_annual_income": self.estimated_women_annual_income,
             "estimated_women_weekly_income": self.estimated_women_weekly_income,
         }
+
+class ABSHouseholdSpending(db.Model):
+    __tablename__ = "spending_categories_ABS"
+    __table_args__ = SCHEMA_ARGS
+
+    month = db.Column("Month", db.DateTime, primary_key=True)
+
+    clothing_and_footwear = db.Column("Clothing and footwear", db.Float)
+    food = db.Column("Food", db.Float)
+    furnishings_and_household_equipment = db.Column(
+        "Furnishings and household equipment",
+        db.Float,
+    )
+    health = db.Column("Health", db.Float)
+    hotels_cafes_and_restaurants = db.Column(
+        "Hotels, cafes and restaurants",
+        db.Float,
+    )
+    miscellaneous_goods_and_services = db.Column(
+        "Miscellaneous goods and services",
+        db.Float,
+    )
+    recreation_and_culture = db.Column("Recreation and culture", db.Float)
+    services = db.Column("Services", db.Float)
+    transport = db.Column("Transport", db.Float)
+
+    def to_spending_items(self):
+        return [
+            {
+                "label": "Food",
+                "value": self.food,
+                "type": "essential",
+                "description": "Groceries and food spending.",
+            },
+            {
+                "label": "Health",
+                "value": self.health,
+                "type": "essential",
+                "description": "Medical, health, and wellbeing costs.",
+            },
+            {
+                "label": "Transport",
+                "value": self.transport,
+                "type": "essential",
+                "description": "Transport, fuel, and getting around.",
+            },
+            {
+                "label": "Services",
+                "value": self.services,
+                "type": "essential",
+                "description": "Regular services households rely on.",
+            },
+            {
+                "label": "Clothing & footwear",
+                "value": self.clothing_and_footwear,
+                "type": "non_essential",
+                "description": "Clothes, shoes, and related spending.",
+            },
+            {
+                "label": "Furnishings & household equipment",
+                "value": self.furnishings_and_household_equipment,
+                "type": "non_essential",
+                "description": "Furniture, homeware, and equipment.",
+            },
+            {
+                "label": "Hotels, cafés & restaurants",
+                "value": self.hotels_cafes_and_restaurants,
+                "type": "non_essential",
+                "description": "Eating out, cafés, restaurants, and hotels.",
+            },
+            {
+                "label": "Recreation & culture",
+                "value": self.recreation_and_culture,
+                "type": "non_essential",
+                "description": "Entertainment, hobbies, and recreation.",
+            },
+            {
+                "label": "Miscellaneous goods & services",
+                "value": self.miscellaneous_goods_and_services,
+                "type": "non_essential",
+                "description": "Other flexible household spending.",
+            },
+        ]

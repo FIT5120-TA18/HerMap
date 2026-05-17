@@ -77,479 +77,149 @@
       <!-- Cards Grid -->
       <section class="hub-grid">
         <!-- Card 1 -->
-        <article
+        <a
+          href="#"
           class="hub-topic-card"
           id="tile-credit"
-          data-topic-title="Credit & BNPL 101"
           style="
-            --hub-bg: url('{{ url_for('static', filename='img/knowledge/credit-bg.jpg') }}');
-            --hub-bg-opacity: 0.22;
-            --hub-overlay: rgba(255, 255, 255, 0.76);
-          "
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/bnpl-credit.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
         >
           <div class="hub-card-content">
-            <div class="hub-tile-icon gradient-bg">
-              <span class="material-symbols-outlined">credit_card</span>
-            </div>
-
             <div class="hub-card-copy">
               <h3 class="hub-tile-title">Credit &amp; BNPL 101</h3>
               <p class="hub-tile-preview">
-                Understand credit cards, minimum repayments, interest, and
-                buy-now-pay-later risks.
+                Dummy description text for this topic. Replace this with your
+                final content later.
               </p>
             </div>
 
             <span class="hub-tile-toggle">Explore</span>
           </div>
-
-          <div class="hub-tile-body">
-            <p class="hub-tile-intro">
-              Understanding credit cards and buy-now-pay-later services is
-              essential to avoiding hidden debt traps. Here's what you need to
-              know.
-            </p>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">credit_card</span>
-                How Credit Cards Work
-              </p>
-
-              <p>
-                A credit card lets you spend money you do not yet have, up to a
-                set limit. If you pay the full balance each month before the due
-                date, you usually pay no interest.
-              </p>
-
-              <p>
-                If you pay only the <strong>minimum repayment</strong>, the
-                remaining balance can build interest quickly. Credit card
-                interest rates can be high, so a small unpaid balance can grow
-                over time.
-              </p>
-
-              <p id="creditPersonalNote"></p>
-
-              <p>
-                <strong>Late payment fees</strong> may apply when you miss a
-                payment. These can add up quickly if your balance keeps growing.
-              </p>
-            </div>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">shopping_bag</span>
-                BNPL: Afterpay, Zip &amp; More
-              </p>
-
-              <p>
-                Buy-now-pay-later services let you split purchases into smaller
-                payments. They can feel easier than paying upfront, but missed
-                payments can lead to late fees.
-              </p>
-
-              <p>
-                Multiple active BNPL payments can become hard to track,
-                especially if your income changes week to week.
-              </p>
-            </div>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">warning</span>
-                Hidden Conditions to Watch
-              </p>
-
-              <button
-                type="button"
-                class="mini-toggle-btn"
-                id="hiddenConditionsBtn"
-              >
-                See hidden conditions ↓
-              </button>
-
-              <ul class="checklist hidden" id="hiddenConditionsList">
-                <li>Interest-free periods can end and interest may apply.</li>
-                <li>Minimum repayments reduce your balance slowly.</li>
-                <li>Store credit cards may have higher interest rates.</li>
-                <li>Some BNPL providers may charge account or late fees.</li>
-                <li>Too many small payments can become hard to manage.</li>
-              </ul>
-            </div>
-
-            <a
-              class="ext-link"
-              href="https://moneysmart.gov.au/credit-cards"
-              target="_blank"
-              rel="noopener"
-            >
-              <span class="material-symbols-outlined">open_in_new</span>
-              Learn more at MoneySmart
-            </a>
-          </div>
-        </article>
+        </a>
 
         <!-- Card 2 -->
-        <article
+        <a
+          href="#"
           class="hub-topic-card"
-          id="tile-tax"
-          data-topic-title="Tax & Super Basics"
+          id="tile-credit"
           style="
-            --hub-bg: url('{{ url_for('static', filename='img/knowledge/tax-bg.jpg') }}');
-            --hub-bg-opacity: 0.22;
-            --hub-overlay: rgba(255, 255, 255, 0.76);
-          "
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/payslip.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
         >
           <div class="hub-card-content">
-            <div class="hub-tile-icon blue-gradient">
-              <span class="material-symbols-outlined">receipt</span>
-            </div>
-
             <div class="hub-card-copy">
-              <h3 class="hub-tile-title">Tax &amp; Super Basics</h3>
+              <h3 class="hub-tile-title">Tax &amp; Payslip Explained</h3>
               <p class="hub-tile-preview">
-                Learn how payslips, PAYG tax, tax returns, and superannuation
-                work.
+                Dummy description text for this topic. Replace this with your
+                final content later.
               </p>
             </div>
 
             <span class="hub-tile-toggle">Explore</span>
           </div>
-
-          <div class="hub-tile-body">
-            <p class="hub-tile-intro">
-              When you start working, understanding your payslip, tax, and
-              superannuation can help you avoid stress and plan better.
-            </p>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">description</span>
-                Your Payslip Explained
-              </p>
-
-              <p>A sample payslip for someone earning $750 per week:</p>
-
-              <div class="payslip-mock">
-                <div class="payslip-header">Sample Payslip — Weekly</div>
-
-                <div class="payslip-row">
-                  <span class="payslip-label">
-                    Gross Income
-                    <span class="payslip-tag">Before tax</span>
-                  </span>
-                  <span class="payslip-value positive">$750.00</span>
-                </div>
-
-                <div class="payslip-row highlight">
-                  <span class="payslip-label">
-                    Tax Withheld
-                    <span class="payslip-tag">Deduction</span>
-                  </span>
-                  <span class="payslip-value negative">−$97.00</span>
-                </div>
-
-                <div class="payslip-row highlight">
-                  <span class="payslip-label">
-                    Superannuation
-                    <span class="payslip-tag">Your future</span>
-                  </span>
-                  <span class="payslip-value blue-value">$86.25</span>
-                </div>
-
-                <div class="payslip-row success-row">
-                  <span class="payslip-label">
-                    <strong>Net Take-Home Pay</strong>
-                  </span>
-                  <span class="payslip-value positive">$653.00</span>
-                </div>
-              </div>
-
-              <p class="small-note">
-                Super is paid by your employer into your super fund. It does not
-                go directly into your bank account.
-              </p>
-            </div>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">assignment_return</span>
-                Tax Return Tips
-              </p>
-
-              <p>
-                Each year, the ATO checks whether you paid too much or too
-                little tax. If you overpaid, you may receive a refund.
-              </p>
-
-              <ul class="checklist">
-                <li>Keep records of work-related expenses.</li>
-                <li>Check if your study costs relate to your current job.</li>
-                <li>Keep receipts for uniforms or protective gear.</li>
-                <li>Review phone or internet costs used for work.</li>
-              </ul>
-
-              <a
-                class="ext-link"
-                href="https://www.ato.gov.au/individuals-and-families/your-tax-return"
-                target="_blank"
-                rel="noopener"
-              >
-                <span class="material-symbols-outlined">open_in_new</span>
-                Learn more at ATO
-              </a>
-            </div>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">savings</span>
-                Understanding Superannuation
-              </p>
-
-              <p>
-                Super is money set aside for retirement. Your employer usually
-                contributes a percentage of your earnings into your chosen super
-                fund.
-              </p>
-
-              <p id="superGrowthExample"></p>
-
-              <p>
-                It is helpful to check whether you have more than one super
-                account, because multiple accounts can mean multiple fees.
-              </p>
-
-              <a
-                class="ext-link"
-                href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super"
-                target="_blank"
-                rel="noopener"
-              >
-                <span class="material-symbols-outlined">open_in_new</span>
-                Super guide at ATO
-              </a>
-            </div>
-          </div>
-        </article>
+        </a>
 
         <!-- Card 3 -->
-        <article
+        <a
+          href="superannuation_explaination"
           class="hub-topic-card"
           id="tile-budgeting"
-          data-topic-title="Smart Budgeting Strategies"
           style="
-            --hub-bg: url('{{ url_for('static', filename='img/knowledge/budget-bg.jpg') }}');
-            --hub-bg-opacity: 0.22;
-            --hub-overlay: rgba(255, 255, 255, 0.76);
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/super.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
           "
         >
           <div class="hub-card-content">
-            <div class="hub-tile-icon orange-gradient">
-              <span class="material-symbols-outlined">savings</span>
-            </div>
-
             <div class="hub-card-copy">
-              <h3 class="hub-tile-title">Smart Budgeting Strategies</h3>
+              <h3 class="hub-tile-title">Superannuation</h3>
               <p class="hub-tile-preview">
-                Explore simple ways to budget, save, and manage weekly spending.
+                Dummy description text for this topic. Replace this with your
+                final content later.
               </p>
             </div>
 
             <span class="hub-tile-toggle">Explore</span>
           </div>
-
-          <div class="hub-tile-body">
-            <p class="hub-tile-intro">
-              Budgeting does not have to be complicated. Pick a method that fits
-              your lifestyle and income pattern.
-            </p>
-
-            <p id="budgetPersonalNote" class="personal-inline-note"></p>
-
-            <div class="budget-methods">
-              <div class="budget-method">
-                <p class="budget-method-name">The 50/30/20 Rule</p>
-                <p class="budget-method-desc">
-                  Split your after-tax income into needs, wants, and savings.
-                  This can be useful if you want a simple weekly structure.
-                </p>
-
-                <a
-                  class="ext-link"
-                  href="https://moneysmart.gov.au/budgeting/budget-planner"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <span class="material-symbols-outlined">open_in_new</span>
-                  Try MoneySmart Budget Planner
-                </a>
-              </div>
-
-              <div class="budget-method">
-                <p class="budget-method-name">Pay Yourself First</p>
-                <p class="budget-method-desc">
-                  Transfer a set amount into savings as soon as you get paid,
-                  before spending on anything else.
-                </p>
-
-                <a
-                  class="ext-link"
-                  href="https://moneysmart.gov.au/saving/how-to-save-money"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <span class="material-symbols-outlined">open_in_new</span>
-                  MoneySmart Savings Guide
-                </a>
-              </div>
-
-              <div class="budget-method">
-                <p class="budget-method-name">The Envelope Method</p>
-                <p class="budget-method-desc">
-                  Use separate spending categories or bank accounts. When one
-                  category runs out, you stop spending in that category.
-                </p>
-
-                <a
-                  class="ext-link"
-                  href="https://moneysmart.gov.au/budgeting/track-your-spending"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <span class="material-symbols-outlined">open_in_new</span>
-                  Track your spending
-                </a>
-              </div>
-            </div>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">lightbulb</span>
-                Quick Wins
-              </p>
-
-              <ul class="checklist">
-                <li>Review your subscriptions monthly.</li>
-                <li>Plan meals before grocery shopping.</li>
-                <li>Set a weekly fun money limit.</li>
-                <li>Keep an emergency buffer separate from spending money.</li>
-              </ul>
-            </div>
-          </div>
-        </article>
+        </a>
 
         <!-- Card 4 -->
-        <article
+        <a
+          href="smart_budgeting"
           class="hub-topic-card"
           id="tile-tenant"
-          data-topic-title="Victorian Tenant Rights"
           style="
-            --hub-bg: url('{{ url_for('static', filename='img/knowledge/tenant-bg.jpg') }}');
-            --hub-bg-opacity: 0.22;
-            --hub-overlay: rgba(255, 255, 255, 0.76);
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/smart-budgeting.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
           "
         >
           <div class="hub-card-content">
-            <div class="hub-tile-icon green-gradient">
-              <span class="material-symbols-outlined">home</span>
-            </div>
-
             <div class="hub-card-copy">
-              <h3 class="hub-tile-title">Victorian Tenant Rights</h3>
+              <h3 class="hub-tile-title">Smart Budgeting</h3>
               <p class="hub-tile-preview">
-                Understand bonds, repairs, rent increases, and rental rights in
-                Victoria.
+                Dummy description text for this topic. Replace this with your
+                final content later.
               </p>
             </div>
 
             <span class="hub-tile-toggle">Explore</span>
           </div>
+        </a>
 
-          <div class="hub-tile-body">
-            <p class="hub-tile-intro">
-              Renting for the first time? Understanding your rights as a tenant
-              in Victoria can protect you from unfair treatment and unexpected
-              costs.
-            </p>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">gavel</span>
-                Key Rights Before You Sign
-              </p>
-
-              <ul class="checklist">
-                <li>You should receive a copy of the rental agreement.</li>
-                <li>Bond is usually lodged with the RTBA.</li>
-                <li>You should receive a condition report.</li>
-                <li>Rent increases must follow notice rules.</li>
-                <li>Take photos when you move in and move out.</li>
-              </ul>
-            </div>
-
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">construction</span>
-                Repairs &amp; Maintenance
-              </p>
-
-              <p>
-                Your rental provider is responsible for keeping the property in
-                good repair. Urgent repairs should be addressed quickly.
+        <!-- Card 5 -->
+        <a
+          href="tenancy_guide"
+          class="hub-topic-card"
+          id="tile-saving"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/rental-guide.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Victorian Tenancy Guide</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
               </p>
             </div>
 
-            <div class="content-section">
-              <p class="content-section-title">
-                <span class="material-symbols-outlined">attach_money</span>
-                Getting Your Bond Back
-              </p>
-
-              <p>
-                Bond can only be claimed for genuine issues beyond fair wear and
-                tear. Photos and condition reports can help protect you.
-              </p>
-            </div>
-
-            <a
-              class="ext-link"
-              href="https://www.consumer.vic.gov.au/housing/renting"
-              target="_blank"
-              rel="noopener"
-            >
-              <span class="material-symbols-outlined">open_in_new</span>
-              Consumer Affairs Victoria Renting Guide
-            </a>
+            <span class="hub-tile-toggle">Explore</span>
           </div>
-        </article>
+        </a>
+
+        <!-- Card 6 -->
+        <a
+          href="safe_employment"
+          class="hub-topic-card"
+          id="tile-goals"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/safe-work.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Safe Employment</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
       </section>
-
-      <!-- Modal -->
-      <div class="knowledge-modal-overlay hidden" id="knowledgeModal">
-        <div class="knowledge-modal-box">
-          <button
-            type="button"
-            class="knowledge-modal-close"
-            id="knowledgeModalClose"
-            aria-label="Close topic popup"
-          >
-            <span class="material-symbols-outlined">close</span>
-          </button>
-
-          <div class="knowledge-modal-header">
-            <div class="knowledge-modal-icon gradient-bg">
-              <span class="material-symbols-outlined" id="knowledgeModalIcon">
-                school
-              </span>
-            </div>
-
-            <h2 id="knowledgeModalTitle">Topic title</h2>
-          </div>
-
-          <div class="knowledge-modal-content" id="knowledgeModalContent"></div>
-        </div>
-      </div>
 
       <div class="hub-disclaimer">
         This content is for educational purposes only and is not financial or

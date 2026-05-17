@@ -7,6 +7,7 @@ from app.api.locations import api
 from app.api.industries import industries_api
 from app.api.gender_pay_ratio import gender_api
 from models import db
+from app.api.household_spending import household_spending_api
 
 load_dotenv()
 
@@ -40,5 +41,7 @@ def create_app():
     app.register_blueprint(api)
     app.register_blueprint(industries_api)
     app.register_blueprint(gender_api, url_prefix="/api")
+    app.register_blueprint(household_spending_api)
+    
 
     return app

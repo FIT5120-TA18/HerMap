@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Superannuation Explained – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Knowledge Hub CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/knowledge_hub.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="knowledge-detail-page super-detail-page">
+      <div class="container">
+        <!-- Header -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Superannuation Explained</h1>
+            <p class="knowledge-detail-subtitle">
+              Learn what superannuation is, why it matters, and how small
+              choices can affect your long-term financial future.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- Q1 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q1: What super is and why does it matter?</h2>
+
+          <div class="super-answer-grid single">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">savings</span>
+              <div>
+                <h3>Super is money for future you</h3>
+                <p>
+                  Right now, your pay helps with everyday life: rent, food,
+                  transport, study, bills, and going out. But when you work,
+                  your employer also puts extra money into a super fund for
+                  later in life.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">trending_up</span>
+              <div>
+                <h3>It grows over time</h3>
+                <p>
+                  You usually cannot spend super now, but it is still your
+                  money. It is saved and invested so it can grow over time.
+                  Think of it as a financial safety fund for the older version
+                  of you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q2 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q2: How much is the employer contribution rate?</h2>
+
+          <div class="super-answer-grid single">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">percent</span>
+              <div>
+                <h3>The contribution rate is 12%</h3>
+                <p>
+                  If you are working in Australia, your employer usually has to
+                  pay extra money into your super fund. This is called the
+                  Superannuation Guarantee. From 1 July 2025, the employer
+                  contribution rate is 12% of your ordinary time earnings.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">payments</span>
+              <div>
+                <h3>Example: $500 earned means about $60 to super</h3>
+                <p>
+                  If you earn $500 in a week, your employer would generally need
+                  to pay about $60 into your super fund. That $60 does not go
+                  into your everyday bank account. It goes into your super
+                  account for future you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q3 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q3: What can I do with my super?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">account_balance</span>
+              <div>
+                <h3>Choose a super fund</h3>
+                <p>
+                  Your super fund is where your super money is kept and
+                  invested. Different funds can have different fees, investment
+                  options, and performance. Choosing a good fund can help your
+                  money grow over time.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">monitoring</span>
+              <div>
+                <h3>Check how your super is invested</h3>
+                <p>
+                  Your super is usually invested in things like shares,
+                  property, and other assets. You may see options like
+                  conservative, balanced, or high growth.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">manage_search</span>
+              <div>
+                <h3>Keep track of your super</h3>
+                <p>
+                  If you work different casual or part-time jobs, you might end
+                  up with more than one super account. Multiple accounts can
+                  mean multiple sets of fees.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">add_card</span>
+              <div>
+                <h3>Add extra money if it suits you</h3>
+                <p>
+                  You can add extra money to your super from your own savings or
+                  through your pay. This is optional, but small contributions
+                  can grow over time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q4 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q4: Things to check regularly</h2>
+
+          <div class="super-check-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">fact_check</span>
+              <div>
+                <h3>Check your fund details</h3>
+                <p>
+                  Make sure your employer is paying into the correct super fund.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">payments</span>
+              <div>
+                <h3>Review fees</h3>
+                <p>
+                  High fees can reduce your balance over time, especially when
+                  you are young.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">trending_up</span>
+              <div>
+                <h3>Review performance</h3>
+                <p>
+                  Compare your fund’s long-term performance with similar funds.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">account_balance</span>
+              <div>
+                <h3>Combine accounts</h3>
+                <p>
+                  If you have multiple super accounts, you may be paying
+                  multiple sets of fees.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="knowledge-detail-cta-row">
+          <a
+            href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="knowledge-cta-btn"
+          >
+            Visit ATO official super guide
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+  </body>
+</html>

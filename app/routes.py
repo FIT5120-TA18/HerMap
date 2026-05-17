@@ -199,3 +199,43 @@ def knowledge_hub():
     if not profile_data:
         return redirect(url_for("main.quick_profile"))
     return render_template("knowledge_hub.html", profile_data=profile_data)
+
+@main.route("/tax_payslip_module")
+@access_required
+def tax_payslip():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("tax_payslip_module.html", profile_data=profile_data)
+
+@main.route("/superannuation_explaination")
+@access_required
+def super_explained():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("superannuation_explaination.html", profile_data=profile_data)
+
+@main.route("/smart_budgeting")
+@access_required
+def smart_budget():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("smart_budgeting.html", profile_data=profile_data)
+
+@main.route("/tenancy_guide")
+@access_required
+def tenancy_guide():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("tenancy_guide.html", profile_data=profile_data)
+
+@main.route("/safe_employment")
+@access_required
+def safe_employment():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("safe_employment.html", profile_data=profile_data)

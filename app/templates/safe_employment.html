@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Safe Employment – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Knowledge Hub CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/knowledge_hub.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="knowledge-detail-page safe-employment-page">
+      <div class="container">
+        <!-- Header -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Safe Employment</h1>
+            <p class="knowledge-detail-subtitle">
+              Learn how to spot job scams before they affect your money,
+              identity, or confidence.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- One Main Container -->
+        <section
+          class="super-question-card super-card-highlight safe-employment-card"
+        >
+          <h2>Employment scams to watch out for</h2>
+
+          <div class="safe-employment-content">
+            <div class="safe-employment-intro">
+              <span class="material-symbols-outlined">work_alert</span>
+
+              <div>
+                <h3>A job should help your finances, not put them at risk</h3>
+                <p>
+                  When you are 18–22, studying, working casually, or looking for
+                  flexible work, a “quick money” job can look tempting. But some
+                  fake jobs are designed to steal your money, your personal
+                  information, or access to your bank account.
+                </p>
+              </div>
+            </div>
+
+            <div class="safe-scam-grid">
+              <div class="safe-scam-item">
+                <h3>1. “Pay first to get the job”</h3>
+                <p>
+                  Be careful if someone asks you to pay for training,
+                  registration, equipment, starter kits, background checks, or
+                  software before you can begin. A real job should not require
+                  you to pay money just to earn money.
+                </p>
+              </div>
+
+              <div class="safe-scam-item">
+                <h3>2. “High pay, low effort” jobs</h3>
+                <p>
+                  Scams often promise easy money for simple tasks like liking
+                  posts, reviewing products, receiving parcels, or doing “remote
+                  admin” with no proper interview. If it sounds too easy for the
+                  pay offered, pause and check.
+                </p>
+              </div>
+
+              <div class="safe-scam-item">
+                <h3>3. Requests for personal documents too early</h3>
+                <p>
+                  Be cautious if a stranger asks for your passport, licence, Tax
+                  File Number, bank details, or Medicare details before you have
+                  verified the employer and the role. These details can be used
+                  for identity theft.
+                </p>
+              </div>
+
+              <div class="safe-scam-item">
+                <h3>4. Using your bank account for transfers</h3>
+                <p>
+                  Never agree to receive money and send it somewhere else for a
+                  “job”. This could involve stolen money or money laundering,
+                  even if the person makes it sound normal.
+                </p>
+              </div>
+            </div>
+
+            <div class="safe-employment-reminder">
+              <span class="material-symbols-outlined">shield</span>
+              <p>
+                Before accepting a job, check the company website, search the
+                recruiter’s name, avoid WhatsApp-only hiring, do not pay
+                upfront, and never share sensitive documents unless you are sure
+                the job is real.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="knowledge-detail-cta-row">
+          <a
+            href="https://checkmateau.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="knowledge-cta-btn"
+          >
+            Learn more from CheckMateAU
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">ABS Data Sources</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Victorian Tenancy Guide – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Knowledge Hub CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/knowledge_hub.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="knowledge-detail-page tenancy-detail-page">
+      <div class="container">
+        <!-- Header -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Victorian Tenancy Guide</h1>
+            <p class="knowledge-detail-subtitle">
+              A practical moving-out guide for young renters in Victoria:
+              understand rent, bond, utilities, condition reports, and the
+              things to check before you sign.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- Intro -->
+        <section
+          class="super-question-card super-card-highlight tenancy-intro-section"
+        >
+          <h2>Moving out is exciting - but it comes with responsibilities</h2>
+
+          <div class="super-answer-grid single">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">home_pin</span>
+              <div>
+                <h3>
+                  Think of renting like a money commitment, not just a room
+                </h3>
+                <p>
+                  When you move into a rental, you are not just paying weekly
+                  rent. You may also need bond, utility connections, furniture,
+                  internet, moving costs, cleaning supplies, and an emergency
+                  buffer.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">favorite</span>
+              <div>
+                <h3>This guide is for first-time renters</h3>
+                <p>
+                  If you are 18–22 and moving out for study, work, independence,
+                  or safety, the goal is not to scare you. It is to help you
+                  feel prepared before signing anything.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q1 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q1: What should I check before signing a rental agreement?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">description</span>
+              <div>
+                <h3>Read the rental agreement carefully</h3>
+                <p>
+                  Check the rent amount, payment frequency, start date, length
+                  of the agreement, included appliances, and any special terms.
+                  Do not rush just because you feel pressured to secure the
+                  place.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">paid</span>
+              <div>
+                <h3>Calculate the real move-in cost</h3>
+                <p>
+                  Rent is only one part. You may need bond, rent in advance,
+                  moving costs, furniture, kitchen items, internet setup, and
+                  utility connections before you even settle in.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">location_on</span>
+              <div>
+                <h3>Check the location around your lifestyle</h3>
+                <p>
+                  Think about transport at night, distance from uni or work,
+                  grocery access, parking, street lighting, and whether the area
+                  feels safe when you come home late.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">groups</span>
+              <div>
+                <h3>If sharing, agree on house rules early</h3>
+                <p>
+                  If you are moving in with friends or housemates, discuss rent
+                  splits, cleaning, guests, bills, food sharing, and what
+                  happens if someone wants to move out.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q2 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q2: What is bond and why does it matter?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">lock</span>
+              <div>
+                <h3>Bond is security money</h3>
+                <p>
+                  Bond is money paid at the start of a rental. It is usually
+                  held as security in case there is unpaid rent, damage, missing
+                  items, or cleaning issues at the end of the tenancy.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">receipt_long</span>
+              <div>
+                <h3>Keep proof of everything</h3>
+                <p>
+                  Save your bond receipt, payment confirmations, emails, photos,
+                  condition report, and any messages with the rental provider or
+                  agent. These can protect you if there is a dispute later.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">photo_camera</span>
+              <div>
+                <h3>Your photos can protect your bond</h3>
+                <p>
+                  Take clear photos and videos before moving furniture in. Focus
+                  on marks, stains, broken fittings, cracks, mould, scratches,
+                  and anything that already looks damaged.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">task_alt</span>
+              <div>
+                <h3>Normal wear and tear is different from damage</h3>
+                <p>
+                  You should not lose bond for normal everyday use of the
+                  property. But damage, missing items, unpaid rent, or extra
+                  cleaning may create bond issues.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q3 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q3: Why is the condition report so important?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">fact_check</span>
+              <div>
+                <h3>It records the condition before you move in</h3>
+                <p>
+                  The condition report is evidence of what the property looked
+                  like at the start. If something is already broken, stained, or
+                  damaged, write it down.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">edit_note</span>
+              <div>
+                <h3>Do not just sign it without checking</h3>
+                <p>
+                  Walk through every room and compare the report with what you
+                  actually see. Add comments where needed and attach dated
+                  photos if possible.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">schedule</span>
+              <div>
+                <h3>Act quickly after moving in</h3>
+                <p>
+                  In Victoria, if you are not given a condition report before
+                  moving in, you can complete your own and give it to the rental
+                  provider or agent within 5 business days of moving in.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">shield</span>
+              <div>
+                <h3>It helps if there is a bond dispute</h3>
+                <p>
+                  A detailed condition report can help show that damage or
+                  cleaning issues existed before you moved in, rather than being
+                  caused by you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q4 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q4: What should I know about utilities and bills?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">bolt</span>
+              <div>
+                <h3>Know what is included</h3>
+                <p>
+                  Before moving in, ask whether electricity, gas, water,
+                  internet, and other services are included in the rent or paid
+                  separately.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">wifi</span>
+              <div>
+                <h3>Plan connection dates early</h3>
+                <p>
+                  Internet and utilities may take time to connect. Set them up
+                  before move-in day if you need Wi-Fi for study, work, or
+                  safety.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">calculate</span>
+              <div>
+                <h3>If sharing, split bills clearly</h3>
+                <p>
+                  Decide how bills will be split, whose name will be on each
+                  account, when payments are due, and how everyone will prove
+                  they have paid.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">water_drop</span>
+              <div>
+                <h3>Watch water and usage costs</h3>
+                <p>
+                  Some costs may depend on the property and agreement. Ask what
+                  you are responsible for before you sign so there are no
+                  surprises.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q5 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q5: What should I remember about rent?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">calendar_month</span>
+              <div>
+                <h3>Know exactly when rent is due</h3>
+                <p>
+                  Check whether rent is weekly, fortnightly, or monthly. Set a
+                  reminder before the due date so rent does not get lost between
+                  other expenses.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined"
+                >account_balance_wallet</span
+              >
+              <div>
+                <h3>Keep rent separate from spending money</h3>
+                <p>
+                  If possible, move rent into a separate account as soon as you
+                  are paid. This helps stop rent money being accidentally spent
+                  on food, transport, or going out.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">trending_up</span>
+              <div>
+                <h3>Rent can increase, but there are rules</h3>
+                <p>
+                  Victorian renters can check official information about rent
+                  increases and can ask Consumer Affairs Victoria for a rent
+                  assessment if they believe an increase is above the market
+                  range.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">emergency_home</span>
+              <div>
+                <h3>Have a backup plan</h3>
+                <p>
+                  Try to keep a small emergency buffer for unexpected rent,
+                  repairs, replacement keys, transport, or urgent household
+                  costs.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q6 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q6: Moving-in checklist</h2>
+
+          <div class="tenancy-checklist-grid">
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Read the rental agreement before signing</span>
+            </label>
+
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Confirm bond amount and keep payment proof</span>
+            </label>
+
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Complete the condition report carefully</span>
+            </label>
+
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Take dated photos and videos before moving in</span>
+            </label>
+
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Check electricity, gas, water, and internet setup</span>
+            </label>
+
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Save agent/rental provider contact details</span>
+            </label>
+
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Agree on bill splitting with housemates</span>
+            </label>
+
+            <label class="tenancy-check-item">
+              <input type="checkbox" />
+              <span>Put rent due dates into your calendar</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="knowledge-detail-cta-row tenancy-cta-row">
+          <a
+            href="https://www.consumer.vic.gov.au/housing/renting/starting-and-changing-rental-agreements/resources-and-guides-for-renters/renters-guide"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="knowledge-cta-btn"
+          >
+            View Victorian Renters Guide
+          </a>
+
+          <a
+            href="rent_comparison"
+            target="_self"
+            rel="noopener noreferrer"
+            class="knowledge-cta-btn secondary-tenancy-cta"
+          >
+            Find out Suburbs suitable for you to move
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">ABS Data Sources</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+  </body>
+</html>
