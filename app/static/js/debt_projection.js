@@ -127,7 +127,7 @@ function initChart() {
                     borderWidth: 1.5,
                 },
                 {
-                    label: isCC ? 'Interest accrued' : 'Late fees accrued',
+                    label: isCC ? 'Interest Accrued' : 'Late fees accrued',
                     data: interestValues,
                     backgroundColor: topColor,
                     borderColor: 'white',
@@ -284,7 +284,7 @@ function buildLegend() {
     const isCC = state.scenario === 'credit';
     const baseHex = 'rgba(155,114,207,0.95)';
     const topHex = 'rgba(232,84,106,0.95)';
-    const feeLabel = isCC ? 'Interest accrued' : 'Late fees accrued';
+    const feeLabel = isCC ? 'Interest Accrued' : 'Late Fees Accrued';
 
     legend.innerHTML = `
         <span class="legend-item">

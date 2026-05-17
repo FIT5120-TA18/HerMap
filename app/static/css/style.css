@@ -2769,10 +2769,14 @@ main.container {
 /* Legend */
 
 .chart-legend-custom {
+  position: absolute;
+  top: 12px;
+  right: 12px;
   display: flex;
-  gap: var(--space-5);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-4);
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+  pointer-events: none;
 }
 
 .legend-item {
