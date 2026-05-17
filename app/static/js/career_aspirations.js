@@ -194,3 +194,64 @@ function highlightSelectedBar(selectedIndustry) {
   chartInstance.data.datasets[0].backgroundColor = colors;
   chartInstance.update("none");
 }
+
+// Terms of Service modal
+document.addEventListener("DOMContentLoaded", function () {
+  const tosModalTrigger = document.getElementById("tosModalTrigger");
+  const tosModal = document.getElementById("tosModal");
+  const tosModalClose = document.getElementById("tosModalClose");
+
+  if (!tosModalTrigger || !tosModal || !tosModalClose) {
+    return;
+  }
+
+  tosModalTrigger.addEventListener("click", function () {
+    tosModal.classList.remove("hidden");
+  });
+
+  tosModalClose.addEventListener("click", function () {
+    tosModal.classList.add("hidden");
+  });
+
+  tosModal.addEventListener("click", function (event) {
+    if (event.target === tosModal) {
+      tosModal.classList.add("hidden");
+    }
+  });
+});
+
+// ABS Data Sources modal
+document.addEventListener("DOMContentLoaded", function () {
+  const absDataBtn = document.getElementById("absDataBtn");
+  const absModal = document.getElementById("absModal");
+  const absModalClose = document.getElementById("absModalClose");
+
+  if (!absDataBtn || !absModal || !absModalClose) {
+    return;
+  }
+
+  function openAbsModal() {
+    absModal.classList.remove("hidden");
+  }
+
+  function closeAbsModal() {
+    absModal.classList.add("hidden");
+  }
+
+  absDataBtn.addEventListener("click", openAbsModal);
+  absModalClose.addEventListener("click", closeAbsModal);
+
+  // Close when clicking outside the modal box
+  absModal.addEventListener("click", function (event) {
+    if (event.target === absModal) {
+      closeAbsModal();
+    }
+  });
+
+  // Close with Escape key
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !absModal.classList.contains("hidden")) {
+      closeAbsModal();
+    }
+  });
+});

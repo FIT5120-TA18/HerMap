@@ -932,7 +932,7 @@ a {
 }
 
 .insight-graph-card {
-  min-height: 320px;
+  min-height: 150px;
   padding: 24px;
   border-radius: 24px;
   background: var(--surface);
@@ -1059,7 +1059,7 @@ a {
   }
 
   .insight-graph-card {
-    min-height: 280px;
+    min-height: 150px;
     padding: 18px;
   }
 
