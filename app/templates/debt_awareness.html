@@ -217,7 +217,7 @@
       <!-- Progress dots -->
       <div class="q-progress">
         <div class="q-dot active" id="dot0"></div>
-        <div class="q-dot" id="dot1"></div>
+        <div class="q-dot" id="dot1" style="display:none;"></div>
       </div>
 
       <!-- Q1: Credit / BNPL usage -->
@@ -311,17 +311,25 @@
 
     function goStep1() {
       if (!q1Answer) return;
+
       if (q1Answer === "no") {
-        // Skip projection – go straight to knowledge hub
+        // Skip projection - go straight to knowledge hub
         sessionStorage.setItem("debtAwareness", JSON.stringify({ creditType: "none", payer: "none" }));
         window.location.href = "{{ url_for('main.knowledge_hub') }}";
         return;
       }
+
+      if (q1Answer === "considering") {
+        sessionStorage.setItem("debtAwareness", JSON.stringify({ creditType: "considering", payer: "none" }));
+        window.location.href = "{{ url_for('main.debt_projection') }}";
+      }
+
       // Show Q2
       document.getElementById("step0").classList.remove("active");
       document.getElementById("step1").classList.add("active");
       document.getElementById("dot0").classList.remove("active");
       document.getElementById("dot0").classList.add("done");
+      document.getElementById("dot1").style.display = "block";
       document.getElementById("dot1").classList.add("active");
     }
 
@@ -329,6 +337,7 @@
       document.getElementById("step1").classList.remove("active");
       document.getElementById("step0").classList.add("active");
       document.getElementById("dot1").classList.remove("active");
+      document.getElementById("dot1").style.display = "none";
       document.getElementById("dot0").classList.remove("done");
       document.getElementById("dot0").classList.add("active");
     }

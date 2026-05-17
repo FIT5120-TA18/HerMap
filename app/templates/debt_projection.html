@@ -4,188 +4,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Debt Projection – HerMap</title>
+  <title>Debt Projection - HerMap</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
     rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-  <style>
-    .proj-page {
-      padding: 48px 0 80px;
-      min-height: calc(100vh - 100px);
-    }
-
-    .proj-grid {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 32px;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .proj-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .proj-card {
-      background: var(--surface);
-      border: 1px solid var(--divider);
-      border-radius: var(--radius-lg);
-      padding: 32px;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 24px;
-    }
-
-    .proj-card-title {
-      font-family: var(--font-heading);
-      font-size: 22px;
-      margin: 0 0 8px;
-    }
-
-    .proj-card-sub {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin: 0 0 28px;
-      line-height: 1.6;
-    }
-
-    .proj-chart-wrap {
-      position: relative;
-      height: 340px;
-    }
-
-    /* Key message box */
-    .key-message {
-      margin-top: 20px;
-      padding: 16px 18px;
-      border-radius: var(--radius-md);
-      background: rgba(232, 84, 106, 0.07);
-      border-left: 4px solid var(--primary);
-    }
-
-    .key-message p {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text-main);
-    }
-
-    .key-message strong {
-      color: var(--primary);
-    }
-
-    /* Side cards */
-    .side-card {
-      background: var(--surface);
-      border: 1px solid var(--divider);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      box-shadow: var(--shadow-sm);
-      margin-bottom: 20px;
-    }
-
-    .side-card-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 14px;
-    }
-
-    .data-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--divider);
-      font-size: 14px;
-    }
-
-    .data-row:last-child {
-      border-bottom: none;
-    }
-
-    .data-label {
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .data-value {
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .data-value.red {
-      color: var(--primary);
-    }
-
-    /* Legend */
-    .chart-legend-custom {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .legend-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-    }
-
-    .legend-line {
-      width: 28px;
-      height: 4px;
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-
-    .legend-line.dashed {
-      background: repeating-linear-gradient(to right, #9b72cf 0, #9b72cf 6px, transparent 6px, transparent 12px);
-    }
-
-    /* CTA */
-    .cta-box {
-      background: linear-gradient(135deg, rgba(232, 84, 106, 0.07) 0%, rgba(155, 114, 207, 0.07) 100%);
-      border: 1px solid var(--divider);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      text-align: center;
-      margin-top: 24px;
-    }
-
-    .cta-box p {
-      font-size: 14px;
-      color: var(--text-muted);
-      margin: 0 0 16px;
-      line-height: 1.6;
-    }
-
-    .cta-link {
-      display: inline-block;
-      padding: 12px 28px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
-      color: white;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 15px;
-      box-shadow: var(--shadow-brand);
-      transition: transform 0.2s;
-    }
-
-    .cta-link:hover {
-      transform: translateY(-2px);
-    }
-
-    .source-note {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 12px;
-      line-height: 1.5;
-    }
-  </style>
 </head>
 
 <body>
@@ -198,7 +23,7 @@
       </div>
       <div class="nav-links">
         <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
-        <a href="{{ url_for('main.debt_awareness') }}" class="nav-link">Back to Questions</a>
+        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
       </div>
     </div>
   </nav>
@@ -210,14 +35,14 @@
         Back
       </a>
       <h1 class="page-inner-title" style="margin-top:20px;">How Debt Could Grow</h1>
-      <p class="page-inner-subtitle">See how a weekly shortfall grows over 6 months when funded by credit or BNPL.</p>
+      <p class="page-inner-subtitle">See how a weekly shortfall grows over time when funded by credit or BNPL.</p>
     </div>
 
     <div class="proj-grid">
       <!-- Left: Chart -->
       <div>
         <div class="proj-card">
-          <h3 class="proj-card-title" id="chartMainTitle">6-Month Debt Projection</h3>
+          <h3 class="proj-card-title" id="chartMainTitle">Debt Projection</h3>
           <p class="proj-card-sub" id="chartSubtitle">Based on your weekly deficit and selected credit type.</p>
 
           <!-- Legend -->
@@ -227,68 +52,105 @@
             <canvas id="debtChart"></canvas>
           </div>
 
-          <div class="key-message" id="keyMessage">
+          <div class="reveal-controls">
+            <button class="reveal-btn-primary" id="revealNextBtn" onclick="revealNext()">Reveal Month 2</button>
+            <button class="reveal-btn-ghost" id="skipToEndBtn" onclick="skipToEnd()">Skip to End</button>
+          </div>
+
+          <div class="key-message" id="keyMessage" style="display:none;">
             <p>If not paid on time, fees and interest grow faster than you expect.</p>
           </div>
-          <p class="source-note">
-            Credit card rate: 20% p.a. (ASIC MoneySmart standard) · BNPL: $10 late fee per missed fortnightly instalment
-            (Afterpay standard).
+          <p id="sourceNoteCC" class="source-note">
+            Credit card rate: 20% p.a. compound interest
             <a href="https://moneysmart.gov.au/credit-cards" target="_blank" rel="noopener"
-              style="color:var(--primary);font-weight:700;">Learn more at MoneySmart ↗</a>
+              style="color:var(--primary);font-weight:700;">Source: ASIC MoneySmart</a>
+          </p>
+          <p id="sourceNoteBNPL" class="source-note" style="display:none;">
+            Missing a BNPL payment costs upto $17/month in late fees. <b>No interest, but fees add up fast.</b>
+            ASIC found 1 in 5 BNPL users miss a payment, and most of them use more than one BNPL provider. 
+            This chart shows how those fees stack up over time. Fees vary by provider. <br>
+          <em style="font-size:10px;">
+            Source: 
+            <a href="https://download.asic.gov.au/media/5852803/rep672-published-16-november-2020-2.pdf" target="_blank"> Australian Government (ASIC, 2020)</a></em>
           </p>
         </div>
 
-        <div class="cta-box">
+        <div class="cta-box" style="display:none;" id="ctaBox">
           <p>Now that you can see how debt grows, learn about credit products and how to avoid the trap.</p>
-          <a href="{{ url_for('main.knowledge_hub') }}#credit" class="cta-link">Learn about credit products →</a>
+          <a href="{{ url_for('main.knowledge_hub') }}#credit" class="cta-link">Learn about credit products</a>
         </div>
       </div>
 
       <!-- Right: Stats -->
       <div>
-        <div class="side-card">
+        <div class="side-card" id="customCard">
+          <h4 class="side-card-title"> Customise Your Projection</h4>
+
+          <div class="scenario-toggle" id="scenarioToggle">
+            <button class="scenario-btn active" id="btnCredit" onclick="setScenario('credit')">
+              <span class="material-symbols-outlined" style="font-size:16px;">credit_card</span>
+              Credit Card
+            </button>
+            <button class="scenario-btn" id="btnBNPL" onclick="setScenario('bnpl')">
+              <span class="material-symbols-outlined" style="font-size:16px;">shopping_bag</span>
+              BNPL
+            </button>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <p style="font-size:13px;font-weight:700;color:var(--text-muted);margin:0 0 10px;"> 
+              Projection Length <span id="durationDisplay" style="color:var(--primary);"> 12 months </span>
+            </p>
+            <input
+              type="range"
+              id="durationSlider"
+              min="0"
+              max="2"
+              step="1"
+              value="0"
+              class="duration-slider"
+              oninput="onSliderChange(this.value)"
+            />
+            <div class="slider-labels">
+              <span>12 months</span>
+              <span>18 months</span>
+              <span>24 months</span>
+            </div>
+          </div>
+          <div style="margin-bottom:20px;">
+            <label id="balanceLabel" for="openingBalanceInput" style="font-size:13px;font-weight:700;color:var(--text-muted);display:block;margin:8px;"> 
+              Current debt balance ($)
+            </label>
+            <input
+              type="number"
+              id="openingBalanceInput"
+              class="form-input"
+              placeholder="e.g. 150"
+              min="1"
+              max="10000"
+              style="font-size:15px;"
+              oninput="clearBalanceError()"
+              />
+            <p id="balanceError" style="display:none;color:#c0392b;font-size:13px;font-weight:700;margin-top:8px;"></p>
+          </div>
+          <button class="reveal-btn-primary" style="width:100%" onclick="applyCustomisation()"> Update Chart </button>
+        </div>
+      <div class="side-card" id="yourNumbersCard">
           <h4 class="side-card-title">Your Numbers</h4>
           <div class="data-row">
-            <span class="data-label">Weekly deficit</span>
-            <span class="data-value red" id="statDeficit">$—</span>
-          </div>
-          <div class="data-row">
             <span class="data-label">Credit type</span>
-            <span class="data-value" id="statCreditType">—</span>
+            <span class="data-value" id="statCreditType">-</span>
           </div>
           <div class="data-row">
-            <span class="data-label">Month 6 total</span>
-            <span class="data-value red" id="statMonth6">$—</span>
+            <span class="data-label">Current total</span>
+            <span class="data-value red" id="statCurrentTotal">$-</span>
           </div>
-        </div>
-
-        <div class="side-card" id="minRepayCard" style="display:none;">
-          <h4 class="side-card-title">Minimum Repayment Trap</h4>
-          <p style="font-size:13px;color:var(--text-muted);margin:0 0 12px;line-height:1.6;">
-            Paying only the minimum means the balance keeps growing due to interest. The gap between full payoff and
-            minimum-only can cost you hundreds more.
-          </p>
-          <div class="data-row">
-            <span class="data-label">Extra cost vs full payoff</span>
-            <span class="data-value red" id="statMinExtra">$—</span>
-          </div>
-        </div>
-
-        <div class="side-card">
-          <h4 class="side-card-title">What you can do</h4>
-          <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:10px;">
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Always pay more than the minimum on your
-              credit card</li>
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Treat BNPL repayments as fixed expenses
-              in your budget</li>
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Avoid using credit to fund non-essential
-              spending</li>
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Check your credit score regularly via
-              CreditSmart</li>
-          </ul>
         </div>
       </div>
     </div>
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+      <span class="material-symbols-outlined">help</span>
+    </button>
   </main>
 
   <footer class="footer">
@@ -299,224 +161,29 @@
         </a>
       </div>
       <div class="nav-links">
-        <a href="#" class="nav-link">Privacy Policy</a>
+        <a href="#" class="nav-link">ABS Data Sources</a>
         <a href="#" class="nav-link">Terms of Service</a>
       </div>
     </div>
   </footer>
 
+  <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+  <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+  <div class="tutorial-popover" id="tutorialPopover">
+    <div class="tutorial-step-indicator">
+      <span id="tutorialStepLabel">Step 1 of 5</span>
+    </div>
+    <h2 id="tutorialTitle"></h2>
+    <p id="tutorialDesc"></p>
+    <div class="tutorial-actions">
+      <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+      <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const awareness = JSON.parse(sessionStorage.getItem("debtAwareness") || "{}");
-    const spending = JSON.parse(sessionStorage.getItem("spendingData") || "{}");
-
-    // Guard: if no spending data, redirect back to spending input
-    if (!spending.weeklyIncome && !spending.totalExpenses) {
-      window.location.href = "{{ url_for('main.spending_input') }}";
-    }
-
-    const creditType = awareness.creditType || "credit";
-    const weeklyDeficit = Math.abs(parseFloat(spending.weeklyIncome || 0) - parseFloat(spending.totalExpenses || 0));
-    // Opening value matches the 3-month projected shortfall from US 5.2 (weeklyDeficit × 13 weeks)
-    const startingDebt = weeklyDeficit > 0 ? weeklyDeficit * 13 : 200;
-
-    const MONTHS = 6;
-    const CC_RATE = 0.20 / 12;         // monthly credit card rate
-    const BNPL_FEE_FORTNIGHTLY = 10;   // per missed fortnight
-    const BNPL_MISSED_PER_MONTH = 2;   // 2 fortnights/month
-    const MIN_REPAYMENT_PCT = 0.02;    // 2% of balance per month
-
-    // Build month labels
-    const now = new Date();
-    const monthLabels = [];
-    for (let i = 0; i <= MONTHS; i++) {
-      const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
-      monthLabels.push(d.toLocaleString("en-AU", { month: "short" }));
-    }
-
-    // Credit card compound: balance grows monthly
-    function calcCreditCard(start) {
-      const vals = [start];
-      let b = start;
-      for (let m = 1; m <= MONTHS; m++) {
-        b = b * (1 + CC_RATE) + weeklyDeficit * 4;
-        vals.push(Math.round(b));
-      }
-      return vals;
-    }
-
-    // Minimum repayment: pay 2% of balance, interest still accrues
-    function calcMinRepayment(start) {
-      const vals = [start];
-      let b = start;
-      for (let m = 1; m <= MONTHS; m++) {
-        const interest = b * CC_RATE;
-        const payment = Math.max(b * MIN_REPAYMENT_PCT, 25);
-        b = b + interest - payment + weeklyDeficit * 4;
-        vals.push(Math.round(b));
-      }
-      return vals;
-    }
-
-    // BNPL: flat fees per missed fortnightly instalment
-    function calcBnpl(start) {
-      const vals = [start];
-      let b = start;
-      for (let m = 1; m <= MONTHS; m++) {
-        b = b + weeklyDeficit * 4 + BNPL_FEE_FORTNIGHTLY * BNPL_MISSED_PER_MONTH;
-        vals.push(Math.round(b));
-      }
-      return vals;
-    }
-
-    const datasets = [];
-    const legendItems = [];
-    let gapAnnotationData = null; // { ccVal, minVal, extra }
-
-    if (creditType === "credit" || creditType === "both" || creditType === "considering") {
-      const ccData = calcCreditCard(startingDebt);
-      datasets.push({
-        label: "Credit Card (20% p.a.)",
-        data: ccData,
-        borderColor: "#e8546a",
-        backgroundColor: "rgba(232,84,106,0.08)",
-        borderWidth: 2.5,
-        fill: true, tension: 0.3, pointRadius: 4
-      });
-      legendItems.push({ color: "#e8546a", label: "Credit Card (20% p.a.)", dashed: false });
-
-      // Minimum repayment line
-      if (creditType === "credit" || creditType === "both") {
-        const minData = calcMinRepayment(startingDebt);
-        datasets.push({
-          label: "Minimum Repayment Only",
-          data: minData,
-          borderColor: "#9b72cf",
-          backgroundColor: "transparent",
-          borderWidth: 2, borderDash: [8, 4],
-          fill: false, tension: 0.3, pointRadius: 3
-        });
-        legendItems.push({ color: "#9b72cf", label: "Minimum Repayment Only", dashed: true });
-
-        // Stats
-        const ccFull = calcCreditCard(startingDebt);
-        const minFull = calcMinRepayment(startingDebt);
-        const extra = minFull[MONTHS] - ccFull[MONTHS];
-        document.getElementById("statMinExtra").textContent = `$${extra.toFixed(0)}`;
-        document.getElementById("minRepayCard").style.display = "block";
-        // Set data for chart annotation plugin
-        gapAnnotationData = { ccVal: ccFull[MONTHS], minVal: minFull[MONTHS], extra };
-      }
-    }
-
-    if (creditType === "bnpl" || creditType === "both") {
-      const bnplData = calcBnpl(startingDebt);
-      datasets.push({
-        label: "BNPL ($10 late fee/fortnight)",
-        data: bnplData,
-        borderColor: "#c45fa8",
-        backgroundColor: "rgba(196,95,168,0.07)",
-        borderWidth: 2.5,
-        fill: true, tension: 0.3, pointRadius: 4
-      });
-      legendItems.push({ color: "#c45fa8", label: "BNPL ($10 late fee/fortnight)", dashed: false });
-    }
-
-    // Build legend HTML
-    const legendEl = document.getElementById("chartLegend");
-    legendItems.forEach(item => {
-      const row = document.createElement("div");
-      row.className = "legend-row";
-      row.innerHTML = `
-        <div class="legend-line ${item.dashed ? "dashed" : ""}" style="${item.dashed ? "" : "background:" + item.color + ";"}"></div>
-        <span>${item.label}</span>`;
-      legendEl.appendChild(row);
-    });
-
-    // Gap annotation plugin for chart (US 6.2 AC1: label difference in total cost at month 6)
-
-    const gapAnnotationPlugin = {
-      id: 'gapAnnotation',
-      afterDatasetsDraw(chart) {
-        if (!gapAnnotationData) return;
-        const { ccVal, minVal, extra } = gapAnnotationData;
-        const ctx = chart.ctx;
-        const xAxis = chart.scales.x;
-        const yAxis = chart.scales.y;
-        const x = xAxis.getPixelForValue(MONTHS);
-        const yCC = yAxis.getPixelForValue(ccVal);
-        const yMin = yAxis.getPixelForValue(minVal);
-        if (Math.abs(yMin - yCC) < 12) return; // too close, skip
-        ctx.save();
-        // Dashed vertical bracket
-        ctx.strokeStyle = '#9b72cf';
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([4, 3]);
-        ctx.beginPath();
-        ctx.moveTo(x + 12, yCC);
-        ctx.lineTo(x + 12, yMin);
-        ctx.stroke();
-        ctx.setLineDash([]);
-        // Tick marks
-        [yCC, yMin].forEach(y => {
-          ctx.beginPath();
-          ctx.moveTo(x + 8, y);
-          ctx.lineTo(x + 16, y);
-          ctx.stroke();
-        });
-        // Label
-        const midY = (yCC + yMin) / 2;
-        ctx.fillStyle = '#9b72cf';
-        ctx.font = 'bold 11px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText(`+$${Math.round(extra).toLocaleString()} extra`, x + 18, midY + 4);
-        ctx.restore();
-      }
-    };
-
-    // Draw chart
-    new Chart(document.getElementById("debtChart"), {
-      type: "line",
-      data: { labels: monthLabels, datasets },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y.toLocaleString()}`
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { callback: v => "$" + v.toLocaleString() }
-          }
-        }
-      },
-      plugins: [gapAnnotationPlugin]
-    });
-
-    // Update stat sidebar
-    const typeLabels = { credit: "Credit Card", bnpl: "BNPL", both: "Credit Card + BNPL", considering: "Credit Card (considering)" };
-    document.getElementById("statDeficit").textContent = `$${weeklyDeficit.toFixed(0)}/week`;
-    document.getElementById("statCreditType").textContent = typeLabels[creditType] || creditType;
-
-    // Month 6 from first dataset
-    if (datasets.length > 0) {
-      const month6Val = datasets[0].data[MONTHS];
-      document.getElementById("statMonth6").textContent = `$${month6Val.toLocaleString()}`;
-
-      // US 6.2 AC2: chart title as specified in PDF
-      document.getElementById("chartMainTitle").textContent =
-        `Your $${Math.round(startingDebt).toLocaleString()} shortfall grows to $${month6Val.toLocaleString()} by month 6 if left on a ${typeLabels[creditType] || creditType}`;
-
-      // US 6.2 AC2: key message
-      document.getElementById("keyMessage").querySelector("p").innerHTML =
-        `If not paid on time, fees and interest grow faster than you expect.`;
-    }
-  </script>
+  <script src="{{ url_for('static', filename='js/debt_projection.js')}}"></script>
+  
 </body>
 
 </html>
