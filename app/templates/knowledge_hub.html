@@ -1,705 +1,259 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knowledge Hub – HerMap</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Knowledge Hub – HerMap</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
-    rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-  <style>
-    .hub-page {
-      padding: 48px 0 80px;
-      min-height: calc(100vh - 100px);
-    }
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
 
-    /* Topic tiles grid */
-    .hub-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      margin-top: 40px;
-    }
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
 
-    @media (max-width: 720px) {
-      .hub-grid {
-        grid-template-columns: 1fr;
-      }
-    }
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
-    .hub-tile {
-      background: var(--surface);
-      border: 1px solid var(--divider);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: box-shadow 0.25s, transform 0.25s;
-      cursor: pointer;
-    }
+    <!-- Knowledge Hub CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/knowledge_hub.css') }}"
+    />
+  </head>
 
-    .hub-tile:hover {
-      box-shadow: var(--shadow-md);
-      transform: translateY(-3px);
-    }
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
 
-    .hub-tile.open {
-      box-shadow: var(--shadow-md);
-    }
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+        </div>
+      </div>
+    </nav>
 
-    .hub-tile-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 24px;
-    }
-
-    .hub-tile-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: white;
-    }
-
-    .hub-tile-icon .material-symbols-outlined {
-      font-size: 28px;
-    }
-
-    .hub-tile-title {
-      flex: 1;
-      font-family: var(--font-heading);
-      font-size: 18px;
-      margin: 0;
-    }
-
-    .hub-tile-toggle {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--primary);
-      white-space: nowrap;
-      transition: opacity 0.2s;
-    }
-
-    .hub-tile-body {
-      display: none;
-      padding: 0 24px 24px;
-      border-top: 1px solid var(--divider);
-      animation: fadeInUp 0.3s ease;
-    }
-
-    .hub-tile.open .hub-tile-body {
-      display: block;
-    }
-
-    .hub-tile-intro {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.75;
-      margin: 18px 0 20px;
-    }
-
-    /* Content sections within each tile */
-    .content-section {
-      margin-bottom: 20px;
-    }
-
-    .content-section-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin: 0 0 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .content-section-title .material-symbols-outlined {
-      font-size: 18px;
-      color: var(--primary);
-    }
-
-    .content-section p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.7;
-      margin: 0 0 8px;
-    }
-
-    .content-section p:last-child {
-      margin: 0;
-    }
-
-    /* Payslip explainer */
-    .payslip-mock {
-      border: 1px solid var(--divider);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      font-size: 13px;
-      margin: 12px 0;
-    }
-
-    .payslip-header {
-      background: linear-gradient(135deg, #e8546a 0%, #9b72cf 100%);
-      color: white;
-      padding: 12px 16px;
-      font-weight: 700;
-    }
-
-    .payslip-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--divider);
-      transition: background 0.2s;
-    }
-
-    .payslip-row:last-child {
-      border-bottom: none;
-    }
-
-    .payslip-row:hover {
-      background: var(--surface-2);
-    }
-
-    .payslip-row.highlight {
-      background: rgba(232, 84, 106, 0.06);
-    }
-
-    .payslip-label {
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .payslip-value {
-      font-weight: 800;
-      color: var(--text-main);
-    }
-
-    .payslip-value.positive {
-      color: #2e7d32;
-    }
-
-    .payslip-value.negative {
-      color: var(--primary);
-    }
-
-    .payslip-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 999px;
-      margin-left: 8px;
-      background: rgba(232, 84, 106, 0.12);
-      color: var(--primary);
-      text-transform: uppercase;
-    }
-
-    /* Checklist */
-    .checklist {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .checklist li {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    .checklist li::before {
-      content: "✓";
-      color: #2e7d32;
-      font-weight: 900;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    /* Budget method cards */
-    .budget-methods {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin: 10px 0;
-    }
-
-    .budget-method {
-      padding: 14px 16px;
-      border: 1px solid var(--divider);
-      border-radius: var(--radius-md);
-      background: var(--surface-2);
-    }
-
-    .budget-method-name {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin: 0 0 4px;
-    }
-
-    .budget-method-desc {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin: 0;
-      line-height: 1.6;
-    }
-
-    /* External link button */
-    .ext-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 14px;
-      padding: 10px 18px;
-      border-radius: 999px;
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-      color: var(--primary);
-      border: 1.5px solid var(--primary);
-      transition: all 0.2s;
-    }
-
-    .ext-link:hover {
-      background: rgba(232, 84, 106, 0.07);
-    }
-
-    .ext-link .material-symbols-outlined {
-      font-size: 16px;
-    }
-
-    /* Disclaimer */
-    .hub-disclaimer {
-      margin-top: 40px;
-      padding: 16px 20px;
-      background: var(--surface-2);
-      border: 1px solid var(--divider);
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.6;
-      text-align: center;
-    }
-  </style>
-</head>
-
-<body>
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <div class="nav-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
+    <!-- Main Content -->
+    <main class="container hub-page">
+      <div class="hub-header">
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          <span class="material-symbols-outlined back-icon">arrow_back</span>
+          Back to Dashboard
         </a>
-      </div>
-      <div class="nav-links">
-        <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
-        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-      </div>
-    </div>
-  </nav>
 
-  <main class="container hub-page">
-    <div style="margin-bottom:8px;">
-      <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
-        <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
-        Back to Dashboard
-      </a>
-      <h1 class="page-inner-title" style="margin-top:20px;">Build My Financial Literacy</h1>
-      <p class="page-inner-subtitle">Explore all financial education topics at your own pace. Each topic is plain
-        English, practical, and linked to trusted Australian sources.</p>
-    </div>
+        <h1 class="hub-title">Build My Financial Literacy</h1>
 
-    <!-- US 8.1 AC2: personalised scenario alert (injected by JS) -->
-    <div id="personalScenarioNote" style="display:none;margin-bottom:20px;padding:14px 18px;background:rgba(232,84,106,0.07);border:1px solid rgba(232,84,106,0.25);border-radius:12px;font-size:14px;line-height:1.7;color:var(--text-primary);"></div>
-
-    <div class="hub-grid">
-
-      <!-- Tile 1: Credit & BNPL 101 -->
-      <div class="hub-tile" id="tile-credit" onclick="toggleTile(this)">
-        <div class="hub-tile-header">
-          <div class="hub-tile-icon gradient-bg">
-            <span class="material-symbols-outlined">credit_card</span>
-          </div>
-          <h3 class="hub-tile-title">Credit &amp; BNPL 101</h3>
-          <span class="hub-tile-toggle">Explore ↓</span>
-        </div>
-        <div class="hub-tile-body">
-          <p class="hub-tile-intro">Understanding credit cards and buy-now-pay-later services is essential to avoiding
-            hidden debt traps. Here's what you need to know.</p>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">credit_card</span> How Credit Cards
-              Work</p>
-            <p>A credit card lets you spend money you don't yet have, up to a set limit. If you pay the full balance
-              each month before the due date, you pay no interest. If you pay only the <strong>minimum</strong>, the
-              remaining balance accrues interest at around <strong>20% per year</strong> — meaning a $500 balance left
-              unpaid costs you ~$100 extra over 12 months.</p>
-            <p id="creditPersonalNote"><!-- personalised note injected by JS --></p>
-            <p><strong>Late payment fees</strong> are charged when you miss a payment. These compound quickly if your
-              balance keeps growing.</p>
-          </div>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">shopping_bag</span> BNPL (Afterpay,
-              Zip &amp; more)</p>
-            <p>BNPL lets you split a purchase into 4 fortnightly payments at no interest — but <strong>miss a payment
-                and you're charged a late fee</strong> (Afterpay charges $10 per missed instalment). Multiple active
-              BNPL schedules can create a cascade of fees if a bad week hits your income.</p>
-            <p>BNPL activity is increasingly being reported to credit bureaus, meaning missed payments can
-              <strong>affect your credit score</strong>.</p>
-          </div>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">warning</span> Hidden Conditions to Watch</p>
-            <button type="button" onclick="toggleHiddenConditions(this)" style="margin-bottom:10px;padding:7px 16px;border:1.5px solid var(--primary);border-radius:20px;background:transparent;color:var(--primary);font-size:13px;font-weight:600;cursor:pointer;">
-              See hidden conditions ↓
-            </button>
-            <ul class="checklist" id="hiddenConditionsList" style="display:none;">
-              <li>Interest-free periods end — often without warning</li>
-              <li>Minimum repayments only reduce your balance slowly — interest keeps compounding</li>
-              <li>Store credit cards often have higher rates (25–30% p.a.)</li>
-              <li>BNPL is not always free — some providers charge account fees</li>
-              <li>Late payment fees stack — one bad week can trigger multiple BNPL penalties</li>
-            </ul>
-          </div>
-
-          <a class="ext-link" href="https://moneysmart.gov.au/credit-cards" target="_blank" rel="noopener">
-            <span class="material-symbols-outlined">open_in_new</span> Learn more at MoneySmart
-          </a>
-        </div>
+        <p class="hub-subtitle">
+          Explore financial education topics at your own pace. Each topic is
+          plain English, practical, and linked to trusted Australian sources.
+        </p>
       </div>
 
-      <!-- Tile 2: Tax & Super Basics -->
-      <div class="hub-tile" onclick="toggleTile(this)">
-        <div class="hub-tile-header">
-          <div class="hub-tile-icon" style="background:linear-gradient(135deg,#4e9af1,#26c6da);">
-            <span class="material-symbols-outlined">receipt</span>
-          </div>
-          <h3 class="hub-tile-title">Tax &amp; Super Basics</h3>
-          <span class="hub-tile-toggle">Explore ↓</span>
-        </div>
-        <div class="hub-tile-body">
-          <p class="hub-tile-intro">When you start working, understanding your payslip, how tax works, and what
-            superannuation is will save you stress and money.</p>
+      <!-- Personalised scenario note -->
+      <div
+        id="personalScenarioNote"
+        class="personal-scenario-note hidden"
+      ></div>
 
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">description</span> Your Payslip
-              Explained</p>
-            <p>A sample payslip for someone earning $750/week gross:</p>
-            <div class="payslip-mock">
-              <div class="payslip-header">Sample Payslip — Weekly</div>
-              <div class="payslip-row">
-                <span class="payslip-label">Gross Income <span class="payslip-tag">Before tax</span></span>
-                <span class="payslip-value positive">$750.00</span>
-              </div>
-              <div class="payslip-row highlight">
-                <span class="payslip-label">Tax Withheld (PAYG) <span class="payslip-tag">Deduction</span></span>
-                <span class="payslip-value negative">−$97.00</span>
-              </div>
-              <div class="payslip-row highlight">
-                <span class="payslip-label">Superannuation (11.5%) <span class="payslip-tag">Your future</span></span>
-                <span class="payslip-value" style="color:#1976d2;">$86.25</span>
-              </div>
-              <div class="payslip-row" style="background:rgba(76,175,80,0.06);">
-                <span class="payslip-label"><strong>Net (Take-Home) Pay</strong></span>
-                <span class="payslip-value positive" style="font-size:16px;">$653.00</span>
-              </div>
+      <!-- Cards Grid -->
+      <section class="hub-grid">
+        <!-- Card 1 -->
+        <a
+          href="#"
+          class="hub-topic-card"
+          id="tile-credit"
+          style="
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/bnpl-credit.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Credit &amp; BNPL 101</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
             </div>
-            <p style="font-size:12px;margin-top:8px;">Super is paid by your employer in addition to your wage — it goes
-              into your super fund, not your bank account.</p>
+
+            <span class="hub-tile-toggle">Explore</span>
           </div>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">assignment_return</span> Tax Return
-              Tips</p>
-            <p>Each year, the ATO calculates whether you've paid too much or too little tax. If you've overpaid, you
-              receive a refund. Common deductions for young workers:</p>
-            <ul class="checklist">
-              <li>Work-related clothing (uniforms, protective gear)</li>
-              <li>Home office expenses (if you WFH)</li>
-              <li>Study costs directly related to your current job</li>
-              <li>Union fees and professional memberships</li>
-              <li>Work-related phone and internet use</li>
-            </ul>
-            <a class="ext-link" href="https://www.ato.gov.au/individuals-and-families/your-tax-return" target="_blank"
-              rel="noopener">
-              <span class="material-symbols-outlined">open_in_new</span> Lodge via myGov (ATO)
-            </a>
-          </div>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">savings</span> Understanding
-              Superannuation</p>
-            <p>Super is money set aside for your retirement. Your employer must contribute <strong>11.5% of your
-                wages</strong> (from July 2024) into your chosen super fund. Over a working lifetime, this grows
-              significantly through compounding interest.</p>
-            <p id="superGrowthExample"><!-- personalised super growth injected by JS --></p>
-            <p>Always check you have <strong>only one super fund</strong> — multiple funds mean multiple sets of fees
-              eating into your balance.</p>
-            <a class="ext-link"
-              href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super"
-              target="_blank" rel="noopener">
-              <span class="material-symbols-outlined">open_in_new</span> Super guide at ATO
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tile 3: Smart Budgeting -->
-      <div class="hub-tile" id="tile-budgeting" onclick="toggleTile(this)">
-        <div class="hub-tile-header">
-          <div class="hub-tile-icon" style="background:linear-gradient(135deg,#ff7043,#ffa726);">
-            <span class="material-symbols-outlined">savings</span>
-          </div>
-          <h3 class="hub-tile-title">Smart Budgeting Strategies</h3>
-          <span class="hub-tile-toggle">Explore ↓</span>
-        </div>
-        <div class="hub-tile-body">
-          <p class="hub-tile-intro">Budgeting doesn't have to be complicated. Here are three simple methods — pick
-            whichever fits your lifestyle.</p>
-          <p id="budgetPersonalNote" style="font-size:14px;color:var(--text-muted);margin:0 0 16px;line-height:1.6;"><!-- personalised note injected by JS --></p>
-
-          <div class="budget-methods">
-            <div class="budget-method">
-              <p class="budget-method-name">🥊 The 50/30/20 Rule</p>
-              <p class="budget-method-desc">Split your after-tax income: <strong>50%</strong> on needs (rent, groceries,
-                transport), <strong>30%</strong> on wants (dining out, entertainment), <strong>20%</strong> on savings
-                and debt repayment. Simple and flexible for irregular incomes.</p>
-              <a class="ext-link" href="https://moneysmart.gov.au/budgeting/budget-planner" target="_blank" rel="noopener" style="margin-top:6px;font-size:13px;">
-                <span class="material-symbols-outlined">open_in_new</span> Try this method — MoneySmart Budget Planner
-              </a>
-            </div>
-            <div class="budget-method">
-              <p class="budget-method-name">💸 Pay Yourself First</p>
-              <p class="budget-method-desc">As soon as you get paid, transfer a set amount to savings <em>before</em>
-                spending anything else. Even $20/week adds up to $1,040 a year. Automate it so you don't have to think
-                about it.</p>
-              <a class="ext-link" href="https://moneysmart.gov.au/saving/how-to-save-money" target="_blank" rel="noopener" style="margin-top:6px;font-size:13px;">
-                <span class="material-symbols-outlined">open_in_new</span> Try this method — MoneySmart Savings Guide
-              </a>
-            </div>
-            <div class="budget-method">
-              <p class="budget-method-name">✉️ The Envelope Method</p>
-              <p class="budget-method-desc">Allocate cash (or separate bank accounts) for each spending category. Once
-                an envelope is empty, you stop spending in that category. Works great for controlling discretionary
-                spending.</p>
-              <a class="ext-link" href="https://moneysmart.gov.au/budgeting/track-your-spending" target="_blank" rel="noopener" style="margin-top:6px;font-size:13px;">
-                <span class="material-symbols-outlined">open_in_new</span> Try this method — MoneySmart Spending Tracker
-              </a>
-            </div>
-          </div>
-
-          <div class="content-section" style="margin-top:16px;">
-            <p class="content-section-title"><span class="material-symbols-outlined">lightbulb</span> Quick Wins</p>
-            <ul class="checklist">
-              <li>Review your subscriptions monthly — cancel what you don't use</li>
-              <li>Cook in bulk to reduce food spend by up to 40%</li>
-              <li>Use public transport concession cards if eligible</li>
-              <li>Set a weekly "fun money" limit so you don't overspend</li>
-            </ul>
-          </div>
-
-          <a class="ext-link" href="https://moneysmart.gov.au/budgeting/budget-planner" target="_blank" rel="noopener">
-            <span class="material-symbols-outlined">open_in_new</span> Try MoneySmart's Budget Planner
-          </a>
-        </div>
-      </div>
-
-      <!-- Tile 4: Victorian Tenant Rights -->
-      <div class="hub-tile" onclick="toggleTile(this)">
-        <div class="hub-tile-header">
-          <div class="hub-tile-icon" style="background:linear-gradient(135deg,#26a69a,#42bd8e);">
-            <span class="material-symbols-outlined">home</span>
-          </div>
-          <h3 class="hub-tile-title">Victorian Tenant Rights</h3>
-          <span class="hub-tile-toggle">Explore ↓</span>
-        </div>
-        <div class="hub-tile-body">
-          <p class="hub-tile-intro">Renting for the first time? Understanding your rights as a tenant in Victoria
-            protects you from unfair treatment and unexpected costs.</p>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">gavel</span> Key Rights Before You
-              Sign</p>
-            <ul class="checklist">
-              <li>You must receive a copy of the rental agreement before signing</li>
-              <li>Bond cannot exceed one month's rent for rentals under $900/week</li>
-              <li>Landlords must provide a condition report within 3 business days of moving in</li>
-              <li>Rent increases must be in writing with at least 60 days notice</li>
-              <li>Landlords cannot increase rent more than once every 12 months</li>
-            </ul>
-          </div>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">construction</span> Repairs &amp;
-              Maintenance</p>
-            <p>Your landlord is responsible for keeping the property in good repair. <strong>Urgent repairs</strong>
-              (broken heater, no hot water, security issues) must be fixed promptly. If they refuse, you can apply to
-              VCAT for orders.</p>
-          </div>
-
-          <div class="content-section">
-            <p class="content-section-title"><span class="material-symbols-outlined">attach_money</span> Getting Your
-              Bond Back</p>
-            <p>Bond is held by the Residential Tenancies Bond Authority (RTBA). At the end of your tenancy, the landlord
-              can only claim bond for genuine damage beyond normal wear and tear. Take photos on move-in day!</p>
-          </div>
-
-          <a class="ext-link" href="https://www.consumer.vic.gov.au/housing/renting" target="_blank" rel="noopener">
-            <span class="material-symbols-outlined">open_in_new</span> Consumer Affairs Victoria — Renting Guide
-          </a>
-        </div>
-      </div>
-
-    </div><!-- end hub-grid -->
-
-    <div class="hub-disclaimer">
-      This content is for educational purposes only and is not financial or legal advice. Always consult a qualified
-      professional for personal guidance.
-    </div>
-  </main>
-
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
         </a>
+
+        <!-- Card 2 -->
+        <a
+          href="#"
+          class="hub-topic-card"
+          id="tile-credit"
+          style="
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/payslip.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Tax &amp; Payslip Explained</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a
+          href="superannuation_explaination"
+          class="hub-topic-card"
+          id="tile-budgeting"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/super.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Superannuation</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a
+          href="smart_budgeting"
+          class="hub-topic-card"
+          id="tile-tenant"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/smart-budgeting.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Smart Budgeting</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a
+          href="tenancy_guide"
+          class="hub-topic-card"
+          id="tile-saving"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/rental-guide.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Victorian Tenancy Guide</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 6 -->
+        <a
+          href="safe_employment"
+          class="hub-topic-card"
+          id="tile-goals"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/safe-work.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Safe Employment</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+      </section>
+
+      <div class="hub-disclaimer">
+        This content is for educational purposes only and is not financial or
+        legal advice. Always consult a qualified professional for personal
+        guidance.
       </div>
-      <div class="nav-links">
-        <a href="#" class="nav-link">Privacy Policy</a>
-        <a href="#" class="nav-link">Terms of Service</a>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <script>
-    // Sync Flask profile → sessionStorage
-    (function syncProfile() {
-      const serverProfile = {{ profile_data | tojson }};
-      if (serverProfile && Object.keys(serverProfile).length > 0) {
-        sessionStorage.setItem("profile", JSON.stringify(serverProfile));
-      }
-    })();
+    <!-- Profile data from Flask -->
+    <script>
+      window.serverProfileData = {{ profile_data | tojson }};
+    </script>
 
-    function toggleTile(tile) {
-      const isOpen = tile.classList.contains("open");
-      // Close all
-      document.querySelectorAll(".hub-tile").forEach(t => {
-        t.classList.remove("open");
-        t.querySelector(".hub-tile-toggle").textContent = "Explore ↓";
-      });
-      // Open clicked if it wasn't open
-      if (!isOpen) {
-        tile.classList.add("open");
-        tile.querySelector(".hub-tile-toggle").textContent = "Close ↑";
-        tile.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-    }
-
-    // US 8.1 AC2: inject personalised numbers from sessionStorage
-    const profile = JSON.parse(sessionStorage.getItem("profile") || "{}");
-    const weeklyIncome = parseFloat(profile.income) || 0;
-    const spending = JSON.parse(sessionStorage.getItem("spendingData") || "{}");
-    const weeklyDeficit = weeklyIncome > 0
-      ? Math.max(0, parseFloat(spending.totalExpenses || 0) - weeklyIncome)
-      : 0;
-
-    // Credit tile: personalised example using their income
-    if (weeklyIncome > 0) {
-      const monthlyIncome = weeklyIncome * 4;
-      const minRepayExample = Math.max(monthlyIncome * 0.02, 25).toFixed(0);
-      const el = document.getElementById("creditPersonalNote");
-      if (el) el.innerHTML = `Based on your income of <strong>$${weeklyIncome.toFixed(0)}/week</strong>, a typical credit card minimum repayment would be around <strong>$${minRepayExample}/month</strong> — but paying only the minimum means interest keeps growing each month.`;
-    }
-
-    // Super tile: personalised growth example (US 8.4)
-    if (weeklyIncome > 0) {
-      const annualIncome = weeklyIncome * 52;
-      const annualSuper = annualIncome * 0.115;
-      // Simple 10-year compound at 7% pa (average long-term super return)
-      const tenYearBalance = annualSuper * ((Math.pow(1.07, 10) - 1) / 0.07);
-      const el = document.getElementById("superGrowthExample");
-      if (el) el.innerHTML = `On your current income of <strong>$${annualIncome.toFixed(0)}/year</strong>, your employer contributes approximately <strong>$${annualSuper.toFixed(0)}/year</strong> to your super. At an average 7% return, that grows to roughly <strong>$${Math.round(tenYearBalance).toLocaleString()}</strong> over 10 years — even before you add your own contributions.`;
-    }
-
-    // Budgeting tile: personalised 50/30/20 breakdown
-    if (weeklyIncome > 0) {
-      const needs = (weeklyIncome * 0.5).toFixed(0);
-      const wants = (weeklyIncome * 0.3).toFixed(0);
-      const savings = (weeklyIncome * 0.2).toFixed(0);
-      const el = document.getElementById("budgetPersonalNote");
-      if (el) el.innerHTML = `💡 Based on your <strong>$${weeklyIncome.toFixed(0)}/week</strong> income, the 50/30/20 rule suggests: <strong>$${needs}</strong> on needs · <strong>$${wants}</strong> on wants · <strong>$${savings}</strong> to save.`;
-    }
-    // Auto-open tile based on URL hash (e.g. #credit, #budgeting)
-    (function autoOpenFromHash() {
-      const hash = window.location.hash.replace('#', '');
-      if (!hash) return;
-      const target = document.getElementById('tile-' + hash);
-      if (target) {
-        target.classList.add('open');
-        target.querySelector('.hub-tile-toggle').textContent = 'Close ↑';
-        setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-      }
-    })();
-
-    // US 8.1 AC2: personalised scenario notes
-    (function injectScenarioNote() {
-      const rentAmt = parseFloat(spending.rent || 0);
-      const notes = [];
-
-      if (weeklyIncome > 0 && rentAmt > 0) {
-        const rentPct = (rentAmt / weeklyIncome) * 100;
-        if (rentPct > 35) {
-          notes.push(`🏠 <strong>You are in housing stress.</strong> Your rent ($${rentAmt.toFixed(0)}/week) is ${rentPct.toFixed(0)}% of your income — above the 35% threshold. In Victoria, this usually means less room for savings or emergencies.`);
-        }
-      }
-
-      if (weeklyDeficit > 50) {
-        const weeksToMissedRent = rentAmt > 0 ? Math.floor(rentAmt / weeklyDeficit) : 9;
-        notes.push(`⚠️ <strong>At this rate, your shortfall could become one missed rent payment in ${weeksToMissedRent} weeks.</strong> Addressing even $40/week of discretionary spending now can make a real difference.`);
-      }
-
-      if (weeklyDeficit > 0 && weeklyIncome > 0) {
-        const savingPerWeek = 40;
-        const bondWeeks = rentAmt > 0 ? Math.ceil((rentAmt * 4) / savingPerWeek) : null;
-        const delayCutWeeks = Math.floor((weeklyDeficit) / (weeklyDeficit - savingPerWeek + weeklyDeficit));
-        if (bondWeeks) {
-          notes.push(`💡 <strong>Cutting $${savingPerWeek}/week from discretionary spending</strong> could save your bond deposit ${Math.max(1, Math.round(bondWeeks * 0.15))} weeks sooner.`);
-        }
-      }
-
-      if (notes.length > 0) {
-        const el = document.getElementById('personalScenarioNote');
-        if (el) {
-          el.innerHTML = notes.join('<br><br>');
-          el.style.display = 'block';
-        }
-      }
-    })();
-
-    function toggleHiddenConditions(btn) {
-      const list = document.getElementById('hiddenConditionsList');
-      if (!list) return;
-      const isHidden = list.style.display === 'none';
-      list.style.display = isHidden ? 'block' : 'none';
-      btn.textContent = isHidden ? 'Hide conditions ↑' : 'See hidden conditions ↓';
-    }
-  </script>
-</body>
-
+    <!-- Knowledge Hub JS -->
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+  </body>
 </html>

@@ -64,14 +64,22 @@
       </div> -->
 
         <div class="insights-grid">
-          <div class="insight-graph-card feature-card dashboard-feature-tile">
+          <div
+            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
+            style="
+    --tile-bg: url('{{ url_for('static', filename='img/dashboard/financial-position.png') }}');
+    --tile-bg-opacity: 1;
+    --tile-bg-hover-opacity: 1;
+    --tile-overlay: rgba(255, 255, 255, 0.70);
+  "
+          >
             <a
               href="{{ url_for('main.income_comparison') }}"
               class="dashboard-feature-link"
             >
-              <div class="dashboard-feature-icon">
+              <!-- <div class="dashboard-feature-icon">
                 <span class="material-symbols-outlined">monitoring</span>
-              </div>
+              </div> -->
 
               <div class="dashboard-feature-copy">
                 <p class="dashboard-feature-title">
@@ -84,14 +92,22 @@
             </a>
           </div>
 
-          <div class="insight-graph-card feature-card dashboard-feature-tile">
+          <div
+            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
+            style="
+    --tile-bg: url('{{ url_for('static', filename='img/dashboard/living-options.png') }}');
+    --tile-bg-opacity: 1;
+    --tile-bg-hover-opacity: 1;
+    --tile-overlay: rgba(255, 255, 255, 0.70);
+  "
+          >
             <a
               href="{{ url_for('main.rent_comparison') }}"
               class="dashboard-feature-link"
             >
-              <div class="dashboard-feature-icon">
+              <!-- <div class="dashboard-feature-icon">
                 <span class="material-symbols-outlined">home_work</span>
-              </div>
+              </div> -->
 
               <div class="dashboard-feature-copy">
                 <p class="dashboard-feature-title">
@@ -104,50 +120,124 @@
             </a>
           </div>
 
-          <div class="insight-graph-card feature-card dashboard-feature-tile">
-            <a href="{{ url_for('main.spending_input') }}" class="dashboard-feature-link">
-              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#f7971e,#ffd200);">
-                <span class="material-symbols-outlined" style="color:#fff;">savings</span>
-              </div>
+          <div
+            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
+            style="
+    --tile-bg: url('{{ url_for('static', filename='img/dashboard/spending-tracker.png') }}');
+    --tile-bg-opacity: 1;
+    --tile-bg-hover-opacity: 1;
+    --tile-overlay: rgba(255, 255, 255, 0.70);
+  "
+          >
+            <a
+              href="{{ url_for('main.spending_input') }}"
+              class="dashboard-feature-link"
+            >
+              <!-- <div
+                class="dashboard-feature-icon"
+                style="background: linear-gradient(135deg, #f7971e, #ffd200)"
+              >
+                <span class="material-symbols-outlined" style="color: #fff"
+                  >savings</span
+                >
+              </div> -->
               <div class="dashboard-feature-copy">
                 <p class="dashboard-feature-title">Track My Spending</p>
-                <p class="dashboard-feature-text">See where your money goes each week</p>
+                <p class="dashboard-feature-text">
+                  See where your money goes each week
+                </p>
               </div>
             </a>
           </div>
 
-          <div class="insight-graph-card feature-card dashboard-feature-tile">
-            <a href="{{ url_for('main.debt_awareness') }}" class="dashboard-feature-link">
-              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#e8546a,#c45fa8);">
-                <span class="material-symbols-outlined" style="color:#fff;">finance</span>
-              </div>
+          <div
+            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
+            style="
+    --tile-bg: url('{{ url_for('static', filename='img/dashboard/credit-debt-awareness.png') }}');
+    --tile-bg-opacity: 1;
+    --tile-bg-hover-opacity: 1;
+    --tile-overlay: rgba(255, 255, 255, 0.70);
+  "
+          >
+            <a
+              href="{{ url_for('main.debt_awareness') }}"
+              class="dashboard-feature-link"
+            >
+              <!-- <div
+                class="dashboard-feature-icon"
+                style="background: linear-gradient(135deg, #e8546a, #c45fa8)"
+              >
+                <span class="material-symbols-outlined" style="color: #fff"
+                  >finance</span
+                >
+              </div> -->
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">Credit and Debt Awareness</p>
-                <p class="dashboard-feature-text">Understand credit cards and BNPL</p>
+                <p class="dashboard-feature-title">Debt Projection</p>
+                <p class="dashboard-feature-text">
+                  Understand credit cards and BNPL
+                </p>
               </div>
             </a>
           </div>
 
-          <div class="insight-graph-card feature-card dashboard-feature-tile">
-            <a href="{{ url_for('main.career_aspirations') }}" class="dashboard-feature-link">
-              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#4e9af1,#26c6da);">
-                <span class="material-symbols-outlined" style="color:#fff;">work</span>
-              </div>
+          <div
+            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
+            style="
+    --tile-bg: url('{{ url_for('static', filename='img/dashboard/career-aspiration.png') }}');
+    --tile-bg-opacity: 1;
+    --tile-bg-hover-opacity: 1;
+    --tile-overlay: rgba(255, 255, 255, 0.70);
+  "
+          >
+            <a
+              href="{{ url_for('main.career_aspirations') }}"
+              class="dashboard-feature-link"
+            >
+              <!-- <div
+                class="dashboard-feature-icon"
+                style="background: linear-gradient(135deg, #4e9af1, #26c6da)"
+              >
+                <span class="material-symbols-outlined" style="color: #fff"
+                  >work</span
+                >
+              </div> -->
               <div class="dashboard-feature-copy">
                 <p class="dashboard-feature-title">Career Aspirations</p>
-                <p class="dashboard-feature-text">Explore salaries across industries</p>
+                <p class="dashboard-feature-text">
+                  Explore salaries across industries
+                </p>
               </div>
             </a>
           </div>
 
-          <div class="insight-graph-card feature-card dashboard-feature-tile">
-            <a href="{{ url_for('main.knowledge_hub') }}" class="dashboard-feature-link">
-              <div class="dashboard-feature-icon" style="background: linear-gradient(135deg,#43a047,#66bb6a);">
-                <span class="material-symbols-outlined" style="color:#fff;">school</span>
-              </div>
+          <div
+            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
+            style="
+    --tile-bg: url('{{ url_for('static', filename='img/dashboard/financial-literacy.png') }}');
+    --tile-bg-opacity: 1;
+    --tile-bg-hover-opacity: 1;
+    --tile-overlay: rgba(255, 255, 255, 0.70);
+  "
+          >
+            <a
+              href="{{ url_for('main.knowledge_hub') }}"
+              class="dashboard-feature-link"
+            >
+              <!-- <div
+                class="dashboard-feature-icon"
+                style="background: linear-gradient(135deg, #43a047, #66bb6a)"
+              >
+                <span class="material-symbols-outlined" style="color: #fff"
+                  >school</span
+                >
+              </div> -->
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">Build My Financial Literacy</p>
-                <p class="dashboard-feature-text">Learn budgeting, credit and more</p>
+                <p class="dashboard-feature-title">
+                  Build My Financial Literacy
+                </p>
+                <p class="dashboard-feature-text">
+                  Learn budgeting techniques, tax, superannuation and more
+                </p>
               </div>
             </a>
           </div>
@@ -169,7 +259,6 @@
         </div>
 
         <div class="nav-links">
-          <a href="#" class="nav-link">Privacy Policy</a>
           <button
             type="button"
             class="nav-link footer-modal-link"
@@ -177,7 +266,14 @@
           >
             ABS Data Sources
           </button>
-          <a href="#" class="nav-link">Terms of Service</a>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            id="tosModalTrigger"
+          >
+            Terms of Service
+          </button>
         </div>
       </div>
     </footer>
@@ -219,6 +315,135 @@
           are intended to help users better understand possible trade-offs, not
           to provide personal financial advice.
         </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          class="modal-close"
+          id="tosModalClose"
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="tos-modal-content">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+
+          <div class="tos-credit-section">
+            <h3>Images on Dashboard &amp; Advice</h3>
+
+            <ul class="tos-credit-list">
+              <li>
+                <strong>"Numbers And Finance"</strong> by kenteegardin is
+                licensed under CC BY-SA 2.0.
+                <a
+                  href="https://creativecommons.org/licenses/by-sa/2.0/?ref=openverse"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View license
+                </a>
+              </li>
+
+              <li>
+                <strong>"Craftsman House"</strong> by roarofthefour is licensed
+                under CC BY-SA 2.0.
+                <a
+                  href="https://creativecommons.org/licenses/by-sa/2.0/?ref=openverse"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View license
+                </a>
+              </li>
+
+              <li>
+                <strong>"Financial gain (38/365)"</strong> by LifeSupercharger
+                is licensed under CC BY 2.0.
+                <a
+                  href="https://creativecommons.org/licenses/by/2.0/?ref=openverse"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View license
+                </a>
+              </li>
+
+              <li>
+                <strong>"Credit Cards"</strong> by Sean MacEntee is licensed
+                under CC BY 2.0.
+                <a
+                  href="https://creativecommons.org/licenses/by/2.0/?ref=openverse"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View license
+                </a>
+              </li>
+
+              <li>
+                <strong>"Newspaper - Careers"</strong> by flazingo_photos is
+                licensed under CC BY-SA 2.0.
+                <a
+                  href="https://creativecommons.org/licenses/by-sa/2.0/?ref=openverse"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View license
+                </a>
+              </li>
+
+              <li>
+                <strong>"Books - then and now"</strong> by spykster is licensed
+                under CC BY 2.0.
+                <a
+                  href="https://creativecommons.org/licenses/by/2.0/?ref=openverse"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View license
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 

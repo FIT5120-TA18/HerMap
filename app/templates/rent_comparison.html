@@ -200,12 +200,115 @@
         </a>
       </div>
       <div class="nav-links">
-        <a href="#" class="nav-link">Privacy Policy</a>
-        <a href="#" class="nav-link">ABS Data Sources</a>
-        <a href="#" class="nav-link">Terms of Service</a>
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            id="absDataBtn"
+          >
+            ABS Data Sources
+          </button>
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            id="tosModalTrigger"
+          >
+            Terms of Service
+          </button>
       </div>
     </div>
   </footer>
+
+      <!-- ABS Data Sources Popup -->
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="absModalClose"
+          aria-label="Close popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2>ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia’s national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="tosModalClose"
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
 
   <!-- Leaflet Map Library -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

@@ -932,7 +932,7 @@ a {
 }
 
 .insight-graph-card {
-  min-height: 320px;
+  min-height: 150px;
   padding: 24px;
   border-radius: 24px;
   background: var(--surface);
@@ -1059,7 +1059,7 @@ a {
   }
 
   .insight-graph-card {
-    min-height: 280px;
+    min-height: 150px;
     padding: 18px;
   }
 
@@ -3049,4 +3049,618 @@ grid-template-columns: 1fr;
 
 .tutorial-fab .material-symbols-outlined {
   font-size: 26px;
+}
+.career-page {
+  padding: 48px 0 80px;
+  min-height: calc(100vh - 100px);
+}
+
+.career-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .career-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.career-card {
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+}
+
+.career-card-title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+
+.career-card-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0 0 28px;
+  line-height: 1.6;
+}
+
+.chart-wrap {
+  position: relative;
+  height: 520px;
+}
+
+/* Selected industry info panel */
+.industry-info {
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+  animation: fadeInUp 0.3s ease;
+}
+
+.industry-info-name {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  margin: 0 0 16px;
+  line-height: 1.3;
+}
+
+.industry-stat {
+  margin-bottom: 14px;
+}
+
+.industry-stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin: 0 0 4px;
+}
+
+.industry-stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0;
+}
+
+.industry-stat-value.weekly {
+  color: var(--secondary);
+}
+
+.gap-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  background: rgba(155, 114, 207, 0.12);
+  color: var(--secondary);
+  margin-bottom: 14px;
+}
+
+.disclaimer-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 16px 0 0;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--divider);
+  line-height: 1.6;
+}
+
+/* Your industry badge */
+.your-industry-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(232, 84, 106, 0.1),
+    rgba(155, 114, 207, 0.1)
+  );
+  border: 1px solid rgba(232, 84, 106, 0.25);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+/* Source card */
+.source-card {
+  background: var(--surface-2);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.source-card a {
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.source-card a:hover {
+  text-decoration: underline;
+}
+
+/* Loading state */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 0;
+  color: var(--text-muted);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 4px solid rgba(232, 84, 106, 0.15);
+  border-top-color: var(--primary);
+  animation: spin 0.8s linear infinite;
+}
+
+/* Dashboard feature card background images */
+.dashboard-feature-tile {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+/* Background image layer */
+.dashboard-feature-tile.card-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--tile-bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: var(--tile-bg-opacity, 0.18);
+  z-index: 0;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* Soft white layer so text remains readable */
+.dashboard-feature-tile.card-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--tile-overlay, rgba(255, 255, 255, 0.72));
+  z-index: 0;
+}
+
+/* Keep content above the image */
+.dashboard-feature-link,
+.dashboard-feature-icon,
+.dashboard-feature-copy {
+  position: relative;
+  z-index: 1;
+}
+
+/* Optional: make image slightly pop on hover */
+.dashboard-feature-tile.card-bg:hover::before {
+  opacity: var(--tile-bg-hover-opacity, 0.28);
+  transform: scale(1.04);
+}
+
+/* Terms modal: keep box normal size, scroll only content */
+.tos-modal-box {
+  max-height: min(680px, calc(100vh - 48px));
+  display: flex;
+  flex-direction: column;
+}
+
+.tos-modal-content {
+  margin-top: 4px;
+  padding-right: 10px;
+  overflow-y: auto;
+  max-height: 420px;
+}
+
+/* optional: cleaner scrollbar */
+.tos-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tos-modal-content::-webkit-scrollbar-track {
+  background: var(--surface-2);
+  border-radius: 999px;
+}
+
+.tos-modal-content::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+/* Terms modal credit list styling */
+.tos-credit-section {
+  margin-top: 22px;
+}
+
+.tos-credit-section h3 {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.tos-credit-list {
+  margin: 0;
+  padding-left: 22px;
+  display: grid;
+  gap: 12px;
+}
+
+.tos-credit-list li {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.55;
+  padding-left: 4px;
+}
+
+.tos-credit-list strong {
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.tos-credit-list a {
+  color: var(--primary);
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tos-credit-list a:hover {
+  text-decoration: underline;
+}
+
+.tos-modal-content p {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.tos-modal-content {
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 12px;
+}
+
+.field-label-small {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Income comparison page font consistency */
+.income-comparison-container,
+.income-comparison-container input,
+.income-comparison-container button,
+.income-comparison-container select,
+.income-comparison-container textarea {
+  font-family: var(--font-body);
+}
+
+.income-comparison-container h1,
+.income-comparison-container h2,
+.income-comparison-container .lga-detail-title {
+  font-family: var(--font-heading);
+}
+
+.income-comparison-container p,
+.income-comparison-container label,
+.income-comparison-container span,
+.income-comparison-container div {
+  font-family: var(--font-body);
+}
+
+/* Fix Terms modal cutting off on small screens */
+#tosModal {
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: 40px 24px;
+}
+
+.tos-modal-box {
+  width: min(720px, 100%);
+  max-height: calc(100vh - 80px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.tos-modal-content {
+  overflow-y: auto;
+  max-height: calc(100vh - 260px);
+  padding-right: 12px;
+}
+
+/* Fix Terms modal appearing behind navbar */
+#tosModal {
+  z-index: 30000 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  overflow-y: auto !important;
+}
+
+#tosModal .tos-modal-box {
+  width: min(620px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#tosModal .tos-modal-content {
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  padding-right: 12px;
+}
+
+/* Final Terms modal layout fix */
+#tosModal {
+  z-index: 30000 !important;
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+#tosModal .tos-modal-box {
+  width: min(620px, calc(100vw - 40px));
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#tosModal .tos-modal-content {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  max-height: calc(100vh - 260px);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  margin-top: 14px;
+  padding: 24px;
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+#tosModal .tos-modal-content p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+
+#tosModal .tos-modal-content p:last-child {
+  margin-bottom: 0;
+}
+
+/* FINAL Terms modal fix - only modal box is the card */
+#tosModal {
+  z-index: 30000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  overflow-y: auto !important;
+}
+
+#tosModal .tos-modal-box {
+  width: min(560px, calc(100vw - 40px)) !important;
+  max-height: calc(100vh - 48px) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Reset the inner content so it cannot overflow sideways */
+#tosModal .tos-modal-content {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+
+  margin: 0 !important;
+  padding: 0 8px 0 0 !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: calc(100vh - 250px) !important;
+}
+
+#tosModal .tos-modal-content p {
+  margin: 0 0 18px !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+  color: var(--text-muted) !important;
+}
+
+#tosModal .tos-modal-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Keep Terms modal hidden on page load */
+#tosModal.hidden {
+  display: none !important;
+}
+
+/* Only show modal when JS removes .hidden */
+#tosModal:not(.hidden) {
+  display: flex !important;
+}
+
+/* Final fix: keep Terms content box inside modal */
+#tosModal .tos-modal-box {
+  width: min(620px, calc(100vw - 40px)) !important;
+  max-height: calc(100vh - 48px) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+#tosModal .tos-modal-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+
+  margin: 18px 0 0 0 !important;
+  padding: 28px !important;
+
+  border: 1px solid var(--divider) !important;
+  border-radius: var(--radius-lg) !important;
+  background: var(--surface) !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: calc(100vh - 300px) !important;
+}
+
+/* FINAL Terms modal layout - one modal box only */
+#tosModal.hidden {
+  display: none !important;
+}
+
+#tosModal:not(.hidden) {
+  display: flex !important;
+}
+
+#tosModal {
+  z-index: 30000 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  overflow-y: auto !important;
+}
+
+/* Main modal box */
+#tosModal .tos-modal-box {
+  width: min(520px, calc(100vw - 40px)) !important;
+  max-height: calc(100vh - 48px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+/* Scroll only the text area, but don't make it another card */
+#tosModal .tos-modal-content {
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+
+  margin: 0 !important;
+  padding: 0 10px 0 0 !important;
+
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: calc(100vh - 260px) !important;
+}
+
+#tosModal .tos-modal-content p {
+  margin: 0 0 18px !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+  color: var(--text-muted) !important;
+}
+
+#tosModal .tos-modal-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* FINAL: Terms modal should have only one white box */
+#tosModal.hidden {
+  display: none !important;
+}
+
+#tosModal:not(.hidden) {
+  display: flex !important;
+}
+
+#tosModal {
+  z-index: 30000 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  overflow-y: auto !important;
+}
+
+#tosModal .tos-modal-box {
+  width: min(560px, calc(100vw - 40px)) !important;
+  max-height: calc(100vh - 48px) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* This removes the second floating white box */
+#tosModal .tos-modal-content {
+  width: auto !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+
+  margin: 0 !important;
+  padding: 0 10px 0 0 !important;
+
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-height: calc(100vh - 250px) !important;
+}
+
+#tosModal .tos-modal-content p {
+  margin: 0 0 18px !important;
+  font-size: 14px !important;
+  line-height: 1.65 !important;
+  color: var(--text-muted) !important;
+}
+
+#tosModal .tos-modal-content p strong {
+  color: var(--text-main) !important;
+  font-weight: 800 !important;
+}
+
+#tosModal .tos-modal-content p:last-child {
+  margin-bottom: 0 !important;
 }
