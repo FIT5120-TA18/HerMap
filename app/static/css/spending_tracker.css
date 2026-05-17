@@ -1,0 +1,243 @@
+/* Add breathing space inside the income/rent boxes */
+.banner-half {
+  padding: 36px 42px !important;
+  box-sizing: border-box;
+}
+
+/* Keep the input row nicely spaced */
+.income-edit {
+  margin-top: 22px;
+}
+
+/* Optional: make the outer white wrapper also breathe more */
+.income-banner {
+  padding: 32px !important;
+}
+
+/* =========================================================
+   Rent Pressure Meter
+   Red / Yellow / Green gauge
+   ========================================================= */
+
+.rent-gauge {
+  margin-top: 28px;
+}
+
+.gauge-wrap {
+  position: relative;
+  width: 300px;
+  height: 170px;
+  margin: 28px auto 18px;
+}
+
+.gauge-svg {
+  width: 300px;
+  height: 170px;
+  overflow: visible;
+}
+
+/* base empty track */
+.gauge-segment {
+  fill: none;
+  stroke-width: 22;
+  stroke-linecap: round;
+}
+
+/* Empty starting colour */
+.gauge-stable,
+.gauge-vulnerable,
+.gauge-risk {
+  stroke: rgba(28, 23, 20, 0.12);
+}
+
+/* Filled states added by JS */
+.rent-gauge.is-stable .gauge-stable {
+  stroke: #2e7d32;
+}
+
+.rent-gauge.is-vulnerable .gauge-stable {
+  stroke: #2e7d32;
+}
+
+.rent-gauge.is-vulnerable .gauge-vulnerable {
+  stroke: #f9a825;
+}
+
+.rent-gauge.is-risk .gauge-stable {
+  stroke: #2e7d32;
+}
+
+.rent-gauge.is-risk .gauge-vulnerable {
+  stroke: #f9a825;
+}
+
+.rent-gauge.is-risk .gauge-risk {
+  stroke: #e53935;
+}
+
+/* Needle */
+.gauge-needle {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  width: 4px;
+  height: 95px;
+  background: var(--text-main);
+  border-radius: 999px;
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(-90deg);
+  transition: transform 0.45s ease;
+  z-index: 3;
+}
+
+.gauge-center {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-main);
+  transform: translateX(-50%);
+  z-index: 4;
+}
+
+.gauge-label {
+  position: absolute;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.gauge-label-0 {
+  left: 20px;
+  bottom: 0;
+}
+
+.gauge-label-30 {
+  left: 78px;
+  top: 26px;
+}
+
+.gauge-label-45 {
+  left: 140px;
+  top: 10px;
+}
+
+.gauge-label-75 {
+  right: 14px;
+  bottom: 0;
+}
+
+.gauge-value {
+  margin-top: 10px;
+  text-align: center;
+  color: var(--text-main);
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.gauge-legend {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.gauge-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.legend-dot.stable {
+  background: #2e7d32;
+}
+
+.legend-dot.vulnerable {
+  background: #f9a825;
+}
+
+.legend-dot.risk {
+  background: #e53935;
+}
+
+/* =========================================================
+   Rent pressure meter colours
+   ========================================================= */
+
+/* Make SVG paths visible and coloured */
+.gauge-segment {
+  fill: none !important;
+  stroke-width: 22 !important;
+  stroke-linecap: round !important;
+}
+
+/* 0–30% */
+.gauge-stable {
+  stroke: #2e7d32 !important;
+}
+
+/* 30–45% */
+.gauge-vulnerable {
+  stroke: #f9a825 !important;
+}
+
+/* 45%+ */
+.gauge-risk {
+  stroke: #e53935 !important;
+}
+
+.gauge-tick {
+  display: none !important;
+}
+
+.gauge-label {
+  position: absolute;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 900;
+  background: var(--surface);
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(28, 23, 20, 0.08);
+  z-index: 9;
+}
+
+.gauge-label-0 {
+  left: 28px;
+  bottom: 8px;
+}
+
+.gauge-label-30 {
+  left: 80px;
+  top: 5px;
+}
+
+.gauge-label-45 {
+  left: 160px;
+  top: 1px;
+}
+
+.gauge-label-75 {
+  right: 18px;
+  bottom: 8px;
+}
+
+/* Rent pressure summary colours */
+.rent-pressure-stable {
+  color: #2e7d32 !important;
+}
+
+.rent-pressure-vulnerable {
+  color: #f9a825 !important;
+}
+
+.rent-pressure-risk {
+  color: #e53935 !important;
+}

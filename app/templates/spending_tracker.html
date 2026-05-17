@@ -1,175 +1,195 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Track My Spending - Hermap</title>
+    <title>Track My Spending - Hermap</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
 
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/spending_tracker.css') }}" />
-</head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/spending_tracker.css') }}"
+    />
+  </head>
 
-<body>
+  <body>
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
 
-<nav class="navbar">
-  <div class="container nav-inner">
-    <div class="nav-brand">
-      <a href="{{ url_for('main.landing') }}" class="logo-link">
-        <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-      </a>
-    </div>
-
-    <div class="nav-links">
-      <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
-    </div>
-  </div>
-</nav>
-
-<main class="tracker-container">
-
-  <div class="tracker-header">
-    <div>
-      <h1>Track My <span class="gradient-text">Spending</span></h1>
-      <p>
-        Enter your weekly expenses to understand your surplus, deficit, rent pressure,
-        and what this means for independent living.
-      </p>
-    </div>
-
-    <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">Back to Dashboard</a>
-  </div>
-
-  <div class="intro-note">
-    <strong>How this works:</strong>
-    enter the weekly costs you know. Categories left at $0 are ignored.
-    Your results will show your weekly position, rent pressure, and practical next steps.
-  </div>
-
-  <div class="income-banner split-banner">
-
-    <div class="banner-half">
-      <div class="income-banner-label">Weekly take-home income</div>
-      <div class="income-banner-value" id="incomeBannerValue">$--</div>
-
-      <div class="income-edit">
-        <label for="incomeInput">Adjust income</label>
-        <input type="number" id="incomeInput" min="0" step="1" />
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link"
+            >Dashboard</a
+          >
+        </div>
       </div>
-    </div>
+    </nav>
 
-    <div class="banner-half">
-      <div class="income-banner-label">Weekly rent</div>
-      <div class="income-banner-value" id="rentBannerValue">$--</div>
+    <main class="tracker-container">
+      <div class="tracker-header">
+        <div>
+          <h1>Track My <span class="gradient-text">Spending</span></h1>
+          <p>
+            Enter your weekly expenses to understand your surplus, deficit, rent
+            pressure, and what this means for independent living.
+          </p>
+        </div>
 
-      <div class="income-edit">
-        <label for="rentBannerInput">Adjust rent</label>
-        <input type="number" id="rentBannerInput" min="0" step="1" />
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn"
+          >Back to Dashboard</a
+        >
       </div>
-    </div>
 
-  </div>
+      <div class="intro-note">
+        <strong>How this works:</strong>
+        enter the weekly costs you know. Categories left at $0 are ignored. Your
+        results will show your weekly position, rent pressure, and practical
+        next steps.
+      </div>
 
-  <section class="expenses-section">
-    <div class="expenses-section-title">
-      <span class="section-badge badge-essential">Essential</span>
-      Things you need to pay to live
-    </div>
+      <div class="income-banner split-banner">
+        <div class="banner-half">
+          <div class="income-banner-label">Weekly take-home income</div>
+          <div class="income-banner-value" id="incomeBannerValue">$--</div>
 
-    <p class="expenses-section-subtitle">
-      These are costs that are harder to avoid, such as groceries, transport, medical needs, and utilities.
-    </p>
+          <div class="income-edit">
+            <label for="incomeInput">Adjust income</label>
+            <input type="number" id="incomeInput" min="0" step="1" />
+          </div>
+        </div>
 
-    <div class="expense-cards" id="essentialCards"></div>
+        <div class="banner-half">
+          <div class="income-banner-label">Weekly rent</div>
+          <div class="income-banner-value" id="rentBannerValue">$--</div>
 
-    <div class="add-expense-row" id="addEssentialRow">
-      <select id="essentialDropdown">
-        <option value="">+ Add an essential expense…</option>
-      </select>
+          <div class="income-edit">
+            <label for="rentBannerInput">Adjust rent</label>
+            <input type="number" id="rentBannerInput" min="0" step="1" />
+          </div>
+        </div>
+      </div>
 
-      <!-- <button class="add-btn" id="addEssentialBtn" type="button">Add</button> -->
-    </div>
-  </section>
+      <section class="expenses-section">
+        <div class="expenses-section-title">
+          <span class="section-badge badge-essential">Essential</span>
+          Things you need to pay to live
+        </div>
 
-  <section class="expenses-section">
-    <div class="expenses-section-title">
-      <span class="section-badge badge-nonessential">Non-essential</span>
-      Things you enjoy but could reduce
-    </div>
+        <p class="expenses-section-subtitle">
+          These are costs that are harder to avoid, such as groceries,
+          transport, medical needs, and utilities.
+        </p>
 
-    <p class="expenses-section-subtitle">
-      These are flexible costs, such as eating out, subscriptions, clothing, BNPL repayments, and hobbies.
-    </p>
+        <div class="expense-cards" id="essentialCards"></div>
 
-    <div class="expense-cards" id="nonessentialCards"></div>
+        <div class="add-expense-row" id="addEssentialRow">
+          <select id="essentialDropdown">
+            <option value="">+ Add an essential expense…</option>
+          </select>
 
-    <div class="add-expense-row" id="addNonEssentialRow">
-      <select id="nonessentialDropdown">
-        <option value="">+ Add a non-essential expense…</option>
-      </select>
+          <!-- <button class="add-btn" id="addEssentialBtn" type="button">Add</button> -->
+        </div>
+      </section>
 
-      <!-- <button class="add-btn" id="addNonEssentialBtn" type="button">Add</button> -->
-    </div>
-  </section>
+      <section class="expenses-section">
+        <div class="expenses-section-title">
+          <span class="section-badge badge-nonessential">Non-essential</span>
+          Things you enjoy but could reduce
+        </div>
 
-  <div class="totals-bar">
-    <div class="total-item">
-      <div class="total-label">Essentials</div>
-      <div class="total-value essential-color" id="totalEssential">$0</div>
-    </div>
+        <p class="expenses-section-subtitle">
+          These are flexible costs, such as eating out, subscriptions, clothing,
+          BNPL repayments, and hobbies.
+        </p>
 
-    <div class="total-item">
-      <div class="total-label">Non-essentials</div>
-      <div class="total-value nonessential-color" id="totalNonessential">$0</div>
-    </div>
+        <div class="expense-cards" id="nonessentialCards"></div>
 
-    <div class="total-item">
-      <div class="total-label">Total spending</div>
-      <div class="total-value total-color" id="totalAll">$0</div>
-    </div>
+        <div class="add-expense-row" id="addNonEssentialRow">
+          <select id="nonessentialDropdown">
+            <option value="">+ Add a non-essential expense…</option>
+          </select>
 
-    <div class="total-item">
-      <div class="total-label">Left over</div>
-      <div class="total-value" id="totalSurplus">$0</div>
-    </div>
-  </div>
+          <!-- <button class="add-btn" id="addNonEssentialBtn" type="button">Add</button> -->
+        </div>
+      </section>
 
-  <div class="cta-row">
-    <button class="primary-btn" id="checkPositionBtn" type="button">
-      ✦ Check my financial position
-    </button>
-  </div>
+      <div class="totals-bar">
+        <div class="total-item">
+          <div class="total-label">Essentials</div>
+          <div class="total-value essential-color" id="totalEssential">$0</div>
+        </div>
 
-</main>
+        <div class="total-item">
+          <div class="total-label">Non-essentials</div>
+          <div class="total-value nonessential-color" id="totalNonessential">
+            $0
+          </div>
+        </div>
 
-<footer class="footer">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <a href="{{ url_for('main.landing') }}" class="logo-link">
-        <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-      </a>
-    </div>
+        <div class="total-item">
+          <div class="total-label">Total spending</div>
+          <div class="total-value total-color" id="totalAll">$0</div>
+        </div>
 
-    <div class="nav-links">
-      <a href="#" class="nav-link">Privacy Policy</a>
-      <a href="#" class="nav-link">ABS Data Sources</a>
-      <a href="#" class="nav-link">Terms of Service</a>
-    </div>
-  </div>
-</footer>
+        <div class="total-item">
+          <div class="total-label">Left over</div>
+          <div class="total-value" id="totalSurplus">$0</div>
+        </div>
+      </div>
 
-<script>
-  window.userProfileData = {
-    income: parseFloat("{{ profile_data.get('income', '0') }}") || 0,
-    rent: parseFloat("{{ profile_data.get('rent', '0') }}") || 0,
-    living: "{{ profile_data.get('living', '') }}",
-    locality: "{{ profile_data.get('locality', '') }}"
-  };
-</script>
+      <div class="cta-row">
+        <button class="primary-btn" id="checkPositionBtn" type="button">
+          ✦ Check my financial position
+        </button>
+      </div>
+    </main>
 
-<script src="{{ url_for('static', filename='js/spending_tracker.js') }}"></script>
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
 
-</body>
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">ABS Data Sources</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      window.userProfileData = {
+        income: parseFloat("{{ profile_data.get('income', '0') }}") || 0,
+        rent: parseFloat("{{ profile_data.get('rent', '0') }}") || 0,
+        living: "{{ profile_data.get('living', '') }}",
+        locality: "{{ profile_data.get('locality', '') }}",
+      };
+    </script>
+
+    <script src="{{ url_for('static', filename='js/spending_tracker.js') }}"></script>
+  </body>
 </html>
