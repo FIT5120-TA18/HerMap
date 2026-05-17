@@ -164,12 +164,19 @@ function initChart() {
                 r: {
                     beginAtZero: true,
                     max: initialMax,
+                    z: 1,
                     ticks: {
                         callback: v => '$' + v.toLocaleString(),
                         font: { size: 11 },
-                        stepSize: initialStepSize
+                        stepSize: initialStepSize,
+                        z: 1,
+                        backdropColor: 'rgba(255,255,255,0.75)',
+                        backdropPadding: 1,
                     },
-                    grid: { color: 'rgba(0,0,0,0.06)'}
+                    grid: { 
+                        color: 'rgba(0,0,0,0.06)',
+                        z: 1
+                    }
                 }
             }
         }

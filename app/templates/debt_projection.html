@@ -23,7 +23,7 @@
       </div>
       <div class="nav-links">
         <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
-        <a href="{{ url_for('main.debt_awareness') }}" class="nav-link">Back to Questions</a>
+        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
       </div>
     </div>
   </nav>
@@ -44,17 +44,6 @@
         <div class="proj-card">
           <h3 class="proj-card-title" id="chartMainTitle">Debt Projection</h3>
           <p class="proj-card-sub" id="chartSubtitle">Based on your weekly deficit and selected credit type.</p>
-
-          <div class="scenario-toggle" id="scenarioToggle">
-            <button class="scenario-btn active" id="btnCredit" onclick="setScenario('credit')">
-              <span class="material-symbols-outlined" style="font-size:16px;">credit_card</span>
-              Credit Card
-            </button>
-            <button class="scenario-btn" id="btnBNPL" onclick="setScenario('bnpl')">
-              <span class="material-symbols-outlined" style="font-size:16px;">shopping_bag</span>
-              BNPL
-            </button>
-          </div>
 
           <!-- Legend -->
           <div class="chart-legend-custom" id="chartLegend"></div>
@@ -96,6 +85,17 @@
       <div>
         <div class="side-card" id="customCard">
           <h4 class="side-card-title"> Customise Your Projection</h4>
+
+          <div class="scenario-toggle" id="scenarioToggle">
+            <button class="scenario-btn active" id="btnCredit" onclick="setScenario('credit')">
+              <span class="material-symbols-outlined" style="font-size:16px;">credit_card</span>
+              Credit Card
+            </button>
+            <button class="scenario-btn" id="btnBNPL" onclick="setScenario('bnpl')">
+              <span class="material-symbols-outlined" style="font-size:16px;">shopping_bag</span>
+              BNPL
+            </button>
+          </div>
 
           <div style="margin-bottom:20px;">
             <p style="font-size:13px;font-weight:700;color:var(--text-muted);margin:0 0 10px;"> 
@@ -146,32 +146,6 @@
             <span class="data-value red" id="statCurrentTotal">$-</span>
           </div>
         </div>
-
-        <div class="side-card" id="minRepayCard" style="display:none;">
-          <h4 class="side-card-title">Minimum Repayment Trap</h4>
-          <p style="font-size:13px;color:var(--text-muted);margin:0 0 12px;line-height:1.6;">
-            Paying only the minimum means the balance keeps growing due to interest. The gap between full payoff and
-            minimum-only can cost you hundreds more.
-          </p>
-          <div class="data-row">
-            <span class="data-label">Extra cost vs full payoff</span>
-            <span class="data-value red" id="statMinExtra">$-</span>
-          </div>
-        </div>
-
-        <div class="side-card">
-          <h4 class="side-card-title">What you can do</h4>
-          <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:10px;">
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Always pay more than the minimum on your
-              credit card</li>
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Treat BNPL repayments as fixed expenses
-              in your budget</li>
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Avoid using credit to fund non-essential
-              spending</li>
-            <li style="font-size:13px;color:var(--text-muted);line-height:1.6;">Check your credit score regularly via
-              CreditSmart</li>
-          </ul>
-        </div>
       </div>
     </div>
     <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
@@ -187,7 +161,7 @@
         </a>
       </div>
       <div class="nav-links">
-        <a href="#" class="nav-link">Privacy Policy</a>
+        <a href="#" class="nav-link">ABS Data Sources</a>
         <a href="#" class="nav-link">Terms of Service</a>
       </div>
     </div>
