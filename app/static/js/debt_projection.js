@@ -419,3 +419,146 @@ updateSourceNote();
 updateBalanceLabel();
 document.getElementById('btnCredit').classList.toggle('active', state.scenario === 'credit');
 document.getElementById('btnBNPL').classList.toggle('active', state.scenario === 'bnpl');
+
+const TUTORIAL_STEPS = [
+    {
+        targetId: 'scenarioToggle',
+        title: 'Choose your credit type',
+        desc: 'Switch between Credit Card and BNPL to see how each one grows debt differently over time.'
+    },
+    {
+        targetId: 'debtChart',
+        title: 'Your debt projection',
+        desc: 'This chart shows how your debt grows each month. each wedge is one month - watch it expand as you reveal more.'
+    },
+    {
+        targetId: 'revealNextBtn',
+        title: 'Reveal month by month',
+        desc: 'Tap Reveal to uncover each month one at a time and watch the debt grow. You can also reveal all months by click on "Skip to end".'
+    },
+    {
+        targetId: 'customCard',
+        title: 'Make it your own',
+        desc: 'Enter your actual balance and choose how far ahead you want to project - 12, 18, or 24 months.'
+    },
+    {
+        targetId: 'yourNumbersCard',
+        title: 'Track your numbers',
+        desc: 'This panel updates as you reveal months so you can always see the real dollar impact.'
+    }
+]
+
+let tutorialStep = 0;
+
+function startTutorial() {
+    tutorialStep = 0;
+    document.getElementById('tutorialOverlay').style.display = 'block';
+    document.getElementById('tutorialFab').style.display = 'none';
+    renderTutorialStep();
+}
+
+function renderTutorialStep() {
+    const step = TUTORIAL_STEPS[tutorialStep];
+    const total = TUTORIAL_STEPS.length;
+
+    // Update popover content
+    document.getElementById('tutorialStepLabel').textContent = `Step ${tutorialStep + 1} of ${total}`;
+    document.getElementById('tutorialTitle').textContent = step.title;
+    document.getElementById('tutorialDesc').textContent = step.desc;
+    document.getElementById('tutorialNextBtn').textContent = tutorialStep === total - 1 ? 'Done' : 'Next';
+
+    // Remove active class from previous target
+    document.querySelectorAll('.tutorial-active-target').forEach(e1 => {
+        e1.classList.remove('tutorial-active-target');
+    });
+
+    // Highlight new target 
+    const target = document.getElementById(step.targetId);
+    if (!target) return;
+    target.classList.add('tutorial-active-target');
+
+    // Scroll target into view first, then position on next frame
+    target.scrollIntoView({ behavior: 'smooth', block:'center' });
+
+    setTimeout(() => {
+        const rect = target.getBoundingClientRect();
+        const PAD = 10;
+
+        // Position highlight box
+        const highlight = document.getElementById('tutorialHighlight');
+
+        highlight.style.top = `${rect.top - PAD}px`;
+        highlight.style.left = `${rect.left - PAD}px`;
+        highlight.style.width = `${rect.width + PAD * 2}px`;
+        highlight.style.height = `${rect.height + PAD * 2}px`;
+        highlight.style.boxShadow = '0 0 0 9999px rgba(28,23,20,0.55)';
+        highlight.style.borderRadius = '18px';
+
+        // Position popover below or above the highlight
+        positionPopover(rect, PAD);
+
+        // Animate in
+        setTimeout(() => {
+            highlight.classList.add('is-ready');
+            document.getElementById('tutorialPopover').classList.add('is-ready');
+        }, 50);
+    }, 400);
+}
+
+function positionPopover(rect, pad) {
+    const popover = document.getElementById('tutorialPopover');
+    popover.classList.remove('is-ready');
+
+    const POPOVER_HEIGHT = 220;
+    const POPOVER_WIDTH = 360;
+    const MARGIN = 16;
+
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+
+    let top; 
+
+    if (spaceBelow >= POPOVER_HEIGHT + MARGIN) {
+        top = rect.bottom + pad + MARGIN;
+    } else if (spaceAbove >= POPOVER_HEIGHT + MARGIN) {
+        top = rect.top - POPOVER_HEIGHT - pad - MARGIN;
+    } else {
+        top = window.innerHeight / 2 - POPOVER_HEIGHT / 2;
+    }
+
+    let left = rect.left;
+    const maxLeft = window.innerWidth - POPOVER_WIDTH - MARGIN;
+    left = Math.min(Math.max(left, MARGIN), maxLeft);
+
+    popover.style.top = `${top}px`;
+    popover.style.left = `${left}px`;
+    popover.style.width = `${POPOVER_WIDTH}px`;
+}
+
+function tutorialNext() {
+    if (tutorialStep < TUTORIAL_STEPS.length - 1) {
+        tutorialStep++;
+        document.getElementById('tutorialHighlight').classList.remove('is-ready');
+        document.getElementById('tutorialPopover').classList.remove('is-ready');
+        setTimeout(renderTutorialStep, 200);
+    } else {
+        endTutorial();
+    }
+}
+
+function endTutorial() {
+    document.querySelectorAll('.tutorial-active-target').forEach(e1 => {e1.classList.remove('tutorial-active-target');
+    });
+    document.getElementById('tutorialOverlay').style.display = 'none';
+    document.getElementById('tutorialHighlight').classList.remove('is-ready');
+    document.getElementById('tutorialPopover').classList.remove('is-ready');
+    document.getElementById('tutorialFab').style.display = 'flex';
+
+    // Mark as seen so auto-lauch doesn't repeat
+    sessionStorage.setItem('tutorialSeen', 'true');
+}
+
+// Auto-launch on first visit
+if (!sessionStorage.getItem('tutorialSeen')) {
+    setTimeout(startTutorial, 800);
+}

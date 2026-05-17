@@ -3023,3 +3023,30 @@ grid-template-columns: 1fr;
   margin-top: 12px;
   line-height: 1.5;
 }
+
+.tutorial-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+  color: white;
+  box-shadow: var(--shadow-brand);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: transform 0.2 ease;
+}
+
+.tutorial-fab:hover {
+  transform: scale(1.1);
+}
+
+.tutorial-fab .material-symbols-outlined {
+  font-size: 26px;
+}

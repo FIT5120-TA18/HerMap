@@ -126,7 +126,7 @@
               id="openingBalanceInput"
               class="form-input"
               placeholder="e.g. 150"
-              min="50"
+              min="1"
               max="10000"
               style="font-size:15px;"
               oninput="clearBalanceError()"
@@ -135,7 +135,7 @@
           </div>
           <button class="reveal-btn-primary" style="width:100%" onclick="applyCustomisation()"> Update Chart </button>
         </div>
-      <div class="side-card">
+      <div class="side-card" id="yourNumbersCard">
           <h4 class="side-card-title">Your Numbers</h4>
           <div class="data-row">
             <span class="data-label">Credit type</span>
@@ -174,6 +174,9 @@
         </div>
       </div>
     </div>
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+      <span class="material-symbols-outlined">help</span>
+    </button>
   </main>
 
   <footer class="footer">
@@ -190,8 +193,23 @@
     </div>
   </footer>
 
+  <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+  <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+  <div class="tutorial-popover" id="tutorialPopover">
+    <div class="tutorial-step-indicator">
+      <span id="tutorialStepLabel">Step 1 of 5</span>
+    </div>
+    <h2 id="tutorialTitle"></h2>
+    <p id="tutorialDesc"></p>
+    <div class="tutorial-actions">
+      <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+      <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="{{ url_for('static', filename='js/debt_projection.js')}}"></script>
+  
 </body>
 
 </html>
