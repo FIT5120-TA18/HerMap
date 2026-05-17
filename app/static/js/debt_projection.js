@@ -220,6 +220,7 @@ function updateSidebar(stepIndex) {
     if (!month) return;
     const total = month.base + month.interest;
     document.getElementById('statCurrentTotal').textContent = `$${total.toLocaleString()}`;
+    document.getElementById('statOriginalAmount').textContent = `$${month.base.toLocaleString()}`;
 }
 
 // Boot the chart on page load
