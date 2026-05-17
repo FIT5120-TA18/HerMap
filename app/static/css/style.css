@@ -5020,3 +5020,228 @@ main.container {
   display: flex;
   flex-direction: column;
 } */
+.rent-gauge {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.gauge-wrap {
+  position: relative;
+  width: min(420px, 100%);
+  height: 240px;
+  margin: 0 auto;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 180px;
+  overflow: visible;
+}
+
+.gauge-segment {
+  fill: none;
+  stroke-width: 34;
+  stroke-linecap: butt;
+}
+
+.gauge-stable {
+  stroke: #8bb391;
+}
+
+.gauge-vulnerable {
+  stroke: #d9b844;
+}
+
+.gauge-risk {
+  stroke: #c48791;
+}
+
+.gauge-needle {
+  position: absolute;
+
+  left: 50%;
+  top: 35px;
+
+  width: 6px;
+  height: 105px;
+
+  background: #c9435c;
+  border-radius: 999px;
+
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(-90deg);
+
+  z-index: 10;
+  transition: transform 0.35s ease;
+}
+.gauge-center {
+  position: absolute;
+
+  left: 50%;
+  top: 140px;
+
+  width: 34px;
+  height: 34px;
+
+  transform: translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: #d84a63;
+  border: 6px solid var(--surface);
+
+  box-shadow: var(--shadow-sm);
+
+  z-index: 6;
+}
+
+.gauge-label {
+  position: absolute;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  color: var(--text-muted);
+
+  z-index: 20;
+}
+
+/* 0% left edge */
+.gauge-label-0 {
+  left: 7%;
+  top: 132px;
+}
+
+/* 30% marker */
+.gauge-label-30 {
+  left: 32%;
+  top: 58px;
+}
+
+/* 45% marker */
+.gauge-label-45 {
+  right: 32%;
+  top: 58px;
+}
+
+/* 75% right edge */
+.gauge-label-75 {
+  right: 4%;
+  top: 132px;
+}
+.gauge-value {
+  margin-top: -8px;
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.gauge-value .risk-text {
+  color: #d84a63;
+}
+
+.gauge-legend {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--divider);
+}
+
+.gauge-legend-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.gauge-legend-item strong {
+  display: block;
+  font-size: 15px;
+}
+
+.gauge-legend-item small {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-muted);
+}
+
+.legend-dot {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+}
+
+.legend-dot.stable {
+  background: #8bb391;
+}
+
+.legend-dot.vulnerable {
+  background: #d9b844;
+}
+
+.legend-dot.risk {
+  background: #c48791;
+}
+.gauge-tick {
+  position: absolute;
+
+  left: 50%;
+  top: -8px;
+
+  width: 3px;
+  height: 150px;
+
+  transform-origin: bottom center;
+
+  z-index: 8;
+  pointer-events: none;
+}
+
+.gauge-tick::before {
+  content: "";
+
+  position: absolute;
+  top: 10%;
+  left: 50%;
+
+  width: 3px;
+  height: 12px;
+
+  background: rgba(28, 23, 20, 0.55);
+
+  border-radius: 999px;
+
+  transform: translateX(-50%);
+}
+
+.gauge-tick-30 {
+  transform: translateX(-50%) rotate(-20.5deg);
+}
+
+.gauge-tick-45 {
+  transform: translateX(-50%) rotate(15deg);
+}
+.gauge-label-30 {
+  left: 35%;
+  top: -12px;
+}
+
+.gauge-label-45 {
+  right: 35%;
+  top: -12px;
+}
+
+.gauge-status-stable {
+  color: #5f8f66;
+}
+
+.gauge-status-vulnerable {
+  color: #b89319;
+}
+
+.gauge-status-risk {
+  color: #c15b6b;
+}

@@ -117,8 +117,32 @@ function renderSummaryCards(data) {
   surplusEl.textContent = `${signedMoney(data.surplus)}/wk`;
   surplusEl.className = "summary-value " + (data.surplus >= 0 ? "surplus-color" : "deficit-color");
 
-  document.getElementById("summaryRentPressure").textContent =
-    data.rent > 0 ? `${rentPct.toFixed(1)}%` : "No rent";
+  const rentPressureEl = document.getElementById("summaryRentPressure");
+
+if (data.rent > 0) {
+
+  let status = "Stable";
+  let statusClass = "gauge-status-stable";
+
+  if (rentPct > 45) {
+    status = "At Risk";
+    statusClass = "gauge-status-risk";
+
+  } else if (rentPct >= 30) {
+    status = "Vulnerable";
+    statusClass = "gauge-status-vulnerable";
+  }
+
+  rentPressureEl.innerHTML = `
+
+    <div class="summary-pressure-label ${statusClass}">
+      ${status}
+    </div>
+  `;
+
+} else {
+  rentPressureEl.textContent = "No rent";
+}
 }
 
 function renderVerdict(data) {
@@ -153,32 +177,78 @@ function renderVerdict(data) {
   }
 }
 
+// function renderPressureMeter(data) {
+//   const marker = document.getElementById("pressureMarker");
+//   const value = document.getElementById("pressureValue");
+
+//   if (!marker || !value) return;
+
+//   if (!data.rent || data.rent <= 0 || data.income <= 0) {
+//     marker.style.left = "0%";
+//     value.textContent = "No rent entered";
+//     return;
+//   }
+
+//   const rentPct = (data.rent / data.income) * 100;
+//   const markerLeft = Math.min(rentPct, 80);
+
+//   marker.style.left = `${markerLeft}%`;
+
+//   let status = "Stable";
+//   if (rentPct >= 45) {
+//     status = "At Risk";
+//   } else if (rentPct >= 30) {
+//     status = "Vulnerable";
+//   }
+
+//   value.textContent = `${rentPct.toFixed(1)}% of income on rent · ${status}`;
+// }
+
 function renderPressureMeter(data) {
-  const marker = document.getElementById("pressureMarker");
-  const value = document.getElementById("pressureValue");
+    const needle = document.getElementById("pressureMarker");
+    const value = document.getElementById("pressureValue");
+  
+    if (!needle || !value) return;
+  
+    if (!data.rent || data.rent <= 0 || data.income <= 0) {
+      needle.style.transform = "translateX(-50%) rotate(-90deg)";
+      value.textContent = "No rent entered";
+      return;
+    }
+  
+    const rentPct = (data.rent / data.income) * 100;
+  
+    let status = "Stable";
+  
+    if (rentPct > 45) {
+      status = "At Risk";
+    } else if (rentPct >= 30) {
+      status = "Vulnerable";
+    }
+  
+    const cappedPct = Math.min(rentPct, 75);
+    const angle = -90 + (cappedPct / 75) * 180;
+  
+    needle.style.transform = `translateX(-50%) rotate(${angle}deg)`;
+  
+    let statusClass = "gauge-status-stable";
 
-  if (!marker || !value) return;
-
-  if (!data.rent || data.rent <= 0 || data.income <= 0) {
-    marker.style.left = "0%";
-    value.textContent = "No rent entered";
-    return;
-  }
-
-  const rentPct = (data.rent / data.income) * 100;
-  const markerLeft = Math.min(rentPct, 80);
-
-  marker.style.left = `${markerLeft}%`;
-
-  let status = "Stable";
-  if (rentPct >= 45) {
-    status = "At Risk";
-  } else if (rentPct >= 30) {
-    status = "Vulnerable";
-  }
-
-  value.textContent = `${rentPct.toFixed(1)}% of income on rent · ${status}`;
+if (rentPct > 45) {
+  statusClass = "gauge-status-risk";
+} else if (rentPct >= 30) {
+  statusClass = "gauge-status-vulnerable";
 }
+
+value.innerHTML = `
+  <span class="${statusClass}">
+    ${rentPct.toFixed(1)}%
+  </span>
+  of income on rent ·
+  <span class="${statusClass}">
+    ${status}
+  </span>
+`;
+  }
 
 function renderTopDrivers(data) {
   const container = document.getElementById("topDrivers");

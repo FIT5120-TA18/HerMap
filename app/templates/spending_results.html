@@ -81,25 +81,58 @@
     </div>
 
     <section class="visual-insight-grid">
-      <div class="pressure-card">
-        <h3>Rent pressure meter</h3>
-        <p>See how much of your weekly income is going toward rent.</p>
-
-        <div class="pressure-meter" id="pressureMeter">
-          <div class="pressure-labels">
-            <span>Stable</span>
-            <span>Vulnerable</span>
-            <span>At Risk</span>
+        <div class="pressure-card">
+            <h3>Rent pressure meter</h3>
+            <p>See how much of your weekly income is going toward rent.</p>
+          
+            <div class="rent-gauge">
+              <div class="gauge-wrap">
+                <svg viewBox="0 0 300 170" class="gauge-svg">
+                  <path class="gauge-segment gauge-stable" d="M 40 140 A 110 110 0 0 1 113 36" />
+                  <path class="gauge-segment gauge-vulnerable" d="M 113 36 A 110 110 0 0 1 177 36" />
+                  <path class="gauge-segment gauge-risk" d="M 177 36 A 110 110 0 0 1 260 140" />
+                </svg>
+                <div class="gauge-tick gauge-tick-30"></div>
+<div class="gauge-tick gauge-tick-45"></div>
+          
+                <div class="gauge-needle" id="pressureMarker"></div>
+                <div class="gauge-center"></div>
+          
+                <span class="gauge-label gauge-label-0">0%</span>
+                <span class="gauge-label gauge-label-30">30%</span>
+                <span class="gauge-label gauge-label-45">45%</span>
+                <span class="gauge-label gauge-label-75">75%+</span>
+              </div>
+          
+              <div class="gauge-value" id="pressureValue">No rent entered</div>
+          
+              <div class="gauge-legend">
+                <div class="gauge-legend-item">
+                  <span class="legend-dot stable"></span>
+                  <div>
+                    <strong>Stable</strong>
+                    <small>&lt;30%</small>
+                  </div>
+                </div>
+          
+                <div class="gauge-legend-item">
+                  <span class="legend-dot vulnerable"></span>
+                  <div>
+                    <strong>Vulnerable</strong>
+                    <small>30–45%</small>
+                  </div>
+                </div>
+          
+                <div class="gauge-legend-item">
+                  <span class="legend-dot risk"></span>
+                  <div>
+                    <strong>At Risk</strong>
+                    <small>&gt;45%</small>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div class="pressure-track">
-            <div class="pressure-zone stable-zone"></div>
-            <div class="pressure-zone vulnerable-zone"></div>
-            <div class="pressure-zone risk-zone"></div>
-            <div class="pressure-marker" id="pressureMarker"></div>
-          </div>
-
-          <div class="pressure-value" id="pressureValue">No rent entered</div>
         </div>
 
       </div>
