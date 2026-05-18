@@ -79,9 +79,13 @@ function roundUpTo25 (value) {
 }
 
 function getStepSizeForMax (max) {
+    if (max <= 100) return 10;
     if (max <= 250) return 25;
-    if (max <= 1000) return 50;
-    return 100;
+    if (max <= 500) return 50;
+    if (max <= 1000) return 100;
+    if (max <= 2500) return 250;
+    if (max <= 7500) return 1000;
+    return 2000;
 }
 
 function initChart() {
@@ -590,3 +594,24 @@ function endTutorial() {
 if (!sessionStorage.getItem('tutorialSeen')) {
     setTimeout(startTutorial, 800);
 }
+
+document.getElementById('absDataBtn').addEventListener('click', () => {
+    document.getElementById('absModal').classList.remove('hidden');
+});
+document.getElementById('absModalClose').addEventListener('click', () => {
+    document.getElementById('absModal').classList.add('hidden');
+});
+document.getElementById('tosModalTrigger').addEventListener('click', () => {
+    document.getElementById('tosModal').classList.remove('hidden');
+});
+document.getElementById('tosModalClose').addEventListener('click', () => {
+    document.getElementById('tosModal').classList.add('hidden');
+});
+
+['absModal', 'tosModal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            e.currentTarget.classList.add('hidden');
+        }
+    });
+});
