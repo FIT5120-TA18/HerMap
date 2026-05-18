@@ -16,6 +16,11 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/tutorial.css') }}"
+    />
   </head>
 
   <body>
@@ -70,7 +75,7 @@
         Your industry: <strong id="yourIndustryName"></strong>
       </div>
 
-      <div class="career-grid">
+      <div class="career-grid" id="careerGrid">
         <!-- Left: Bar Chart -->
         <div class="career-card">
           <h3 class="career-card-title">Average Weekly Earnings by Industry</h3>
@@ -293,5 +298,41 @@
       src="{{ url_for('static', filename='js/career_aspirations.js') }}"
       defer
     ></script>
+    <!-- 1. Tutorial HTML -->
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+      <span class="material-symbols-outlined">help</span>
+    </button>
+    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 3</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+      </div>
+    </div>
+
+    <!-- 2. TUTORIAL_STEPS -->
+    <script>
+    const TUTORIAL_STEPS = [
+      {
+        targetId: 'chartArea',
+        title: 'Earnings by industry',
+        desc: 'Each bar shows the average weekly earnings for women working full-time in that industry. Tap any bar to see the full breakdown.'
+      },
+      {
+        targetId: 'defaultHint',
+        title: 'Industry detail panel',
+        desc: 'When you tap a bar, this panel shows the weekly and annual earnings for that industry, plus the gender pay gap sourced from WGEA.'
+      }
+    ];
+    </script>
+
+    <!-- 3. Tutorial engine -->
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

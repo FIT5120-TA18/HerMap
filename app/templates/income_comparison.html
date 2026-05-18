@@ -28,6 +28,7 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tutorial.css') }}" />
   </head>
 
   <body>
@@ -96,7 +97,7 @@
                   {% endif %}
                 </div>
 
-                <!-- SA3 Search Input -->
+                <!-- Suburb Search Input -->
                 <label
                   for="sa3Input"
                   style="
@@ -105,7 +106,7 @@
                     font-weight: 600;
                   "
                 >
-                  Statistical Area Level 3 (SA3)
+                  Suburb
                 </label>
 
                 <div class="lga-input-row">
@@ -113,17 +114,9 @@
                     type="text"
                     id="sa3Input"
                     class="budget-input"
-                    placeholder="Search SA3 area..."
+                    placeholder="Search Suburb..."
                     autocomplete="off"
                   />
-
-                  <button
-                    type="button"
-                    id="sa3DropdownBtn"
-                    class="lga-dropdown-btn"
-                  >
-                    ▼
-                  </button>
                 </div>
 
                 <!-- Hidden Selected SA3 Values -->
@@ -135,25 +128,6 @@
               </div>
             </div>
 
-            <!-- How to Use Card -->
-            <div class="rent-filter-card">
-              <p class="filter-title">ℹ️ How to Use</p>
-
-              <p
-                style="
-                  margin: 0;
-                  font-size: 13px;
-                  color: var(--text-muted);
-                  line-height: 1.6;
-                "
-              >
-                1. View Victorian SA3 areas on the map<br />
-                2. Areas are coloured by comparing SA3 income with your
-                estimated annual income<br />
-                3. Hover over an area to see its SA3 name and income<br />
-                4. Click an SA3 area to view its income details and trend
-              </p>
-            </div>
           </aside>
 
           <!-- Right Main Content -->
@@ -161,11 +135,11 @@
             <!-- SA3 Income Map Card -->
             <div class="map-card">
               <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600">
-                Victorian SA3 Areas - Young Female Annual Income
+                Victorian Suburb Areas - Young Female Annual Income
               </h2>
 
               <div id="incomeMapContainer" class="map-placeholder">
-                <span>Loading Victorian SA3 income map...</span>
+                <span>Loading Victorian Suburb income map...</span>
               </div>
             </div>
 
@@ -449,6 +423,52 @@
       };
     </script>
 
+    <!-- 1. Tutorial HTML -->
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+      <span class="material-symbols-outlined">help</span>
+    </button>
+    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 5</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+      </div>
+    </div>
+
+    <!-- 2. TUTORIAL_STEPS -->
+    <script>
+    const TUTORIAL_STEPS = [
+      {
+        targetId: 'sa3Input',
+        title: 'Find your area',
+        desc: 'Search for your suburb or region. This filters the map and comparisons to your local area.'
+      },
+      {
+        targetId: 'incomeMapContainer',
+        title: 'Income map',
+        desc: 'Areas are coloured by average income. Darker means higher earners. Tap any area to see the detail breakdown.'
+      },
+      {
+        targetId: 'sa3DetailPanel',
+        title: 'Area detail panel',
+        desc: 'Tap a region on the map to see the average income, how it compares to your income, and whether it\'s trending up or down.'
+      },
+      {
+        targetId: 'profileLocationInput',
+        title: 'Your profile location',
+        desc: 'This is pulled from your profile. If it looks wrong, go back to the profile builder to update it.'
+      }
+    ];
+    </script>
+
+    <!-- 3. tutorial.js -->
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
     <!-- Income Comparison JS -->
     <script src="{{ url_for('static', filename='js/income_comparison.js') }}"></script>
   </body>

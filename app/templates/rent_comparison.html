@@ -1,293 +1,468 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rent Comparison - Hermap</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Rent Comparison - Hermap</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <!-- Map Library -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- Chart.js for trend visualization -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-  
-</head>
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Map Library -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <!-- Chart.js for trend visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/tutorial.css') }}"
+    />
+  </head>
 
-<body>
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <div class="nav-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-        </a>
-      </div>
-      <div class="nav-links">
-        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="rent-comparison-container">
-    <div class="rent-comparison-content">
-      <!-- Header -->
-      <div class="rent-header">
-        <div class="rent-header-left">
-          <h1>Explore Affordable <span class="gradient-text">Living Options</span></h1>
-          <p>Compare rental prices across Local Government Areas</p>
+  <body>
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
         </div>
-        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">Back to Dashboard</a>
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+        </div>
       </div>
+    </nav>
 
-      <!-- Main Layout -->
-      <div class="rent-comparison-grid">
-        <!-- Sidebar Filters -->
-        <aside class="rent-sidebar">
-          <!-- Location Search -->
-          <div class="rent-filter-card">
-            <p class="filter-title">Search Location</p>
-            <div class="info-message">
-              Enter your suburb or postcode to explore rental prices in your area.
-            </div>
-
-            <div class="budget-input-group">
-              <label for="locationSearchInput" style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                Suburb or Postcode
-              </label>
-              <input
-                type="text"
-                id="locationSearchInput"
-                class="budget-input"
-                placeholder="e.g. Clayton or 3168"
-                autocomplete="off"
-              >
-              <div id="locationSearchSuggestions" class="location-suggestions"></div>
-              <input type="hidden" id="selectedLgaInput">
-              <input type="hidden" id="selectedLgacodeInput">
-              <div id="resolvedLgaDisplay" class="profile-location-display" style="display:none; margin-top:8px;"></div>
-            </div>
+    <main class="rent-comparison-container">
+      <div class="rent-comparison-content">
+        <!-- Header -->
+        <div class="rent-header">
+          <div class="rent-header-left">
+            <h1>
+              Explore Affordable
+              <span class="gradient-text">Living Options</span>
+            </h1>
+            <p>Compare rental prices across Local Government Areas</p>
           </div>
+          <a href="{{ url_for('main.dashboard') }}" class="back-home-btn"
+            >Back to Dashboard</a
+          >
+        </div>
 
-          <!-- Budget Filter -->
-          <div class="rent-filter-card">
-            <p class="filter-title">Filter by Budget</p>
-            <div class="info-message">
-              Enter your weekly rent budget to highlight affordable areas.
-            </div>
-            <div class="budget-input-group">
-              <label for="budgetInput" style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                Weekly Budget ($)
-              </label>
-              <input type="number" id="budgetInput" class="budget-input" placeholder="e.g., 300" min="0" step="10">
-              <button class="budget-button" id="filterButton">See Suburbs Within Budget</button>
-            </div>
+        <!-- Main Layout -->
+        <div class="rent-comparison-grid">
+          <!-- Sidebar Filters -->
+          <aside class="rent-sidebar">
+            <!-- Location Search -->
+            <div class="rent-filter-card">
+              <p class="filter-title">Search Location</p>
+              <div class="info-message">
+                Enter your suburb or postcode to explore rental prices in your
+                area.
+              </div>
 
-            <div id="mapModeBox" class="map-mode-box">
-              <strong id="mapModeTitle">Map mode: Rent View</strong>
-              <p id="mapModeText">Suburbs are coloured by weekly rent.</p>
-<div id="mapModeLegend" class="map-mode-legend"></div>
-            </div>
-
-            <div class="budget-legend">
-              <strong id="mapModeTitle">Bubble Chart: Rent View</strong>
-              <div class="budget-legend-item">
-                <span class="budget-legend-dot affordable"></span>
-                <span>Within budget</span>
-              </div>
-            
-              <div class="budget-legend-item">
-                <span class="budget-legend-dot unaffordable"></span>
-                <span>Above budget</span>
-              </div>
-            
-            </div>
-          </div>
-
-          <!-- Info Card -->
-          <div class="rent-filter-card">
-            <p class="filter-title">ℹ️ How to Use</p>
-            <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-              1. Search your suburb or postcode to load your local area<br>
-              2. Use the map to compare suburb rent within that LGA<br>
-              3. Enter a budget and click <strong>See Suburbs Within Budget</strong> to highlight affordable suburbs<br>
-              4. Click any LGA on the map to view rent, affordability, and rent trends
-            </p>
-          </div>
-        </aside>
-
-        <!-- Main Content -->
-        <div class="rent-main">
-          <!-- Map Section -->
-          <div class="map-card">
-            <h2 id="mapTitle" style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">Explore Rental Prices by Suburb</h2>
-            <div id="mapContainer" class="map-placeholder">
-              <div class="map-loading">
-                <div class="map-spinner"></div>
-              <span>Select a LGA to view suburbs on the map</span>
-            </div>
-            </div>
-          </div>
-          <button id="resetMapBtn" class="reset-map-btn">
-            Reset to my area
-          </button>
-
-          <div class="bubble-chart-card">
-            <div class="bubble-chart-header">
-              <div>
-                <h2>Compare suburbs by affordability and access</h2>
-                <p>Choose what to compare. The chart starts with suburbs in your selected LGA.</p>
-              </div>
-            </div>
-          
-            <div class="bubble-choice-panel">
-              <div class="bubble-choice-section">
-                <div class="bubble-choice-heading">
-                  <h3>🏠 Housing Cost</h3>
-                  <p>Choose how affordability is shown on the chart.</p>
-                </div>
-            
-                <div class="bubble-choice-buttons" data-target="bubbleXAxis">
-                  <button type="button" class="bubble-choice-btn active" data-value="rent">Weekly rent</button>
-                  <button type="button" class="bubble-choice-btn" data-value="rent_income_pct">% income on rent</button>
-                  <button type="button" class="bubble-choice-btn" data-value="rent_growth_pct">Rent growth</button>
-                </div>
-            
-                <input type="hidden" id="bubbleXAxis" value="rent">
-              </div>
-            
-              <div class="bubble-choice-section">
-                <div class="bubble-choice-heading">
-                  <h3>🚉 Essential Access</h3>
-                  <p>Choose which daily need matters most.</p>
-                </div>
-            
-                <div class="bubble-choice-buttons" data-target="bubbleYAxis">
-                  <button type="button" class="bubble-choice-btn" data-value="supermarket_count">Supermarkets</button>
-                  <button type="button" class="bubble-choice-btn active" data-value="train_station_count">Train stations</button>
-                  <button type="button" class="bubble-choice-btn" data-value="hospital_count">Hospitals</button>
-                  <button type="button" class="bubble-choice-btn" data-value="pharmacy_count">Pharmacies</button>
-                </div>
-            
-                <input type="hidden" id="bubbleYAxis" value="train_station_count">
-              </div>
-            
-              <div class="bubble-choice-section">
-                <div class="bubble-choice-heading">
-                  <h3>🌿 Lifestyle Focus</h3>
-                  <p>Choose what controls the bubble size.</p>
-                </div>
-            
-                <div class="bubble-choice-buttons" data-target="bubbleSizeMetric">
-                  <button type="button" class="bubble-choice-btn" data-value="cafes_count">Cafes</button>
-                  <button type="button" class="bubble-choice-btn" data-value="gyms_count">Gyms</button>
-                  <button type="button" class="bubble-choice-btn" data-value="libraries_count">Libraries</button>
-                  <button type="button" class="bubble-choice-btn active" data-value="parks_count">Parks</button>
-                </div>
-            
-                <input type="hidden" id="bubbleSizeMetric" value="parks_count">
-              </div>
-            </div>
-            <div class="bubble-add-suburb">
-              <div class="bubble-add-title">Compare another suburb</div>
-              <div class="bubble-add-description">
-                Search and add a suburb outside your selected LGA. Added suburbs appear in blue on the chart.
-              </div>
-            
-              <div class="bubble-add-row">
+              <div class="budget-input-group">
+                <label
+                  for="locationSearchInput"
+                  style="
+                    font-size: 12px;
+                    color: var(--text-muted);
+                    font-weight: 600;
+                  "
+                >
+                  Suburb or Postcode
+                </label>
                 <input
                   type="text"
-                  id="bubbleSuburbSearch"
-                  class="budget-input bubble-suburb-search"
-                  placeholder="Search suburb or postcode"
+                  id="locationSearchInput"
+                  class="budget-input"
+                  placeholder="e.g. Clayton or 3168"
                   autocomplete="off"
+                />
+                <div
+                  id="locationSearchSuggestions"
+                  class="location-suggestions"
+                ></div>
+                <input type="hidden" id="selectedLgaInput" />
+                <input type="hidden" id="selectedLgacodeInput" />
+                <div
+                  id="resolvedLgaDisplay"
+                  class="profile-location-display"
+                  style="display: none; margin-top: 8px"
+                ></div>
+              </div>
+            </div>
+
+            <!-- Budget Filter -->
+            <div class="rent-filter-card">
+              <p class="filter-title">Filter by Budget</p>
+              <div class="info-message">
+                Enter your weekly rent budget to highlight affordable areas.
+              </div>
+              <div class="budget-input-group">
+                <label
+                  for="budgetInput"
+                  style="
+                    font-size: 12px;
+                    color: var(--text-muted);
+                    font-weight: 600;
+                  "
                 >
-            
-                <button type="button" id="clearAddedSuburbsBtn" class="reset-map-btn">
-                  Clear added suburbs
+                  Weekly Budget ($)
+                </label>
+                <input
+                  type="number"
+                  id="budgetInput"
+                  class="budget-input"
+                  placeholder="e.g., 300"
+                  min="0"
+                  step="10"
+                />
+                <button class="budget-button" id="filterButton">
+                  See Suburbs Within Budget
                 </button>
               </div>
-            
-              <div id="bubbleSuburbSuggestions" class="location-suggestions"></div>
-            
-              <div id="addedSuburbTags" class="added-suburb-tags"></div>
-            </div>
-          
-            <div class="bubble-chart-wrapper">
-              <canvas id="suburbBubbleChart"></canvas>
-            </div>
-            <div class="bubble-chart-insights">
-              <h3>Key insights</h3>
-            
-              <ul id="bubbleChartInsights">
-                <li>Loading insights...</li>
-              </ul>
-            </div>
-          </div>
-        
-          
-          <!-- LGA Detail Panel -->
-          <div id="lgaDetailPanel" class="lga-detail-panel hidden">
-            <div class="lga-detail-header">
-              <h2 class="lga-detail-title" id="lgaDetailName">--</h2>
-              <button class="close-detail-btn" id="closeDetailBtn">Close</button>
-            </div>
 
-            <div class="lga-detail-content">
-              <div class="detail-stat">
-                <div class="detail-stat-label">Average 1-Bedroom Rent</div>
-                <p class="detail-stat-value" id="detailRentPrice">--</p>
-                <p class="detail-stat-sublabel">per week</p>
+              <div id="mapModeBox" class="map-mode-box">
+                <strong id="mapModeTitle">Map mode: Rent View</strong>
+                <p id="mapModeText">Suburbs are coloured by weekly rent.</p>
+                <div id="mapModeLegend" class="map-mode-legend"></div>
               </div>
 
-              <div class="detail-stat">
-                <div class="detail-stat-label">% of Your Income</div>
-                <p class="detail-stat-value" id="detailAffordability">--</p>
-                <p class="detail-stat-sublabel" id="detailAffordabilityLabel">--</p>
+              <div class="budget-legend">
+                <strong id="mapModeTitle">Bubble Chart: Rent View</strong>
+                <div class="budget-legend-item">
+                  <span class="budget-legend-dot affordable"></span>
+                  <span>Within budget</span>
+                </div>
+
+                <div class="budget-legend-item">
+                  <span class="budget-legend-dot unaffordable"></span>
+                  <span>Above budget</span>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main Content -->
+          <div class="rent-main">
+            <!-- Map Section -->
+            <div class="map-card">
+              <h2
+                id="mapTitle"
+                style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600"
+              >
+                Explore Rental Prices by Suburb
+              </h2>
+              <div id="mapContainer" class="map-placeholder">
+                <div class="map-loading">
+                  <div class="map-spinner"></div>
+                  <span>Select a LGA to view suburbs on the map</span>
+                </div>
+              </div>
+            </div>
+            <button id="resetMapBtn" class="reset-map-btn">
+              Reset to my area
+            </button>
+
+            <div class="bubble-chart-card">
+              <div class="bubble-chart-header">
+                <div>
+                  <h2>Compare suburbs by affordability and access</h2>
+                  <p>
+                    Choose what to compare. The chart starts with suburbs in
+                    your selected LGA.
+                  </p>
+                </div>
               </div>
 
-              <div class="detail-stat">
-                <div class="detail-stat-label">Affordability</div>
-                <p style="margin: 0; padding: 8px 0;">
-                  <span class="affordability-badge" id="affordabilityBadge">Calculating...</span>
+              <div class="bubble-choice-panel">
+                <div class="bubble-choice-section">
+                  <div class="bubble-choice-heading">
+                    <h3>🏠 Housing Cost</h3>
+                    <p>Choose how affordability is shown on the chart.</p>
+                  </div>
+
+                  <div class="bubble-choice-buttons" data-target="bubbleXAxis">
+                    <button
+                      type="button"
+                      class="bubble-choice-btn active"
+                      data-value="rent"
+                    >
+                      Weekly rent
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="rent_income_pct"
+                    >
+                      % income on rent
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="rent_growth_pct"
+                    >
+                      Rent growth
+                    </button>
+                  </div>
+
+                  <input type="hidden" id="bubbleXAxis" value="rent" />
+                </div>
+
+                <div class="bubble-choice-section">
+                  <div class="bubble-choice-heading">
+                    <h3>🚉 Essential Access</h3>
+                    <p>Choose which daily need matters most.</p>
+                  </div>
+
+                  <div class="bubble-choice-buttons" data-target="bubbleYAxis">
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="supermarket_count"
+                    >
+                      Supermarkets
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn active"
+                      data-value="train_station_count"
+                    >
+                      Train stations
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="hospital_count"
+                    >
+                      Hospitals
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="pharmacy_count"
+                    >
+                      Pharmacies
+                    </button>
+                  </div>
+
+                  <input
+                    type="hidden"
+                    id="bubbleYAxis"
+                    value="train_station_count"
+                  />
+                </div>
+
+                <div class="bubble-choice-section">
+                  <div class="bubble-choice-heading">
+                    <h3>🌿 Lifestyle Focus</h3>
+                    <p>Choose what controls the bubble size.</p>
+                  </div>
+
+                  <div
+                    class="bubble-choice-buttons"
+                    data-target="bubbleSizeMetric"
+                  >
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="cafes_count"
+                    >
+                      Cafes
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="gyms_count"
+                    >
+                      Gyms
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn"
+                      data-value="libraries_count"
+                    >
+                      Libraries
+                    </button>
+                    <button
+                      type="button"
+                      class="bubble-choice-btn active"
+                      data-value="parks_count"
+                    >
+                      Parks
+                    </button>
+                  </div>
+
+                  <input
+                    type="hidden"
+                    id="bubbleSizeMetric"
+                    value="parks_count"
+                  />
+                </div>
+              </div>
+              <div class="bubble-add-suburb">
+                <div class="bubble-add-title">Compare another suburb</div>
+                <div class="bubble-add-description">
+                  Search and add a suburb outside your selected LGA. Added
+                  suburbs appear in blue on the chart.
+                </div>
+
+                <div class="bubble-add-row">
+                  <input
+                    type="text"
+                    id="bubbleSuburbSearch"
+                    class="budget-input bubble-suburb-search"
+                    placeholder="Search suburb or postcode"
+                    autocomplete="off"
+                  />
+
+                  <button
+                    type="button"
+                    id="clearAddedSuburbsBtn"
+                    class="reset-map-btn"
+                  >
+                    Clear added suburbs
+                  </button>
+                </div>
+
+                <div
+                  id="bubbleSuburbSuggestions"
+                  class="location-suggestions"
+                ></div>
+
+                <div id="addedSuburbTags" class="added-suburb-tags"></div>
+              </div>
+
+              <div class="bubble-chart-wrapper">
+                <canvas id="suburbBubbleChart"></canvas>
+              </div>
+              <div class="bubble-chart-insights">
+                <h3>Key insights</h3>
+
+                <ul id="bubbleChartInsights">
+                  <li>Loading insights...</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- LGA Detail Panel -->
+            <div id="lgaDetailPanel" class="lga-detail-panel hidden">
+              <div class="lga-detail-header">
+                <h2 class="lga-detail-title" id="lgaDetailName">--</h2>
+                <button class="close-detail-btn" id="closeDetailBtn">
+                  Close
+                </button>
+              </div>
+
+              <div class="lga-detail-content">
+                <div class="detail-stat">
+                  <div class="detail-stat-label">Average 1-Bedroom Rent</div>
+                  <p class="detail-stat-value" id="detailRentPrice">--</p>
+                  <p class="detail-stat-sublabel">per week</p>
+                </div>
+
+                <div class="detail-stat">
+                  <div class="detail-stat-label">% of Your Income</div>
+                  <p class="detail-stat-value" id="detailAffordability">--</p>
+                  <p class="detail-stat-sublabel" id="detailAffordabilityLabel">
+                    --
+                  </p>
+                </div>
+
+                <div class="detail-stat">
+                  <div class="detail-stat-label">Affordability</div>
+                  <p style="margin: 0; padding: 8px 0">
+                    <span class="affordability-badge" id="affordabilityBadge"
+                      >Calculating...</span
+                    >
+                  </p>
+                </div>
+              </div>
+
+              <!-- Trend Section -->
+              <div class="trend-section">
+                <p class="trend-title">📈 Rental Trends</p>
+                <p
+                  style="
+                    font-size: 13px;
+                    color: var(--text-muted);
+                    margin: 0 0 16px 0;
+                  "
+                >
+                  How 1-bedroom rent has changed over the past decade
                 </p>
-              </div>
-            </div>
 
-            <!-- Trend Section -->
-            <div class="trend-section">
-              <p class="trend-title">📈 Rental Trends</p>
-              <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 16px 0;">
-                How 1-bedroom rent has changed over the past decade
-              </p>
+                <div style="margin-bottom: 16px">
+                  <div
+                    class="detail-stat-label"
+                    style="text-align: left; margin-bottom: 8px"
+                  >
+                    Trend Status
+                  </div>
+                  <span class="affordability-badge" id="trendStatusBadge"
+                    >--</span
+                  >
+                </div>
 
-              <div style="margin-bottom: 16px;">
-                <div class="detail-stat-label" style="text-align: left; margin-bottom: 8px;">Trend Status</div>
-                <span class="affordability-badge" id="trendStatusBadge">--</span>
-              </div>
+                <div
+                  class="chart-container"
+                  style="height: 300px; margin-bottom: 16px"
+                >
+                  <canvas id="trendChart"></canvas>
+                </div>
 
-              <div class="chart-container" style="height: 300px; margin-bottom: 16px;">
-                <canvas id="trendChart"></canvas>
-              </div>
-
-              <div style="background: var(--surface-offset); border-radius: var(--radius-md); padding: 16px; margin-top: 16px;">
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;" id="trendInsight">
-                  Loading trend analysis...
-                </p>
+                <div
+                  style="
+                    background: var(--surface-offset);
+                    border-radius: var(--radius-md);
+                    padding: 16px;
+                    margin-top: 16px;
+                  "
+                >
+                  <p
+                    style="
+                      margin: 0;
+                      font-size: 13px;
+                      color: var(--text-muted);
+                      line-height: 1.6;
+                    "
+                    id="trendInsight"
+                  >
+                    Loading trend analysis...
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-        </a>
-      </div>
-      <div class="nav-links">
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+        <div class="nav-links">
           <button
             type="button"
             class="nav-link footer-modal-link"
@@ -302,11 +477,11 @@
           >
             Terms of Service
           </button>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-      <!-- ABS Data Sources Popup -->
+    <!-- ABS Data Sources Popup -->
     <div class="modal-overlay hidden" id="absModal">
       <div class="modal-box">
         <button
@@ -398,21 +573,89 @@
       </div>
     </div>
 
-  <!-- Leaflet Map Library -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet Map Library -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Main Script -->
-  <!-- <script src="{{ url_for('static', filename='js/rent_comparison.js') }}"></script> -->
-  <script>
-    window.userProfileData = {
-      locality: "{{ profile_data.get('locality', '') }}",
-      postcode: "{{ profile_data.get('postcode', '') }}",
-      income: parseInt("{{ profile_data.get('income', '') }}") || null,
-      rent: parseInt("{{ profile_data.get('rent', '') }}") || null
-    };
-  </script>
-  
-  <script src="{{ url_for('static', filename='js/rent_comparison.js') }}"></script>
-</body>
+    <!-- Main Script -->
+    <!-- <script src="{{ url_for('static', filename='js/rent_comparison.js') }}"></script> -->
+    <script>
+      window.userProfileData = {
+        locality: "{{ profile_data.get('locality', '') }}",
+        postcode: "{{ profile_data.get('postcode', '') }}",
+        income: parseInt("{{ profile_data.get('income', '') }}") || null,
+        rent: parseInt("{{ profile_data.get('rent', '') }}") || null,
+      };
+    </script>
 
+    <script src="{{ url_for('static', filename='js/rent_comparison.js') }}"></script>
+
+    <!-- 1. Tutorial HTML -->
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
+      <span class="material-symbols-outlined">help</span>
+    </button>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 5</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. TUTORIAL_STEPS -->
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: "locationSearchInput",
+          title: "Search your area",
+          desc: "Type a suburb or postcode to zoom the map to your area and see local rent prices.",
+        },
+        {
+          targetId: "budgetInput",
+          title: "Set your budget",
+          desc: "Enter your weekly rent budget and tap the button to highlight only the suburbs you can afford.",
+        },
+        {
+          targetId: "mapContainer",
+          title: "Explore the map",
+          desc: "Suburbs are coloured by weekly rent. Tap any suburb to see detailed rent data, affordability, and trend information.",
+        },
+        {
+          targetId: "suburbBubbleChart",
+          title: "Bubble chart view",
+          desc: "Switch to the bubble chart to compare suburbs across rent, transport, and green space all at once.",
+        },
+        {
+          targetId: "lgaDetailPanel",
+          title: "Suburb detail panel",
+          desc: "When you tap a suburb on the map, the full breakdown appears here — rent, affordability rating, and price trend.",
+        },
+      ];
+    </script>
+
+    <!-- 3. tutorial.js -->
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
+  </body>
 </html>

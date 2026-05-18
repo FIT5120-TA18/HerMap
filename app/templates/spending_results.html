@@ -18,10 +18,21 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
 
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/tutorial.css') }}"
+    />
+
     <!-- Spending CSS -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/spending_tracker.css') }}"
+    />
+
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
     />
 
     <!-- Chart.js -->
@@ -108,7 +119,7 @@
           <!-- LEFT COLUMN -->
           <div class="results-left-column">
             <!-- Rent Pressure Meter -->
-            <div class="pressure-card">
+            <div class="pressure-card" id="rentPressure">
               <h3>Rent pressure meter</h3>
               <p>See how much of your weekly income is going toward rent.</p>
 
@@ -174,7 +185,7 @@
             </div>
 
             <!-- Spending Breakdown -->
-            <div class="chart-card">
+            <div class="chart-card" id="spendingDonutChart">
               <h3>Spending breakdown</h3>
               <p>
                 Blue shows essential spending. Purple shows flexible spending.
@@ -233,7 +244,7 @@
 
           <div id="benchmarkWarning" class="benchmark-warning"></div>
 
-          <div class="benchmark-layout">
+          <div class="benchmark-layout" id="benchmarkInfo">
             <div class="benchmark-chart-wrap">
               <canvas id="benchmarkChart"></canvas>
             </div>
@@ -256,7 +267,7 @@
         </section>
 
         <!-- Next Step -->
-        <section class="action-card">
+        <section class="action-card" id="actionItems">
           <h3>Next step</h3>
 
           <p id="nextStepText"></p>
@@ -274,5 +285,74 @@
     </main>
 
     <script src="{{ url_for('static', filename='js/spending_results.js') }}"></script>
+
+    <!-- 1. Tutorial HTML -->
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
+      <span class="material-symbols-outlined">help</span>
+    </button>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 6</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. TUTORIAL_STEPS -->
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: "rentPressure",
+          title: "Rent pressure",
+          desc: "This shows what percentage of your income goes to rent. Above 30% is considered vulnerable — above 45% is at risk.",
+        },
+        {
+          targetId: "spendingDonutChart",
+          title: "Spending breakdown",
+          desc: "Blue shows your essential costs, purple shows flexible spending. The bigger the slice, the more it's taking from your weekly income.",
+        },
+        {
+          targetId: "verdictCard",
+          title: "Your verdict",
+          desc: "This card gives you a plain-language summary of your financial position and highlights your biggest spending drivers.",
+        },
+        {
+          targetId: "benchmarkInfo",
+          title: "Victorian benchmark comparison",
+          desc: "See how your spending pattern compares to the average Victorian household. Categories where you're spending more than average are flagged.",
+        },
+        {
+          targetId: "actionItems",
+          title: "Next steps",
+          desc: "Based on your results, these are the most relevant next steps and tools to help you improve your position.",
+        },
+      ];
+    </script>
+
+    <!-- 3. Tutorial engine -->
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

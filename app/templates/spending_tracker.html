@@ -10,7 +10,6 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
       rel="stylesheet"
     />
-
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
@@ -18,6 +17,15 @@
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/spending_tracker.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/tutorial.css') }}"
+    />
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
     />
   </head>
 
@@ -191,5 +199,74 @@
     </script>
 
     <script src="{{ url_for('static', filename='js/spending_tracker.js') }}"></script>
+
+    <!-- 1. Tutorial HTML -->
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
+      <span class="material-symbols-outlined">help</span>
+    </button>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 5</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. TUTORIAL_STEPS -->
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: "incomeInput",
+          title: "Your weekly income",
+          desc: "Enter what you actually take home each week after tax. This is your starting number for everything else.",
+        },
+        {
+          targetId: "rentBannerInput",
+          title: "Your weekly rent",
+          desc: "Enter what you pay in rent each week. If you live at home for free, enter 0.",
+        },
+        {
+          targetId: "addEssentialRow",
+          title: "Essential expenses",
+          desc: "These are your must-pay costs - transport, groceries, utilities. Tap each card to enter your weekly spend.",
+        },
+        {
+          targetId: "addNonEssentialRow",
+          title: "Non-essential spending",
+          desc: "These are lifestyle costs - eating out, subscriptions, entertainment. Small amounts add up fast.",
+        },
+        {
+          targetId: "checkPositionBtn",
+          title: "Check your position",
+          desc: "Tap here once everything is filled in to see your weekly surplus or deficit and how you compare to ABS benchmarks.",
+        },
+      ];
+    </script>
+
+    <!-- 3. tutorial.js -->
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

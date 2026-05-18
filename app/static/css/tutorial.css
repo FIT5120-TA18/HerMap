@@ -1,0 +1,206 @@
+/* ============================================================
+   tutorial.css — Shared spotlight tutorial styles
+   Used by: dashboard, forecast, rent_comparison,
+            spending_tracker, income_comparison, debt_projection
+   ============================================================ */
+
+/* FAB (floating action button) that re-opens the tutorial */
+.tutorial-fab {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+  color: white;
+  box-shadow: var(--shadow-brand);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: transform 0.2s ease;
+}
+
+.tutorial-fab:hover {
+  transform: scale(1.1);
+}
+
+.tutorial-fab .material-symbols-outlined {
+  font-size: 26px;
+}
+
+/* Dim overlay that sits behind the highlight box */
+.tutorial-spotlight-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  display: none;
+  pointer-events: none;
+}
+
+.tutorial-spotlight-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 23, 20, 0.55);
+  pointer-events: none;
+}
+
+/* Cutout / highlight box around the active element */
+.tutorial-highlight-box {
+  position: fixed;
+  z-index: 20002;
+  border: none;
+  border-radius: 22px;
+  background: transparent;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  opacity: 0;
+}
+
+.tutorial-highlight-box.is-ready {
+  opacity: 1;
+}
+
+/* The element currently being spotlighted */
+.tutorial-active-target {
+  position: relative;
+  z-index: 20001 !important;
+  filter: none !important;
+  opacity: 1 !important;
+  isolation: isolate;
+}
+
+/* Popover card */
+.tutorial-popover {
+  position: fixed;
+  z-index: 20003;
+  width: min(360px, calc(100vw - 32px));
+  min-height: 280px;
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(28, 23, 20, 0.24);
+  padding: 26px;
+  margin-top: -4px;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.tutorial-popover.is-ready {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Step pill */
+.tutorial-step-indicator {
+  margin-bottom: 14px;
+}
+
+.tutorial-step-indicator span {
+  display: inline-flex;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(232, 84, 106, 0.08);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Popover typography */
+.tutorial-popover h2 {
+  margin: 0 0 10px;
+  font-family: var(--font-heading);
+  font-size: 26px;
+  line-height: 1.15;
+  color: var(--text-main);
+}
+
+.tutorial-popover p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* Action row */
+.tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.tutorial-skip-btn,
+.tutorial-next-btn {
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  font-weight: 800;
+  font-size: 14px;
+  padding: 11px 16px;
+  transition: all 0.25s ease;
+}
+
+.tutorial-skip-btn {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border: 1px solid var(--divider);
+}
+
+.tutorial-next-btn {
+  background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+  color: #ffffff;
+  box-shadow: var(--shadow-brand);
+}
+
+/* Close button (hidden by default — kept for flexibility) */
+.tutorial-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--divider);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: none !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutorial-close:hover {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Mobile */
+@media (max-width: 520px) {
+  .tutorial-popover {
+    left: 16px !important;
+    right: 16px !important;
+    width: auto;
+  }
+
+  .tutorial-actions {
+    flex-direction: column-reverse;
+  }
+
+  .tutorial-skip-btn,
+  .tutorial-next-btn {
+    width: 100%;
+  }
+}

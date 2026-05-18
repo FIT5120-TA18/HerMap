@@ -7,21 +7,13 @@
     <title>Dashboard</title>
 
     <!-- Fonts -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet"/>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
     <!-- Styles -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tutorial.css') }}" />
   </head>
 
   <body>
@@ -63,7 +55,7 @@
         <p>Click on the graph to learn more</p>
       </div> -->
 
-        <div class="insights-grid">
+        <div class="insights-grid" id="insightsGrid">
           <div
             class="insight-graph-card feature-card dashboard-feature-tile card-bg"
             style="
@@ -303,7 +295,7 @@
         </p>
 
         <p>
-          The ABS is Australia’s national statistical agency. It collects and
+          The ABS is Australia's national statistical agency. It collects and
           publishes official data about population, housing, work, income, cost
           of living, and other areas that help explain how people live across
           Australia.
@@ -450,5 +442,42 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <!-- Tutorial FAB -->
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+      <span class="material-symbols-outlined">help</span>
+    </button>
+
+    <!-- Tutorial overlay + popover -->
+    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 2</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+      </div>
+    </div>
+
+    <!-- Tutorial steps -->
+    <script>
+    const TUTORIAL_STEPS = [
+      {
+        targetId: 'typewriter-text',
+        title: 'Your financial snapshot',
+        desc: 'This is your personalised summary based on the details you entered. It updates every time you rebuild your profile.'
+      },
+      {
+        targetId: 'insightsGrid',
+        title: 'Your insight modules',
+        desc: 'Each card takes you to a different part of HerMap. Tap any tile to explore income, rent, spending, debt, careers, or financial literacy.'
+      }
+    ];
+    </script>
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>
