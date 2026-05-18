@@ -148,7 +148,7 @@
             >
             Data sourced from the
             <a
-              href="https://www.wgea.gov.au/data-statistics/gender-pay-gaps"
+              href="https://www.wgea.gov.au/data-statistics/gender-pay-gaps-report"
               target="_blank"
               rel="noopener"
               >WGEA Employer Gender Pay Gaps</a
@@ -299,10 +299,19 @@
       defer
     ></script>
     <!-- 1. Tutorial HTML -->
-    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
       <span class="material-symbols-outlined">help</span>
     </button>
-    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
     <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
     <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
@@ -311,25 +320,33 @@
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
       <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
-        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
       </div>
     </div>
 
     <!-- 2. TUTORIAL_STEPS -->
     <script>
-    const TUTORIAL_STEPS = [
-      {
-        targetId: 'chartArea',
-        title: 'Earnings by industry',
-        desc: 'Each bar shows the average weekly earnings for women working full-time in that industry. Tap any bar to see the full breakdown.'
-      },
-      {
-        targetId: 'defaultHint',
-        title: 'Industry detail panel',
-        desc: 'When you tap a bar, this panel shows the weekly and annual earnings for that industry, plus the gender pay gap sourced from WGEA.'
-      }
-    ];
+      const TUTORIAL_STEPS = [
+        {
+          targetId: "chartArea",
+          title: "Earnings by industry",
+          desc: "Each bar shows the average weekly earnings for women working full-time in that industry. Tap any bar to see the full breakdown.",
+        },
+        {
+          targetId: "defaultHint",
+          title: "Industry detail panel",
+          desc: "When you tap a bar, this panel shows the weekly and annual earnings for that industry, plus the gender pay gap sourced from WGEA.",
+        },
+      ];
     </script>
 
     <!-- 3. Tutorial engine -->
