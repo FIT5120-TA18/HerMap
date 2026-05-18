@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Credit & BNPL 101 - Hermap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Material Symbols -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Page CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/credit_bnpl.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="credit-page">
+      <!-- Header -->
+      <section class="credit-hero">
+        <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Back to Knowledge Hub
+        </a>
+
+        <div class="credit-hero-content">
+          <div class="credit-hero-icon gradient-bg">
+            <span class="material-symbols-outlined">credit_card</span>
+          </div>
+
+          <div>
+            <h1>Credit &amp; BNPL 101</h1>
+            <p>
+              Learn about credit products in plain language, and understand how
+              to manage multiple financial commitments at once.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Intro -->
+      <section class="credit-intro-card">
+        <p>
+          Some credit products look manageable at first because repayments seem
+          small. However, interest, fees, and missed payments can increase the
+          total cost much faster than you expected.
+        </p>
+      </section>
+
+      <!-- Section 1 -->
+      <section class="credit-section">
+        <div class="section-heading">
+          <span class="section-number">01</span>
+          <div>
+            <h2>Not All Credit Is Free!</h2>
+            <p>
+              Click each card to reveal what it could actually mean in credit
+              products and BNPL services.
+            </p>
+          </div>
+        </div>
+
+        <div class="flip-card-grid">
+          <button class="flip-card" type="button" aria-label="Reveal meaning">
+            <div class="flip-card-inner">
+              <div class="flip-card-face flip-card-front">
+                <span class="card-kicker">What you see</span>
+                <h3>“Only $17/week”</h3>
+              </div>
+
+              <div class="flip-card-face flip-card-back">
+                <span class="card-kicker">What it can mean</span>
+                <p>Payments may continue for months.</p>
+              </div>
+            </div>
+          </button>
+
+          <button class="flip-card" type="button" aria-label="Reveal meaning">
+            <div class="flip-card-inner">
+              <div class="flip-card-face flip-card-front">
+                <span class="card-kicker">What you see</span>
+                <h3>“Interest-free”</h3>
+              </div>
+
+              <div class="flip-card-face flip-card-back">
+                <span class="card-kicker">What it can mean</span>
+                <p>Fees may apply if payments are missed.</p>
+              </div>
+            </div>
+          </button>
+
+          <button class="flip-card" type="button" aria-label="Reveal meaning">
+            <div class="flip-card-inner">
+              <div class="flip-card-face flip-card-front">
+                <span class="card-kicker">What you see</span>
+                <h3>“Minimum repayment”</h3>
+              </div>
+
+              <div class="flip-card-face flip-card-back">
+                <span class="card-kicker">What it can mean</span>
+                <p>Debt may take much longer to clear.</p>
+              </div>
+            </div>
+          </button>
+
+          <button class="flip-card" type="button" aria-label="Reveal meaning">
+            <div class="flip-card-inner">
+              <div class="flip-card-face flip-card-front">
+                <span class="card-kicker">What you see</span>
+                <h3>“Instant approval”</h3>
+              </div>
+
+              <div class="flip-card-face flip-card-back">
+                <span class="card-kicker">What it can mean</span>
+                <p>Easy access can encourage overspending.</p>
+              </div>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="credit-section soft-section">
+        <div class="section-heading">
+          <span class="section-number">02</span>
+          <div>
+            <h2>More Conditions to Watch Out For</h2>
+            <p>
+              The important details are often in the repayment conditions, not
+              just the advertised offer.
+            </p>
+          </div>
+        </div>
+
+        <div class="condition-grid">
+          <article class="condition-card">
+            <div class="condition-icon">
+              <span class="material-symbols-outlined">sell</span>
+            </div>
+            <div>
+              <h3>Promotional Offer Conditions</h3>
+              <p>
+                Special offers such as reduced fees, lower interest rates, or
+                deferred payments may only apply for a limited time or under
+                specific repayment conditions.
+              </p>
+            </div>
+          </article>
+
+          <article class="condition-card">
+            <div class="condition-icon">
+              <span class="material-symbols-outlined">timer_off</span>
+            </div>
+            <div>
+              <h3>Interest-Free Conditions Ending Early</h3>
+              <p>
+                Interest-free periods only apply if all required repayments are
+                made on time. Missing a payment can cancel the interest-free
+                benefit, and interest may be charged on the remaining balance.
+              </p>
+            </div>
+          </article>
+
+          <article class="condition-card">
+            <div class="condition-icon">
+              <span class="material-symbols-outlined">sync_alt</span>
+            </div>
+            <div>
+              <h3>Automatic Payments</h3>
+              <p>
+                Some services automatically deduct repayments from your account,
+                which can create overdraft or budgeting issues if your balance
+                is low.
+              </p>
+            </div>
+          </article>
+
+          <article class="condition-card">
+            <div class="condition-icon">
+              <span class="material-symbols-outlined">lock</span>
+            </div>
+            <div>
+              <h3>Account Suspension Conditions</h3>
+              <p>
+                Your access to the account may be paused or restricted if
+                repayments are missed, preventing new purchases until balances
+                are cleared.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Section 3 and 4 -->
+      <section class="two-column-section">
+        <article class="question-card">
+          <div class="section-heading compact-heading">
+            <span class="section-number">03</span>
+            <div>
+              <h2>Questions to Ask Before Signing Up</h2>
+              <p>Before using a credit product, always ask yourself:</p>
+            </div>
+          </div>
+
+          <ul class="check-list">
+            <li>Can I still afford this if my work hours drop?</li>
+            <li>Do I know the total amount I’ll repay?</li>
+            <li>Am I relying on this to pay for essentials?</li>
+            <li>Could this purchase wait until I’ve saved up more?</li>
+          </ul>
+        </article>
+
+        <article class="question-card">
+          <div class="section-heading compact-heading">
+            <span class="section-number">04</span>
+            <div>
+              <h2>Safer Ways to Go</h2>
+              <p>Small habits can make credit easier to manage.</p>
+            </div>
+          </div>
+
+          <ul class="check-list safer-list">
+            <li>Set repayment reminders.</li>
+            <li>Keep track of all your active payment plans.</li>
+            <li>Avoid using credit for recurring essentials.</li>
+            <li>Compare fees and repayment terms carefully.</li>
+          </ul>
+        </article>
+      </section>
+
+      <!-- CTA -->
+      <section class="credit-cta-card">
+        <div>
+          <h2>Want to learn more?</h2>
+          <p>
+            MoneySmart explains how credit cards work, including interest,
+            repayments, fees, and safer ways to manage credit.
+          </p>
+        </div>
+
+        <a
+          href="https://moneysmart.gov.au/credit-cards"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="primary-btn credit-cta-btn"
+        >
+          Visit MoneySmart site for credit cards guidance
+        </a>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/credit_bnpl.js') }}"></script>
+  </body>
+</html>

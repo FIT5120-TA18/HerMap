@@ -143,6 +143,7 @@ def income_comparison():
         return redirect(url_for("main.quick_profile"))
 
     return render_template("income_comparison.html", profile_data=profile_data)
+
 @main.route("/forecast")
 @access_required
 def forecast():
@@ -374,3 +375,8 @@ def safe_employment():
     if not profile_data:
         return redirect(url_for("main.quick_profile"))
     return render_template("safe_employment.html", profile_data=profile_data)
+
+@main.route("/credit_bnpl")
+@access_required
+def credit_bnpl():
+    return render_template("credit_bnpl.html")
