@@ -1753,3 +1753,108 @@
   font-size: 13px;
   line-height: 1.6;
 }
+
+.surplus-color {
+  color: #2d8a4e;
+}
+
+.deficit-color {
+  color: #c0392b;
+}
+.gauge-status-stable {
+  /* background: rgba(47, 133, 90, 0.14); */
+  color: #2f855a;
+  /* border: 1px solid rgba(47, 133, 90, 0.22); */
+}
+
+.gauge-status-vulnerable {
+  /* background: rgba(221, 107, 32, 0.14); */
+  color: #dd6b20;
+  /* border: 1px solid rgba(221, 107, 32, 0.22); */
+}
+
+.gauge-status-risk {
+  /* background: rgba(197, 48, 48, 0.14); */
+  color: #c53030;
+  /* border: 1px solid rgba(197, 48, 48, 0.22); */
+}
+.top-drivers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.top-driver-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+
+  border-radius: 18px;
+
+  background: #f8fafc;
+
+  border: 1px solid rgba(15, 23, 42, 0.06);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.top-driver-item:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.top-driver-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.top-driver-emoji {
+  font-size: 18px;
+}
+
+.top-driver-label {
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #334155;
+}
+
+.top-driver-value {
+  font-size: 15px;
+  font-weight: 700;
+
+  color: #0f172a;
+}
+.difference-pill {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* User spends MORE than benchmark */
+.difference-pill.higher {
+  background: rgba(221, 107, 32, 0.14);
+  color: #dd6b20;
+  border: 1px solid rgba(221, 107, 32, 0.22);
+}
+
+/* User spends LESS than benchmark */
+.difference-pill.lower {
+  background: rgba(47, 133, 90, 0.14);
+  color: #2f855a;
+  border: 1px solid rgba(47, 133, 90, 0.22);
+}
+

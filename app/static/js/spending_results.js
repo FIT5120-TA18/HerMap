@@ -835,9 +835,9 @@ function renderNextSteps(data) {
 
   if (data.surplus < 0) {
     items.push({
-      href: "/dashboard",
+      href: "/smart_budgeting",
       title: "Learn tips to help you save more",
-      desc: "Go to education tiles for practical budgeting strategies.",
+      desc: "Open Smart Budgeting tips in the Knowledge Hub.",
       icon: "💡",
     });
   }
@@ -848,6 +848,18 @@ function renderNextSteps(data) {
       title: "Compare suburb affordability",
       desc: "Find suburbs where rent may fit your income better.",
       icon: "🗺️",
+    });
+  }
+  const hasBnpl = data.items.some(
+    item => item.id === "bnpl" && Number(item.value) > 0
+  );
+  
+  if (hasBnpl) {
+    items.push({
+      href: "/knowledge_hub?focus=bnpl",
+      title: "Understand BNPL repayments",
+      desc: "Learn how Buy Now Pay Later commitments can affect your weekly budget.",
+      icon: "💳",
     });
   }
 
