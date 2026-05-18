@@ -13,6 +13,19 @@ function syncProfileToSession() {
   }
 }
 
+/* =========================================================
+   Deployment path helper
+   Handles local and /underdevelopment server paths
+   ========================================================= */
+
+const BASE_PATH = window.location.pathname.startsWith("/underdevelopment")
+  ? "/underdevelopment"
+  : "";
+
+function apiUrl(path) {
+  return `${BASE_PATH}${path}`;
+}
+
 /* Optional personalised note on top of the Knowledge Hub page */
 function injectPersonalisedScenarioNote() {
   const profile = JSON.parse(sessionStorage.getItem("profile") || "{}");
@@ -216,7 +229,7 @@ async function setupEssentialExpensesChart() {
   }
 
   try {
-    const response = await fetch("/api/household-spending/latest");
+    const response = await fetch(apiUrl("/api/household-spending/latest"));
 
     if (!response.ok) {
       throw new Error("Failed to load household spending data");
