@@ -35,7 +35,7 @@ class LGABoundaryVIC(db.Model):
 
     lgacode = db.Column(db.String(20), primary_key=True)
     lga_name = db.Column(db.String(100))
-    boundary = db.Column(db.Text)
+    boundary = db.Column(db.LargeBinary)
 
 class MedianRentVIC1BR(db.Model):
     __tablename__ = "median_rent_vic_1br"
@@ -91,7 +91,7 @@ class SuburbBoundaryVIC(db.Model):
 
     sal_code = db.Column(db.String(20), primary_key=True)
     suburb_name = db.Column(db.String(100))
-    boundary = db.Column(db.Text)
+    boundary = db.Column(db.LargeBinary)
 
 class SA3BoundaryVIC(db.Model):
     __tablename__ = "sa3_boundaries_vic"
@@ -99,7 +99,7 @@ class SA3BoundaryVIC(db.Model):
 
     sa3_code = db.Column(db.String(20), primary_key=True)
     sa3_name = db.Column(db.String(100))
-    boundary = db.Column(db.Text)
+    boundary = db.Column(db.LargeBinary)
 
 class SA3IncomeVIC(db.Model):
     __tablename__ = "sa3_income_vic"
