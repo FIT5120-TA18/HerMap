@@ -851,9 +851,9 @@ function renderNextSteps(data) {
     });
   }
   const hasBnpl = data.items.some(
-    item => item.id === "bnpl" && Number(item.value) > 0
+    (item) => item.id === "bnpl" && Number(item.value) > 0,
   );
-  
+
   if (hasBnpl) {
     items.push({
       href: "/knowledge_hub?focus=bnpl",
