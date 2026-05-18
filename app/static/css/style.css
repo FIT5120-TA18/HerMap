@@ -2530,6 +2530,7 @@ main.container {
   position: fixed;
   inset: 0;
   z-index: 20000;
+  display: none;
   pointer-events: none;
 }
 
@@ -2538,7 +2539,7 @@ main.container {
   position: fixed;
   inset: 0;
   background: rgba(28, 23, 20, 0.55);
-  pointer-events: auto;
+  pointer-events: none;
 }
 
 .tutorial-highlight-box {
@@ -2566,7 +2567,7 @@ main.container {
   border-radius: var(--radius-lg);
   box-shadow: 0 20px 60px rgba(28, 23, 20, 0.24);
   padding: 26px;
-  pointer-events: auto;
+  pointer-events: none;
   transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
@@ -2578,6 +2579,7 @@ main.container {
 .tutorial-popover.is-ready {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .tutorial-active-target {
@@ -3667,9 +3669,4 @@ grid-template-columns: 1fr;
 
 #tosModal .tos-modal-content p:last-child {
   margin-bottom: 0 !important;
-}
-
-.proj-page .back-home-btn {
-  position: relative;
-  z-index: 30001;
 }
