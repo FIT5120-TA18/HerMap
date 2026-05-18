@@ -12,6 +12,14 @@ const FALLBACK_BENCHMARK = {
   "Miscellaneous goods and services": 15,
 };
 
+const BASE_PATH = window.location.pathname.startsWith("/underdevelopment")
+  ? "/underdevelopment"
+  : "";
+
+function pageUrl(path) {
+  return `${BASE_PATH}${path}`;
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const data = loadSpendingData();
 
@@ -65,7 +73,7 @@ function showResultsState() {
 
 async function fetchBenchmarkData() {
   try {
-    const response = await fetch("/api/abs-spending-benchmark");
+    const response = await fetch(pageUrl("/api/abs-spending-benchmark"));
 
     if (!response.ok) {
       throw new Error("Benchmark API failed");
@@ -825,8 +833,8 @@ function renderNextSteps(data) {
     chips.innerHTML = chipItems
       .map(
         (label) => `
-      <span class="action-chip">${label}</span>
-    `,
+          <span class="action-chip">${label}</span>
+        `,
       )
       .join("");
   }
@@ -835,7 +843,7 @@ function renderNextSteps(data) {
 
   if (data.surplus < 0) {
     items.push({
-      href: "/smart_budgeting",
+      href: pageUrl("/smart_budgeting"),
       title: "Learn tips to help you save more",
       desc: "Open Smart Budgeting tips in the Knowledge Hub.",
       icon: "💡",
@@ -844,19 +852,20 @@ function renderNextSteps(data) {
 
   if (rentPct >= 30 || data.rent === 0) {
     items.push({
-      href: "/rent_comparison",
+      href: pageUrl("/rent_comparison"),
       title: "Compare suburb affordability",
       desc: "Find suburbs where rent may fit your income better.",
       icon: "🗺️",
     });
   }
+
   const hasBnpl = data.items.some(
     (item) => item.id === "bnpl" && Number(item.value) > 0,
   );
 
   if (hasBnpl) {
     items.push({
-      href: "/knowledge_hub?focus=bnpl",
+      href: pageUrl("/knowledge_hub?focus=bnpl"),
       title: "Understand BNPL repayments",
       desc: "Learn how Buy Now Pay Later commitments can affect your weekly budget.",
       icon: "💳",
@@ -864,7 +873,7 @@ function renderNextSteps(data) {
   }
 
   items.push({
-    href: "/income_comparison",
+    href: pageUrl("/income_comparison"),
     title: "Compare income pathways",
     desc: "Explore income patterns across industries and areas.",
     icon: "📊",
@@ -874,14 +883,14 @@ function renderNextSteps(data) {
     links.innerHTML = items
       .map(
         (item) => `
-      <a href="${item.href}" class="action-link-card">
-        <div class="action-link-icon">${item.icon}</div>
-        <div>
-          <h4>${item.title}</h4>
-          <p>${item.desc}</p>
-        </div>
-      </a>
-    `,
+          <a href="${item.href}" class="action-link-card">
+            <div class="action-link-icon">${item.icon}</div>
+            <div class="action-link-content">
+              <h4>${item.title}</h4>
+              <p>${item.desc}</p>
+            </div>
+          </a>
+        `,
       )
       .join("");
   }
