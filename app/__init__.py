@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from app.routes import main
 from app.api.locations import api
 from app.api.industries import industries_api
+from app.api.spendings import spending_session_api
 from app.api.gender_pay_ratio import gender_api
 from models import db
 from app.api.household_spending import household_spending_api
@@ -40,6 +41,7 @@ def create_app():
     app.register_blueprint(main)
     app.register_blueprint(api)
     app.register_blueprint(industries_api)
+    app.register_blueprint(spending_session_api)
     app.register_blueprint(gender_api, url_prefix="/api")
     app.register_blueprint(household_spending_api)
     

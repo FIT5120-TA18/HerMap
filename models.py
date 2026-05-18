@@ -37,9 +37,12 @@ class LGABoundaryVIC(db.Model):
     lga_name = db.Column(db.String(100))
     boundary = db.Column(db.Text)
 
-class MedianRentVIC(db.Model):
-    __tablename__ = "median_rent_vic"
-    __table_args__ = SCHEMA_ARGS
+class MedianRentVIC1BR(db.Model):
+    __tablename__ = "median_rent_vic_1br"
+    __table_args__ = {"schema": "hermap"}
+# class MedianRentVIC(db.Model):
+#     __tablename__ = "median_rent_vic"
+#     __table_args__ = SCHEMA_ARGS
 
     locality = db.Column(db.String(100), primary_key=True)
     postcode = db.Column(db.String(10), primary_key=True)
@@ -69,14 +72,18 @@ class MedianRentVIC(db.Model):
     rent_06_25 = db.Column("06-25", db.Float)
     rent_09_25 = db.Column("09-25", db.Float)
 
-class MedianRentVIC1BR(db.Model):
-    __tablename__ = "median_rent_vic_1br"
-    __table_args__ = SCHEMA_ARGS
+# class MedianRentVIC1BR(db.Model):
+#     __tablename__ = "median_rent_vic_1br"
+#     __table_args__ = {"schema": "hermap"}
+# class MedianRentVIC1BR(db.Model):
+#     __tablename__ = "median_rent_vic_1br"
+#     __table_args__ = SCHEMA_ARGS
 
-    locality = db.Column(db.String(100), primary_key=True)
-    postcode = db.Column(db.String(10), primary_key=True)
-    lgacode = db.Column(db.String(20), primary_key=True)
-    rent_09_25 = db.Column("09-25", db.Float)
+#     id = db.Column(db.String(10), primary_key=True)
+#     locality = db.Column(db.String(100))
+#     postcode = db.Column(db.String(10))
+#     lgacode = db.Column(db.String(20))
+#     rent_09_25 = db.Column("09-25", db.Float)
 
 class SuburbBoundaryVIC(db.Model):
     __tablename__ = "suburb_boundaries_vic"
@@ -115,6 +122,64 @@ class IndustryBasedAverageEarnings(db.Model):
     year_2021_22 = db.Column("2021-22", db.Float)
     year_2022_23 = db.Column("2022-23", db.Float)
 
+class OSMPOIVIC(db.Model):
+    __tablename__ = "osm_pois_vic"
+    __table_args__ = {"schema": "hermap"}
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    osm_id = db.Column(db.BigInteger, unique=True)
+
+    name = db.Column(db.String(255))
+
+    category = db.Column(db.String(100))
+
+    amenity = db.Column(db.String(100))
+    shop = db.Column(db.String(100))
+    leisure = db.Column(db.String(100))
+    railway = db.Column(db.String(100))
+    highway = db.Column(db.String(100))
+
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+    location = db.Column(db.Text)
+
+    suburb_name = db.Column(db.String(100))
+
+
+class SpendingCategoriesABS(db.Model):
+    __tablename__ = "spending_categories_ABS"
+    __table_args__ = {"schema": "hermap","extend_existing": True}
+
+    month = db.Column("Month", db.DateTime, primary_key=True)
+
+    services = db.Column("Services", db.Float)
+    food = db.Column("Food", db.Float)
+    clothing_and_footwear = db.Column("Clothing and footwear", db.Float)
+
+    furnishings_and_household_equipment = db.Column(
+        "Furnishings and household equipment",
+        db.Float
+    )
+
+    health = db.Column("Health", db.Float)
+    transport = db.Column("Transport", db.Float)
+
+    recreation_and_culture = db.Column(
+        "Recreation and culture",
+        db.Float
+    )
+
+    hotels_cafes_and_restaurants = db.Column(
+        "Hotels, cafes and restaurants",
+        db.Float
+    )
+
+    miscellaneous_goods_and_services = db.Column(
+        "Miscellaneous goods and services",
+        db.Float
+    )
 class GenderPayGapIndustrySummary(db.Model):
     __tablename__ = "pay_gap_by_industry"
     __table_args__ = SCHEMA_ARGS
@@ -156,7 +221,7 @@ class GenderPayGapIndustrySummary(db.Model):
 
 class ABSHouseholdSpending(db.Model):
     __tablename__ = "spending_categories_ABS"
-    __table_args__ = SCHEMA_ARGS
+    __table_args__ = {"schema": "hermap","extend_existing": True}
 
     month = db.Column("Month", db.DateTime, primary_key=True)
 
