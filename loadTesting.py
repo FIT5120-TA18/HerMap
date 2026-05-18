@@ -80,13 +80,6 @@ class HermapWebsiteUser(HttpUser):
         )
 
     @task(3)
-    def forecast(self):
-        self.client.get(
-            self.path("/forecast"),
-            name="Forecast"
-        )
-
-    @task(3)
     def spending_tracker(self):
         self.client.get(
             self.path("/spending_tracker"),
