@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Spending Results - Hermap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Spending CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/spending_tracker.css') }}"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="results-container">
+      <!-- Header -->
+      <div class="results-header">
+        <div>
+          <h1>Your <span class="gradient-text">Spending Results</span></h1>
+          <p>
+            Understand your weekly position, rent pressure, spending drivers,
+            and what this means for independent living.
+          </p>
+        </div>
+
+        <a href="{{ url_for('main.spending_tracker') }}" class="back-home-btn">
+          Edit spending
+        </a>
+      </div>
+
+      <!-- Empty State -->
+      <section id="emptyState" class="empty-state">
+        <h2>No spending data found</h2>
+        <p>Please enter your expenses first.</p>
+
+        <a href="{{ url_for('main.spending_tracker') }}" class="primary-btn">
+          Go to spending tracker
+        </a>
+      </section>
+
+      <!-- Results Content -->
+      <section id="resultsContent" class="results-content">
+        <!-- Summary Cards -->
+        <section class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-label">Weekly income</div>
+            <div class="summary-value" id="summaryIncome">$0</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Total spending</div>
+            <div class="summary-value" id="summaryTotal">$0</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Weekly surplus / deficit</div>
+            <div class="summary-value" id="summarySurplus">$0</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Rent pressure</div>
+            <div class="summary-value" id="summaryRentPressure">--</div>
+          </div>
+        </section>
+
+        <!-- Rent Pressure + Verdict Side by Side -->
+        <!-- Main Results Grid -->
+        <section class="results-main-grid">
+          <!-- LEFT COLUMN -->
+          <div class="results-left-column">
+            <!-- Rent Pressure Meter -->
+            <div class="pressure-card">
+              <h3>Rent pressure meter</h3>
+              <p>See how much of your weekly income is going toward rent.</p>
+
+              <div class="rent-gauge">
+                <div class="gauge-wrap">
+                  <svg viewBox="0 0 300 170" class="gauge-svg">
+                    <path
+                      class="gauge-segment gauge-stable"
+                      d="M 40 140 A 110 110 0 0 1 113 36"
+                    />
+                    <path
+                      class="gauge-segment gauge-vulnerable"
+                      d="M 113 36 A 110 110 0 0 1 177 36"
+                    />
+                    <path
+                      class="gauge-segment gauge-risk"
+                      d="M 177 36 A 110 110 0 0 1 260 140"
+                    />
+                  </svg>
+
+                  <div class="gauge-tick gauge-tick-30"></div>
+                  <div class="gauge-tick gauge-tick-45"></div>
+
+                  <div class="gauge-needle" id="pressureMarker"></div>
+                  <div class="gauge-center"></div>
+
+                  <span class="gauge-label gauge-label-0">0%</span>
+                  <span class="gauge-label gauge-label-30">30%</span>
+                  <span class="gauge-label gauge-label-45">45%</span>
+                  <span class="gauge-label gauge-label-75">75%+</span>
+                </div>
+
+                <div class="gauge-value" id="pressureValue">
+                  No rent entered
+                </div>
+
+                <div class="gauge-legend">
+                  <div class="gauge-legend-item">
+                    <span class="legend-dot stable"></span>
+                    <div>
+                      <strong>Stable</strong>
+                      <small>&lt;30%</small>
+                    </div>
+                  </div>
+
+                  <div class="gauge-legend-item">
+                    <span class="legend-dot vulnerable"></span>
+                    <div>
+                      <strong>Vulnerable</strong>
+                      <small>30–45%</small>
+                    </div>
+                  </div>
+
+                  <div class="gauge-legend-item">
+                    <span class="legend-dot risk"></span>
+                    <div>
+                      <strong>At Risk</strong>
+                      <small>&gt;45%</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spending Breakdown -->
+            <div class="chart-card">
+              <h3>Spending breakdown</h3>
+              <p>
+                Blue shows essential spending. Purple shows flexible spending.
+              </p>
+
+              <div class="chart-wrap">
+                <canvas id="spendingDonut"></canvas>
+              </div>
+
+              <div id="spendingLegend" class="chart-legend"></div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="results-right-column">
+            <!-- Verdict + Top Drivers -->
+            <div class="verdict-card" id="verdictCard">
+              <div class="verdict-left">
+                <div class="verdict-icon" id="verdictIcon">⏳</div>
+
+                <div class="verdict-copy">
+                  <p id="verdictTitle">Calculating…</p>
+                  <p id="verdictBody"></p>
+                </div>
+              </div>
+
+              <aside class="drivers-card">
+                <p class="drivers-kicker">Spending snapshot</p>
+
+                <h3>Top spending drivers</h3>
+
+                <p>Your largest weekly costs, ranked by impact.</p>
+
+                <div id="topDrivers" class="top-drivers"></div>
+              </aside>
+            </div>
+
+            <!-- What This Means -->
+            <div class="insight-card chart-side-card">
+              <h3>What this means</h3>
+
+              <p id="positionInsight">{{ spending_insight or "" }}</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Benchmark Comparison -->
+        <section class="benchmark-card">
+          <h3>Your spending pattern compared with Victoria</h3>
+
+          <p>
+            This comparison only uses the categories you entered and compares
+            them with the same Victorian benchmark categories. It uses spending
+            shares, not raw dollars.
+          </p>
+
+          <div id="benchmarkWarning" class="benchmark-warning"></div>
+
+          <div class="benchmark-layout">
+            <div class="benchmark-chart-wrap">
+              <canvas id="benchmarkChart"></canvas>
+            </div>
+
+            <div id="benchmarkInsights" class="benchmark-insights"></div>
+          </div>
+
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Your share</th>
+                <th>Victoria</th>
+                <th>Spending pattern</th>
+              </tr>
+            </thead>
+
+            <tbody id="benchmarkTableBody"></tbody>
+          </table>
+        </section>
+
+        <!-- Next Step -->
+        <section class="action-card">
+          <h3>Next step</h3>
+
+          <p id="nextStepText"></p>
+
+          <div class="action-chip-row" id="actionChips"></div>
+
+          <div class="action-links" id="actionLinks"></div>
+        </section>
+
+        <p class="data-note">
+          This is an automated spending summary and is not financial advice.
+          Your data is stored only in this browser session.
+        </p>
+      </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/spending_results.js') }}"></script>
+  </body>
+</html>
