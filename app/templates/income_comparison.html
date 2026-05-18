@@ -61,7 +61,7 @@
               See average income<span class="gradient-text"> in my area</span>
             </h1>
             <p>
-              Explore young female income patterns across Victorian SA3 areas
+              Explore young female income patterns across Victorian suburb areas
             </p>
           </div>
 
@@ -76,20 +76,20 @@
           <aside class="rent-sidebar">
             <!-- SA3 Selection Card -->
             <div class="rent-filter-card">
-              <p class="filter-title">Select SA3 Area</p>
+              <p class="filter-title">Select Suburb Area</p>
 
               <div class="info-message">
-                Search an SA3 area to explore young female annual income across
+                Search an suburb area to explore young female annual income across
                 Victoria.
               </div>
 
               <div class="budget-input-group">
                 <!-- Saved User Location -->
-                <label for="profileLocationInput" class="field-label-small">
+                <label for="profileLocation" class="field-label-small">
                   Your selected location
                 </label>
 
-                <div class="profile-location-display" id="profileLocationInput">
+                <div class="profile-location-display" id="profileLocation">
                   {% if profile_data.get('locality') and
                   profile_data.get('postcode') %} {{
                   profile_data.get('locality') }} ({{
@@ -158,7 +158,7 @@
                 <div class="detail-stat">
                   <div class="detail-stat-label">Average Annual Income</div>
                   <p class="detail-stat-value" id="detailAverageIncome">--</p>
-                  <p class="detail-stat-sublabel">young females in this SA3</p>
+                  <p class="detail-stat-sublabel">young females in this suburb</p>
                 </div>
 
                 <div class="detail-stat">
@@ -193,7 +193,7 @@
                   "
                 >
                   Compare your estimated annual income with young female annual
-                  income in this SA3 area.
+                  income in this suburb area.
                 </p>
 
                 <div
@@ -213,13 +213,13 @@
                     "
                     id="incomeInsight"
                   >
-                    Select an SA3 area to view income analysis.
+                    Select an suburb area to view income analysis.
                   </p>
                 </div>
               </div>
 
               <!-- Income Trend Section -->
-              <div class="trend-section">
+              <div class="trend-section" >
                 <p class="trend-title">📈 Income Trend</p>
 
                 <p
@@ -229,7 +229,7 @@
                     margin: 0 0 16px 0;
                   "
                 >
-                  Annual young female income trend for the selected SA3 area.
+                  Annual young female income trend for the selected suburb area.
                 </p>
 
                 <div style="margin-bottom: 16px">
@@ -247,6 +247,7 @@
                 <div
                   class="chart-container"
                   style="height: 300px; margin-bottom: 16px"
+                  id="incomeTrend"
                 >
                   <canvas id="incomeTrendChart"></canvas>
                 </div>
@@ -268,7 +269,7 @@
                     "
                     id="incomeTrendInsight"
                   >
-                    Select an SA3 area to view income trend analysis.
+                    Select an suburb area to view income trend analysis.
                   </p>
                 </div>
               </div>
@@ -450,19 +451,14 @@
         desc: 'Search for your suburb or region. This filters the map and comparisons to your local area.'
       },
       {
+        targetId: 'profileLocation',
+        title: 'Your profile location',
+        desc: 'This is pulled from your profile. If it looks wrong, go back to the profile builder to update it.'
+      },
+      {
         targetId: 'incomeMapContainer',
         title: 'Income map',
         desc: 'Areas are coloured by average income. Darker means higher earners. Tap any area to see the detail breakdown.'
-      },
-      {
-        targetId: 'sa3DetailPanel',
-        title: 'Area detail panel',
-        desc: 'Tap a region on the map to see the average income, how it compares to your income, and whether it\'s trending up or down.'
-      },
-      {
-        targetId: 'profileLocationInput',
-        title: 'Your profile location',
-        desc: 'This is pulled from your profile. If it looks wrong, go back to the profile builder to update it.'
       }
     ];
     </script>

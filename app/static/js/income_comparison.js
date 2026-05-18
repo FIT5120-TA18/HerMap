@@ -106,7 +106,7 @@ async function loadSa3IncomeMap() {
     const response = await fetch("/api/sa3-income-map");
 
     if (!response.ok) {
-      throw new Error("Failed to load SA3 income map data");
+      throw new Error("Failed to load suburb income map data");
     }
 
     const rawData = await response.json();
@@ -122,7 +122,7 @@ async function loadSa3IncomeMap() {
 
     if (!sa3IncomeData.features || sa3IncomeData.features.length === 0) {
       document.getElementById("incomeMapContainer").innerHTML =
-        "No SA3 income map data found.";
+        "No suburb income map data found.";
       return;
     }
 
@@ -150,10 +150,10 @@ async function loadSa3IncomeMap() {
       }
     }
   } catch (error) {
-    console.error("Error loading SA3 income map:", error);
+    console.error("Error loading suburb income map:", error);
     const mapContainer = document.getElementById("incomeMapContainer");
     if (mapContainer) {
-      mapContainer.innerHTML = "Unable to load SA3 income map.";
+      mapContainer.innerHTML = "Unable to load suburb income map.";
     }
   }
 }
@@ -174,19 +174,19 @@ async function prefillSa3FromUserLocation() {
     const response = await fetch(`/api/sa3-from-location?${params.toString()}`);
 
     if (!response.ok) {
-      throw new Error("Failed to find SA3 from user location");
+      throw new Error("Failed to find suburb from user location");
     }
 
     const sa3 = await response.json();
 
-    console.log("SA3 from user location:", sa3);
+    console.log("suburb from user location:", sa3);
     console.log(
-      "Available SA3 sample:",
+      "Available suburb sample:",
       sa3IncomeData.features.slice(0, 5).map((f) => f.properties),
     );
 
     if (!sa3.sa3_code || !sa3.sa3_name) {
-      console.warn("No matching SA3 found for user location.");
+      console.warn("No matching suburb found for user location.");
       return;
     }
 
@@ -196,13 +196,13 @@ async function prefillSa3FromUserLocation() {
         String(sa3.sa3_code).trim(),
     );
 
-    console.log("Matched SA3 feature:", matchedFeature);
+    console.log("Matched suburb feature:", matchedFeature);
 
     if (matchedFeature) {
       selectSa3Feature(matchedFeature);
     } else {
       console.warn(
-        "SA3 code found from location but not found in map GeoJSON:",
+        "suburb code found from location but not found in map GeoJSON:",
         sa3.sa3_code,
       );
     }
@@ -250,7 +250,7 @@ function getComparisonColour(sa3Income, userAnnualIncome) {
 // -----------------------------
 
 function createIncomeLegend() {
-  const mapCard = document.querySelector(".map-card");
+  const mapCard = document.querySelector(".rent-filter-card");
 
   if (!mapCard || document.getElementById("incomeLegendBox")) return;
 
@@ -263,7 +263,7 @@ function createIncomeLegend() {
   legend.innerHTML = `
     <strong>Map colouring: Income Comparison</strong>
     <p>
-      SA3 areas are coloured by comparing young female annual income in each SA3
+      Suburb areas are coloured by comparing young female annual income in each suburb
       with your estimated annual income.
       ${
         userAnnualIncome
@@ -273,9 +273,9 @@ function createIncomeLegend() {
     </p>
 
     <div class="map-mode-legend">
-      <div class="map-mode-item"><span class="map-dot green"></span>SA3 average below your income</div>
+      <div class="map-mode-item"><span class="map-dot green"></span>Suburb average below your income</div>
       <div class="map-mode-item"><span class="map-dot yellow"></span>Similar to your income</div>
-      <div class="map-mode-item"><span class="map-dot red"></span>SA3 average above your income</div>
+      <div class="map-mode-item"><span class="map-dot red"></span>Suburb average above your income</div>
       <div class="map-mode-item"><span class="map-dot grey"></span>No data / no user income</div>
     </div>
   `;
@@ -429,7 +429,7 @@ function updateIncomeComparison(sa3AnnualIncome) {
   if (!userAnnualIncome || !sa3AnnualIncome) {
     badge.textContent = "Not enough data";
     insight.textContent =
-      "Enter your income in your profile to compare it with the SA3 annual average.";
+      "Enter your income in your profile to compare it with the suburb annual average.";
     return;
   }
 
@@ -439,13 +439,13 @@ function updateIncomeComparison(sa3AnnualIncome) {
   if (Math.abs(difference) < userAnnualIncome * 0.1) {
     badge.textContent = "Similar income level";
     insight.textContent =
-      "Your estimated annual income is similar to the young female average income in this SA3 area.";
+      "Your estimated annual income is similar to the young female average income in this suburb area.";
   } else if (difference > 0) {
-    badge.textContent = `${percentage}% above SA3 average`;
-    insight.textContent = `Your estimated annual income is ${percentage}% higher than the young female average income in this SA3 area.`;
+    badge.textContent = `${percentage}% above suburb average`;
+    insight.textContent = `Your estimated annual income is ${percentage}% higher than the young female average income in this suburb area.`;
   } else {
-    badge.textContent = `${percentage}% below SA3 average`;
-    insight.textContent = `Your estimated annual income is ${percentage}% lower than the young female average income in this SA3 area.`;
+    badge.textContent = `${percentage}% below suburb average`;
+    insight.textContent = `Your estimated annual income is ${percentage}% lower than the young female average income in this suburb area.`;
   }
 }
 
