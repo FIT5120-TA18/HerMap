@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Income Comparison - Hermap</title>
 
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Main CSS -->
     <link
       rel="stylesheet"
@@ -58,45 +69,6 @@
           >
         </div>
 
-        <!-- User Profile Card
-      <div class="income-grid">
-        <div class="profile-summary">
-          <p class="profile-summary-title">Your Profile</p>
-
-          <div class="profile-summary-grid">
-            <div class="profile-item">
-              <div class="profile-item-label">Age</div>
-              <p class="profile-item-value" id="profileAge">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Location</div>
-              <p class="profile-item-value" id="profileLocation">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Work Status</div>
-              <p class="profile-item-value" id="profileWorkStatus">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Industry</div>
-              <p class="profile-item-value" id="profileIndustry">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Your Weekly Income</div>
-              <p class="profile-item-value" id="profileIncome">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Living Arrangement</div>
-              <p class="profile-item-value" id="profileLiving">--</p>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
         <!-- Income Map Layout -->
         <div class="rent-comparison-grid">
           <!-- Left Sidebar -->
@@ -112,14 +84,7 @@
 
               <div class="budget-input-group">
                 <!-- Saved User Location -->
-                <label
-                  for="profileLocationInput"
-                  style="
-                    font-size: 12px;
-                    color: var(--text-muted);
-                    font-weight: 600;
-                  "
-                >
+                <label for="profileLocationInput" class="field-label-small">
                   Your selected location
                 </label>
 
@@ -353,12 +318,115 @@
         </div>
 
         <div class="nav-links">
-          <a href="#" class="nav-link">Privacy Policy</a>
-          <a href="#" class="nav-link">ABS Data Sources</a>
-          <a href="#" class="nav-link">Terms of Service</a>
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            id="absDataBtn"
+          >
+            ABS Data Sources
+          </button>
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            id="tosModalTrigger"
+          >
+            Terms of Service
+          </button>
         </div>
       </div>
     </footer>
+
+    <!-- ABS Data Sources Popup -->
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="absModalClose"
+          aria-label="Close popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2>ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia’s national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="tosModalClose"
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
 
     <!-- Leaflet Map JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

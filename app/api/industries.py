@@ -45,7 +45,6 @@ def get_industry_chart():
             IndustryBasedAverageEarnings.year_2022_23.isnot(None)
         )
         .order_by(IndustryBasedAverageEarnings.year_2022_23.desc())
-        .limit(5)
         .all()
     )
 

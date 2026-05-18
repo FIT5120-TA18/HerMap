@@ -3,3 +3,39 @@ __pycache__/
 .env
 .gitignore
 .DS_Store
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# Flask instance folder (local SQLite DB, config)
+instance/
+
+# Environment variables
+.env
+.env.*
+
+# Local dev scripts & seed data
+scripts/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/

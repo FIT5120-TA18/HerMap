@@ -107,6 +107,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 async function loadLgaRentLayer() {
   try {
+    // const response = await fetch(`${BASE_PATH}/api/lga-rent-map`);
     const response = await fetch(`/api/lga-rent-map`);
     currentLgaRentGeoJson = await response.json();
     console.log("Loaded all LGA rent layer:", currentLgaRentGeoJson);
@@ -246,6 +247,20 @@ function initializeEventListeners() {
   if (locationSearchInput && locationSearchSuggestions) {
     locationSearchInput.addEventListener("input", async function () {
       const query = locationSearchInput.value.trim();
+  // Get the LGA search input (visible text field)
+  const lgaInput = document.getElementById("lgaInput");
+
+  // Get the dropdown container where LGA suggestions will appear
+  const lgaSuggestions = document.getElementById("lgaSuggestions");
+
+  // Hidden input to store the selected LGA value
+  const selectedLgaInput = document.getElementById("selectedLgaInput");
+
+  // Only continue if both the input and suggestion box exist
+  if (lgaInput && lgaSuggestions) {
+    // Listen for user typing in the LGA search box
+    lgaInput.addEventListener("input", async function () {
+      const query = lgaInput.value.trim(); // Get what user typed
 
       if (selectedLgaInput) selectedLgaInput.value = "";
       if (selectedLgacodeInput) selectedLgacodeInput.value = "";
@@ -271,6 +286,40 @@ function initializeEventListeners() {
             data-locality="${item.locality}" data-postcode="${item.postcode}">
             ${item.locality} (${item.postcode})
           </button>`).join("");
+        // Call backend API to fetch matching LGA names
+        // const response = await fetch(`${BASE_PATH}/api/lgas?q=${encodeURIComponent(query)}`)
+        const response = await fetch(
+          `/api/lgas?q=${encodeURIComponent(query)}`,
+        );
+
+        // Convert response into JSON
+        const lgas = await response.json();
+
+        // If no matching LGA found, show message in dropdown
+        if (!lgas.length) {
+          lgaSuggestions.innerHTML = `
+            <div class="location-suggestion-item no-result">
+              No matching LGA found
+            </div>
+          `;
+          return;
+        }
+
+        // Render matching LGAs into clickable dropdown buttons
+        lgaSuggestions.innerHTML = lgas
+          .map(
+            (item) => `
+          <button
+            type="button"
+            class="location-suggestion-item"
+            data-lga="${item.lga_name}"
+            data-lgacode="${item.lgacode}"
+          >
+            ${item.lga_name}
+          </button>
+        `,
+          )
+          .join("");
       } catch (error) {
         console.error("Location fetch error:", error);
         locationSearchSuggestions.innerHTML = "";
@@ -283,6 +332,34 @@ function initializeEventListeners() {
 
       const locality = item.dataset.locality;
       const postcode = item.dataset.postcode;
+    const lgaDropdownBtn = document.getElementById("lgaDropdownBtn");
+
+    if (lgaDropdownBtn) {
+      lgaDropdownBtn.addEventListener("click", async function () {
+        try {
+          const response = await fetch(`/api/all-lgas`);
+          // const response = await fetch(`${BASE_PATH}/api/all-lgas`);
+          const lgas = await response.json();
+
+          lgaSuggestions.innerHTML = lgas
+            .map(
+              (item) => `
+        <button
+          type="button"
+          class="location-suggestion-item"
+          data-lga="${item.lga_name}"
+          data-lgacode="${item.lgacode}"
+        >
+          ${item.lga_name}
+        </button>
+      `,
+            )
+            .join("");
+        } catch (error) {
+          console.error("All LGA fetch error:", error);
+        }
+      });
+    }
 
       locationSearchInput.value = `${locality} (${postcode})`;
       locationSearchSuggestions.innerHTML = "";
@@ -321,6 +398,55 @@ function initializeEventListeners() {
   const budgetInput = document.getElementById("budgetInput");
   if (budgetInput) {
     budgetInput.addEventListener("keypress", function (e) {
+    lgaSuggestions.addEventListener("click", function (event) {
+      const item = event.target.closest(".location-suggestion-item");
+
+      if (!item || item.classList.contains("no-result")) return;
+
+      const lgaName = item.dataset.lga;
+      const lgacode = item.dataset.lgacode;
+
+      // Fill visible input
+      lgaInput.value = lgaName;
+
+      // Save selected LGA name
+      if (selectedLgaInput) {
+        selectedLgaInput.value = lgaName;
+      }
+
+      // Save selected LGA code
+      const selectedLgacodeInput = document.getElementById(
+        "selectedLgacodeInput",
+      );
+      if (selectedLgacodeInput) {
+        selectedLgacodeInput.value = lgacode;
+      }
+
+      // Save in JS state
+      selectedLGAName = lgaName;
+
+      console.log("Selected LGA:", {
+        lga_name: lgaName,
+        lgacode: lgacode,
+      });
+
+      // Later this will trigger real DB suburb map
+      handleLGASelect(lgaName, lgacode);
+
+      // Clear dropdown
+      lgaSuggestions.innerHTML = "";
+    });
+  }
+
+  // Budget filter button click → apply budget filter to map
+  document
+    .getElementById("filterButton")
+    .addEventListener("click", handleBudgetFilter);
+
+  // Pressing Enter in budget input also applies budget filter
+  document
+    .getElementById("budgetInput")
+    .addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         handleBudgetFilter();
       }
@@ -329,11 +455,17 @@ function initializeEventListeners() {
 
   const closeDetailBtn = document.getElementById("closeDetailBtn");
   if (closeDetailBtn) closeDetailBtn.addEventListener("click", closeDetailPanel);
+
+  // Close button hides the suburb detail panel
+  document
+    .getElementById("closeDetailBtn")
+    .addEventListener("click", closeDetailPanel);
 }
 
 async function loadUserData() {
   const budgetInput = document.getElementById("budgetInput");
   const locationSearchInput = document.getElementById("locationSearchInput");
+  const lgaInput = document.getElementById("lgaInput");
   const selectedLgaInput = document.getElementById("selectedLgaInput");
   const selectedLgacodeInput = document.getElementById("selectedLgacodeInput");
 
@@ -349,6 +481,10 @@ async function loadUserData() {
   if (window.userProfileData.rent && Number(window.userProfileData.rent) > 0) {
     defaultBudget = Number(window.userProfileData.rent);
   } else if (window.userProfileData.income && Number(window.userProfileData.income) > 0) {
+  } else if (
+    window.userProfileData.income &&
+    Number(window.userProfileData.income) > 0
+  ) {
     defaultBudget = Number(window.userProfileData.income);
   }
 
@@ -369,6 +505,8 @@ async function loadUserData() {
     try {
       const response = await fetch(
         `/api/lga-from-location?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`
+        // `${BASE_PATH}/api/lga-from-location?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`
+        `/api/lga-from-location?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`,
       );
 
       const data = await response.json();
@@ -399,6 +537,7 @@ async function loadUserData() {
   updateMapModeBox();
 }
 
+// Handle LGA selection
 async function handleLGASelect(lgaName, lgacode) {
   selectedLGAName = lgaName;
   addedBubbleSuburbs = [];
@@ -410,7 +549,7 @@ async function handleLGASelect(lgaName, lgacode) {
   try {
     const [suburbResponse, lgaResponse] = await Promise.all([
       fetch(`/api/suburb-rent-map?lgacode=${encodeURIComponent(lgacode)}`),
-      fetch(`/api/lga-boundary?lgacode=${encodeURIComponent(lgacode)}`)
+      fetch(`/api/lga-boundary?lgacode=${encodeURIComponent(lgacode)}`),
     ]);
 
     const suburbGeojson = await suburbResponse.json();
@@ -428,7 +567,7 @@ async function handleLGASelect(lgaName, lgacode) {
     loadSuburbBubbleData(lgacode);
 
     const selectedLgaFeature = currentLgaRentGeoJson?.features?.find(
-      feature => String(feature.properties.lgacode) === String(lgacode)
+      (feature) => String(feature.properties.lgacode) === String(lgacode),
     );
 
     if (selectedLgaFeature) {
@@ -439,16 +578,16 @@ async function handleLGASelect(lgaName, lgacode) {
         lgacode: props.lgacode,
         rent: props.rent,
         history: props.history,
-        historyLabels: props.history_labels
+        historyLabels: props.history_labels,
       });
     }
-
   } catch (error) {
     console.error("Error loading LGA map:", error);
     showMapError(`Unable to load map for ${lgaName}. Please try another LGA.`);
   }
 }
 
+// Initialize map for selected LGA
 function initializeMap(suburbGeojson, lgaGeojson) {
   const container = document.getElementById("mapContainer");
 
@@ -491,13 +630,15 @@ function initializeMap(suburbGeojson, lgaGeojson) {
           color: "#666",
           weight: 0.7,
           fillColor: getLgaRentColor(rent),
-          fillOpacity: 0.8
+          fillOpacity: 0.8,
         };
       },
 
       onEachFeature: function (feature, layer) {
         const props = feature.properties;
-        const rentText = props.rent ? `$${Math.round(props.rent)}/week` : "No rent data";
+        const rentText = props.rent
+          ? `$${Math.round(props.rent)}/week`
+          : "No rent data";
 
         layer.on("click", function () {
           showLgaDetail({
@@ -505,7 +646,7 @@ function initializeMap(suburbGeojson, lgaGeojson) {
             lgacode: props.lgacode,
             rent: props.rent,
             history: props.history,
-            historyLabels: props.history_labels
+            historyLabels: props.history_labels,
           });
         });
 
@@ -517,13 +658,19 @@ function initializeMap(suburbGeojson, lgaGeojson) {
         layer.bindTooltip(props.lga_name, {
           permanent: true,
           direction: "center",
-          className: "lga-label"
+          className: "lga-label",
         });
-      }
+      },
     }).addTo(map);
   }
 
   if (suburbGeojson && suburbGeojson.features && suburbGeojson.features.length) {
+  // 2. Draw selected LGA suburb polygons on top
+  if (
+    suburbGeojson &&
+    suburbGeojson.features &&
+    suburbGeojson.features.length
+  ) {
     suburbRentLayer = L.geoJSON(suburbGeojson, {
       style: function (feature) {
         const rent = feature.properties.rent;
@@ -532,7 +679,7 @@ function initializeMap(suburbGeojson, lgaGeojson) {
           color: "#ffffff",
           weight: 1.2,
           fillColor: getRentColor(rent),
-          fillOpacity: rent ? 0.8 : 0.25
+          fillOpacity: rent ? 0.8 : 0.25,
         };
       },
 
@@ -549,9 +696,18 @@ function initializeMap(suburbGeojson, lgaGeojson) {
         layer.bindTooltip(props.suburb_name, {
           permanent: true,
           direction: "center",
-          className: "suburb-label"
+          className: "suburb-label",
         });
       }
+
+        // layer.on("click", function () {
+        //   showSuburbDetail({
+        //     name: props.suburb_name,
+        //     postcode: props.postcode,
+        //     rent: props.rent
+        //   });
+        // });
+      },
     }).addTo(map);
   }
 
@@ -560,12 +716,12 @@ function initializeMap(suburbGeojson, lgaGeojson) {
     style: {
       color: "#111",
       weight: 3,
-      fillOpacity: 0
-    }
+      fillOpacity: 0,
+    },
   }).addTo(map);
 
   map.fitBounds(selectedLgaBoundaryLayer.getBounds(), {
-    padding: [20, 20]
+    padding: [20, 20],
   });
 }
 
@@ -602,6 +758,14 @@ function showLgaDetail(lga) {
   if (userIncome && rent) {
     const affordabilityPercent = Math.round((rent / userIncome) * 100);
     document.getElementById("detailAffordability").textContent = `${affordabilityPercent}%`;
+  document.getElementById("detailRentPrice").textContent = rent
+    ? `$${rent}`
+    : "No data";
+
+  if (userIncome && rent) {
+    const affordabilityPercent = Math.round((rent / userIncome) * 100);
+    document.getElementById("detailAffordability").textContent =
+      `${affordabilityPercent}%`;
 
     let affordabilityClass = "affordability-affordable";
     let affordabilityText = "Affordable";
@@ -615,6 +779,8 @@ function showLgaDetail(lga) {
     }
 
     document.getElementById("detailAffordabilityLabel").textContent = "of your weekly income";
+    document.getElementById("detailAffordabilityLabel").textContent =
+      "of your weekly income";
 
     const badge = document.getElementById("affordabilityBadge");
     badge.textContent = affordabilityText;
@@ -622,6 +788,8 @@ function showLgaDetail(lga) {
   } else {
     document.getElementById("detailAffordability").textContent = "--";
     document.getElementById("detailAffordabilityLabel").textContent = "income not available";
+    document.getElementById("detailAffordabilityLabel").textContent =
+      "income not available";
   }
 
   renderLgaTrendChart(lga);
@@ -653,6 +821,7 @@ function resetMapToUserArea() {
   handleLGASelect(userDefaultLGAName, userDefaultLGACode);
 }
 
+// Render trend chart
 function renderLgaTrendChart(lga) {
   if (trendChart) {
     trendChart.destroy();
@@ -680,6 +849,21 @@ function renderLgaTrendChart(lga) {
         pointBorderWidth: 2,
         pointRadius: 4
       }]
+      datasets: [
+        {
+          label: `${lga.name} average weekly rent`,
+          data: data,
+          borderColor: "rgb(232, 84, 106)",
+          backgroundColor: "rgba(232, 84, 106, 0.05)",
+          borderWidth: 3,
+          fill: true,
+          tension: 0.35,
+          pointBackgroundColor: "rgb(232, 84, 106)",
+          pointBorderColor: "#fff",
+          pointBorderWidth: 2,
+          pointRadius: 4,
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -688,14 +872,15 @@ function renderLgaTrendChart(lga) {
         legend: {
           display: true,
           position: "top"
+          position: "top",
         },
         tooltip: {
           callbacks: {
             label: function (context) {
               return `$${Math.round(context.parsed.y)}/week`;
-            }
-          }
-        }
+            },
+          },
+        },
       },
       scales: {
         y: {
@@ -703,16 +888,18 @@ function renderLgaTrendChart(lga) {
           ticks: {
             callback: function (value) {
               return `$${value}`;
-            }
-          }
-        }
-      }
-    }
+            },
+          },
+        },
+      },
+    },
   });
 }
 
 function generateLgaTrendInsight(lga) {
-  const history = (lga.history || []).filter(value => value !== null && value !== undefined);
+  const history = (lga.history || []).filter(
+    (value) => value !== null && value !== undefined,
+  );
 
   if (history.length < 2) {
     document.getElementById("trendStatusBadge").textContent = "No data";
@@ -787,6 +974,7 @@ function handleBudgetFilter() {
   initializeMap(currentGeoJson, currentLgaGeoJson);
 }
 
+// Update budget display
 function updateBudgetDisplay() {
   const display = document.getElementById("currentBudgetDisplay");
   const value = document.getElementById("budgetDisplayValue");
@@ -1205,3 +1393,63 @@ function generateBubbleChartInsights(points, xMetric, yMetric, sizeMetric) {
     `;
   }
 }
+// Terms of Service modal
+document.addEventListener("DOMContentLoaded", function () {
+  const tosModalTrigger = document.getElementById("tosModalTrigger");
+  const tosModal = document.getElementById("tosModal");
+  const tosModalClose = document.getElementById("tosModalClose");
+
+  if (!tosModalTrigger || !tosModal || !tosModalClose) {
+    return;
+  }
+
+  tosModalTrigger.addEventListener("click", function () {
+    tosModal.classList.remove("hidden");
+  });
+
+  tosModalClose.addEventListener("click", function () {
+    tosModal.classList.add("hidden");
+  });
+
+  tosModal.addEventListener("click", function (event) {
+    if (event.target === tosModal) {
+      tosModal.classList.add("hidden");
+    }
+  });
+});
+
+// ABS Data Sources modal
+document.addEventListener("DOMContentLoaded", function () {
+  const absDataBtn = document.getElementById("absDataBtn");
+  const absModal = document.getElementById("absModal");
+  const absModalClose = document.getElementById("absModalClose");
+
+  if (!absDataBtn || !absModal || !absModalClose) {
+    return;
+  }
+
+  function openAbsModal() {
+    absModal.classList.remove("hidden");
+  }
+
+  function closeAbsModal() {
+    absModal.classList.add("hidden");
+  }
+
+  absDataBtn.addEventListener("click", openAbsModal);
+  absModalClose.addEventListener("click", closeAbsModal);
+
+  // Close when clicking outside the modal box
+  absModal.addEventListener("click", function (event) {
+    if (event.target === absModal) {
+      closeAbsModal();
+    }
+  });
+
+  // Close with Escape key
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !absModal.classList.contains("hidden")) {
+      closeAbsModal();
+    }
+  });
+});

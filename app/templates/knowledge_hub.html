@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knowledge Hub – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Knowledge Hub CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/knowledge_hub.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container hub-page">
+      <div class="hub-header">
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          <span class="material-symbols-outlined back-icon">arrow_back</span>
+          Back to Dashboard
+        </a>
+
+        <h1 class="hub-title">Build My Financial Literacy</h1>
+
+        <p class="hub-subtitle">
+          Explore financial education topics at your own pace. Each topic is
+          plain English, practical, and linked to trusted Australian sources.
+        </p>
+      </div>
+
+      <!-- Personalised scenario note -->
+      <div
+        id="personalScenarioNote"
+        class="personal-scenario-note hidden"
+      ></div>
+
+      <!-- Cards Grid -->
+      <section class="hub-grid">
+        <!-- Card 1 -->
+        <a
+          href="#"
+          class="hub-topic-card"
+          id="tile-credit"
+          style="
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/bnpl-credit.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Credit &amp; BNPL 101</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a
+          href="tax_payslip_module"
+          class="hub-topic-card"
+          id="tile-credit"
+          style="
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/payslip.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Tax &amp; Payslip Explained</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a
+          href="superannuation_explaination"
+          class="hub-topic-card"
+          id="tile-budgeting"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/super.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Superannuation</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a
+          href="smart_budgeting"
+          class="hub-topic-card"
+          id="tile-tenant"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/smart-budgeting.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Smart Budgeting</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a
+          href="tenancy_guide"
+          class="hub-topic-card"
+          id="tile-saving"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/rental-guide.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Victorian Tenancy Guide</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 6 -->
+        <a
+          href="safe_employment"
+          class="hub-topic-card"
+          id="tile-goals"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/safe-work.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Safe Employment</h3>
+              <p class="hub-tile-preview">
+                Dummy description text for this topic. Replace this with your
+                final content later.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+      </section>
+
+      <div class="hub-disclaimer">
+        This content is for educational purposes only and is not financial or
+        legal advice. Always consult a qualified professional for personal
+        guidance.
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Profile data from Flask -->
+    <script>
+      window.serverProfileData = {{ profile_data | tojson }};
+    </script>
+
+    <!-- Knowledge Hub JS -->
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+  </body>
+</html>

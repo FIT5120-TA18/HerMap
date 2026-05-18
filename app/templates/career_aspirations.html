@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Career Aspirations – HerMap</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+        <div class="nav-links">
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link"
+            >Dashboard</a
+          >
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container career-page">
+      <div style="margin-bottom: 32px">
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          <span class="material-symbols-outlined" style="font-size: 18px"
+            >arrow_back</span
+          >
+          Back to Dashboard
+        </a>
+        <h1 class="page-inner-title" style="margin-top: 20px">
+          Career Aspirations
+        </h1>
+        <p class="page-inner-subtitle">
+          Explore what women typically earn in full-time roles across different
+          industries in Australia.
+        </p>
+      </div>
+
+      <!-- Your industry indicator -->
+      <div
+        class="your-industry-badge"
+        id="yourIndustryBadge"
+        style="display: none"
+      >
+        <span
+          class="material-symbols-outlined"
+          style="font-size: 18px; color: var(--primary)"
+          >star</span
+        >
+        Your industry: <strong id="yourIndustryName"></strong>
+      </div>
+
+      <div class="career-grid">
+        <!-- Left: Bar Chart -->
+        <div class="career-card">
+          <h3 class="career-card-title">Average Weekly Earnings by Industry</h3>
+          <p class="career-card-sub">Click any bar to see more details.</p>
+          <div id="chartArea">
+            <div class="loading-state" id="loadingState">
+              <div class="loading-spinner"></div>
+              <p>Loading industry data…</p>
+            </div>
+            <div class="chart-wrap" id="chartWrap" style="display: none">
+              <canvas id="industryChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Detail panel -->
+        <div>
+          <div class="industry-info" id="industryDetail" style="display: none">
+            <h4 class="industry-info-name" id="detailName">—</h4>
+            <div class="industry-stat">
+              <p class="industry-stat-label">
+                Avg. Weekly Earnings (2022–23, ABS)
+              </p>
+              <p class="industry-stat-value" id="detailWeekly">$—</p>
+            </div>
+            <div class="industry-stat">
+              <p class="industry-stat-label">Approx. Annual Income</p>
+              <p class="industry-stat-value weekly" id="detailAnnual">$—</p>
+            </div>
+            <div id="gapBadgeWrap"></div>
+            <p class="disclaimer-note">
+              This shows what women working full-time in this industry typically
+              earn — income sourced from ABS Average Weekly Earnings 2022–23;
+              pay gap from WGEA 2024–25. This is not a guarantee of earnings.
+            </p>
+          </div>
+
+          <div class="industry-info" id="defaultHint">
+            <span
+              class="material-symbols-outlined"
+              style="
+                font-size: 32px;
+                color: var(--text-muted);
+                margin-bottom: 12px;
+                display: block;
+              "
+              >touch_app</span
+            >
+            <p
+              style="
+                margin: 0;
+                font-size: 14px;
+                color: var(--text-muted);
+                line-height: 1.7;
+              "
+            >
+              Click any bar on the chart to see detailed earnings information
+              for that industry.
+            </p>
+          </div>
+
+          <div class="source-card">
+            <strong
+              style="
+                color: var(--text-main);
+                display: block;
+                margin-bottom: 6px;
+              "
+              >Data Sources</strong
+            >
+            Data sourced from the
+            <a
+              href="https://www.wgea.gov.au/data-statistics/gender-pay-gaps"
+              target="_blank"
+              rel="noopener"
+              >WGEA Employer Gender Pay Gaps</a
+            >
+            and
+            <a
+              href="https://www.abs.gov.au/statistics/labour/earnings-and-working-conditions/average-weekly-earnings-australia"
+              target="_blank"
+              rel="noopener"
+              >ABS Average Weekly Earnings</a
+            >. Gender pay gap figures indicate how much women earn relative to
+            men in each industry.
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            id="absDataBtn"
+          >
+            ABS Data Sources
+          </button>
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            id="tosModalTrigger"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Popup -->
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="absModalClose"
+          aria-label="Close popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2>ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia’s national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="tosModalClose"
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.profileData = {{ profile_data | tojson }};
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script
+      src="{{ url_for('static', filename='js/career_aspirations.js') }}"
+      defer
+    ></script>
+  </body>
+</html>

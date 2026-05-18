@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit &amp; Debt Awareness – HerMap</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    .debt-page {
+      padding: 48px 0 80px;
+      min-height: calc(100vh - 100px);
+    }
+
+    .question-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-xl);
+      padding: 40px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .q-step {
+      display: none;
+    }
+
+    .q-step.active {
+      display: block;
+      animation: fadeInUp 0.35s ease;
+    }
+
+    .q-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      color: white;
+    }
+
+    .q-icon .material-symbols-outlined {
+      font-size: 36px;
+    }
+
+    .q-label {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 0 0 10px;
+    }
+
+    .q-title {
+      font-family: var(--font-heading);
+      font-size: clamp(22px, 3vw, 30px);
+      margin: 0 0 8px;
+    }
+
+    .q-sub {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin: 0 0 32px;
+    }
+
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .option-btn {
+      width: 100%;
+      padding: 16px 20px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      text-align: left;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-btn:hover {
+      border-color: var(--primary);
+      background: rgba(232, 84, 106, 0.04);
+      transform: translateY(-1px);
+    }
+
+    .option-btn.selected {
+      background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: var(--shadow-brand);
+    }
+
+    .option-emoji {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .q-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .q-next-btn {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 999px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+      box-shadow: var(--shadow-brand);
+      transition: transform 0.2s;
+    }
+
+    .q-next-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .q-next-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .q-back-btn {
+      padding: 15px 24px;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--surface-2);
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+
+    .q-back-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Progress dots */
+    .q-progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .q-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--divider);
+      transition: all 0.3s;
+    }
+
+    .q-dot.active {
+      background: var(--primary);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    .q-dot.done {
+      background: var(--secondary);
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="nav-brand">
+        <a href="{{ url_for('main.landing') }}" class="logo-link">
+          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
+        </a>
+      </div>
+      <div class="nav-links">
+        <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
+        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container debt-page">
+    <div style="margin-bottom:40px;">
+      <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+        <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
+        Back to Dashboard
+      </a>
+    </div>
+
+    <div class="question-card">
+      <!-- Progress dots -->
+      <div class="q-progress">
+        <div class="q-dot active" id="dot0"></div>
+        <div class="q-dot" id="dot1" style="display:none;"></div>
+      </div>
+
+      <!-- Q1: Credit / BNPL usage -->
+      <div class="q-step active" id="step0">
+        <div class="q-icon gradient-bg">
+          <span class="material-symbols-outlined">credit_card</span>
+        </div>
+        <p class="q-label">Question 1 of 2</p>
+        <h2 class="q-title">Some people use credit cards or buy-now-pay-later to cover gaps — does this apply to you?</h2>
+        <p class="q-sub">Understanding how you cover weekly shortfalls helps us show you the real cost and what you can do about it.</p>
+        <div class="option-list" id="q1Options">
+          <button class="option-btn" data-value="credit" onclick="selectOption(this, 'q1')">
+            <span class="option-emoji">💳</span> Yes, I use credit cards
+          </button>
+          <button class="option-btn" data-value="bnpl" onclick="selectOption(this, 'q1')">
+            <span class="option-emoji">🛍</span> Yes, I use BNPL (Afterpay, Zip, etc.)
+          </button>
+          <button class="option-btn" data-value="both" onclick="selectOption(this, 'q1')">
+            <span class="option-emoji">🔗</span> Both
+          </button>
+          <button class="option-btn" data-value="no" onclick="selectOption(this, 'q1')">
+            <span class="option-emoji">✅</span> No, I don't use credit or BNPL
+          </button>
+          <button class="option-btn" data-value="considering" onclick="selectOption(this, 'q1')">
+            <span class="option-emoji">🤔</span> Maybe, I'm considering it
+          </button>
+        </div>
+        <div class="q-actions">
+          <button class="q-next-btn" id="q1NextBtn" disabled onclick="goStep1()">Continue →</button>
+        </div>
+      </div>
+
+      <!-- Q2: Who covers the bill -->
+      <div class="q-step" id="step1">
+        <div class="q-icon gradient-bg">
+          <span class="material-symbols-outlined">family_restroom</span>
+        </div>
+        <p class="q-label">Question 2 of 2</p>
+        <h2 class="q-title">Who usually covers this bill?</h2>
+        <p class="q-sub">Understanding who pays helps us give you more relevant guidance on managing credit and debt.
+        </p>
+        <div class="option-list" id="q2Options">
+          <button class="option-btn" data-value="self" onclick="selectOption(this, 'q2')">
+            <span class="option-emoji">💪</span> I pay it myself
+          </button>
+          <button class="option-btn" data-value="parents" onclick="selectOption(this, 'q2')">
+            <span class="option-emoji">👨‍👩‍👧</span> My parents cover it
+          </button>
+          <button class="option-btn" data-value="split" onclick="selectOption(this, 'q2')">
+            <span class="option-emoji">🤝</span> Split between us
+          </button>
+        </div>
+        <div class="q-actions">
+          <button class="q-back-btn" onclick="goBack()">Back</button>
+          <button class="q-next-btn" id="q2NextBtn" disabled onclick="goToProjection()">See how debt could grow
+            →</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="{{ url_for('main.landing') }}" class="logo-link">
+          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
+        </a>
+      </div>
+      <div class="nav-links">
+        <a href="#" class="nav-link">Privacy Policy</a>
+        <a href="#" class="nav-link">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let q1Answer = null, q2Answer = null;
+
+    function selectOption(btn, question) {
+      const parent = btn.closest(".option-list");
+      parent.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      if (question === "q1") {
+        q1Answer = btn.dataset.value;
+        document.getElementById("q1NextBtn").disabled = false;
+      } else {
+        q2Answer = btn.dataset.value;
+        document.getElementById("q2NextBtn").disabled = false;
+      }
+    }
+
+    function goStep1() {
+      if (!q1Answer) return;
+
+      if (q1Answer === "no") {
+        // Skip projection - go straight to knowledge hub
+        sessionStorage.setItem("debtAwareness", JSON.stringify({ creditType: "none", payer: "none" }));
+        window.location.href = "{{ url_for('main.knowledge_hub') }}";
+        return;
+      }
+
+      if (q1Answer === "considering") {
+        sessionStorage.setItem("debtAwareness", JSON.stringify({ creditType: "considering", payer: "none" }));
+        window.location.href = "{{ url_for('main.debt_projection') }}";
+      }
+
+      // Show Q2
+      document.getElementById("step0").classList.remove("active");
+      document.getElementById("step1").classList.add("active");
+      document.getElementById("dot0").classList.remove("active");
+      document.getElementById("dot0").classList.add("done");
+      document.getElementById("dot1").style.display = "block";
+      document.getElementById("dot1").classList.add("active");
+    }
+
+    function goBack() {
+      document.getElementById("step1").classList.remove("active");
+      document.getElementById("step0").classList.add("active");
+      document.getElementById("dot1").classList.remove("active");
+      document.getElementById("dot1").style.display = "none";
+      document.getElementById("dot0").classList.remove("done");
+      document.getElementById("dot0").classList.add("active");
+    }
+
+    function goToProjection() {
+      if (!q2Answer) return;
+      sessionStorage.setItem("debtAwareness", JSON.stringify({ creditType: q1Answer, payer: q2Answer }));
+      window.location.href = "{{ url_for('main.debt_projection') }}";
+    }
+  </script>
+</body>
+
+</html>

@@ -62,16 +62,6 @@ def quick_profile():
     profile_data = session.get("profile", {})
     return render_template("profile_build_1.html", profile_data=profile_data)
 
-# @main.route("/review")
-# @access_required
-# def review():
-#     profile_data = session.get("profile", {})
-
-#     if not profile_data:
-#         return redirect(url_for("main.quick_profile"))
-
-#     return render_template("review.html", profile_data=profile_data)
-
 # Google Gemini API
 def generate_financial_fact(profile_data):
     api_key = os.getenv("GEMINI_API_KEY")
@@ -288,3 +278,99 @@ def generate_spending_insight(spending_data):
         if surplus == 0:
             return "Your weekly income is fully used by your current spending. This means there may be little room for emergencies, so building even a small weekly buffer could help."
         return "You currently have some money left over each week. A small regular saving habit could help you build more independence and confidence over time."
+
+# ─── Iteration 3 Routes ────────────────────────────────────────────────────────
+
+# Epic 5 – Spending Input
+@main.route("/spending")
+@access_required
+def spending_input():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("spending_input.html", profile_data=profile_data)
+
+# Epic 5 – Spending Results
+@main.route("/spending/result")
+@access_required
+def spending_result():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("spending_result.html", profile_data=profile_data)
+
+# Epic 6 – Debt Awareness
+@main.route("/debt_awareness")
+@access_required
+def debt_awareness():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("debt_awareness.html", profile_data=profile_data)
+
+# Epic 6 – Debt Projection
+@main.route("/debt_projection")
+@access_required
+def debt_projection():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("debt_projection.html", profile_data=profile_data)
+
+# Epic 7 – Career Aspirations
+@main.route("/career_aspirations")
+@access_required
+def career_aspirations():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("career_aspirations.html", profile_data=profile_data)
+
+# Epic 8 – Knowledge Hub
+@main.route("/knowledge_hub")
+@access_required
+def knowledge_hub():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("knowledge_hub.html", profile_data=profile_data)
+
+@main.route("/tax_payslip_module")
+@access_required
+def tax_payslip():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("tax_payslip_module.html", profile_data=profile_data)
+
+@main.route("/superannuation_explaination")
+@access_required
+def super_explained():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("superannuation_explaination.html", profile_data=profile_data)
+
+@main.route("/smart_budgeting")
+@access_required
+def smart_budget():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("smart_budgeting.html", profile_data=profile_data)
+
+@main.route("/tenancy_guide")
+@access_required
+def tenancy_guide():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("tenancy_guide.html", profile_data=profile_data)
+
+@main.route("/safe_employment")
+@access_required
+def safe_employment():
+    profile_data = session.get("profile", {})
+    if not profile_data:
+        return redirect(url_for("main.quick_profile"))
+    return render_template("safe_employment.html", profile_data=profile_data)

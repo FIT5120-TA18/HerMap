@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Track My Spending – HerMap</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <style>
+    .spending-page {
+      padding: 48px 0 80px;
+      min-height: calc(100vh - 100px);
+    }
+
+    .spending-header {
+      margin-bottom: 36px;
+    }
+
+    .income-banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: linear-gradient(135deg, rgba(232, 84, 106, 0.08) 0%, rgba(155, 114, 207, 0.08) 100%);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+
+    .income-banner-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .income-banner-icon .material-symbols-outlined {
+      font-size: 28px;
+    }
+
+    .income-banner-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0 0 4px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .income-banner-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .spending-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .spending-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .spending-form-card {
+      background: var(--surface);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .category-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .category-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 18px;
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-md);
+      background: var(--surface-2);
+      transition: border-color 0.2s;
+    }
+
+    .category-row:focus-within {
+      border-color: var(--primary);
+      background: var(--surface);
+    }
+
+    .cat-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .cat-icon .material-symbols-outlined {
+      font-size: 22px;
+      color: white;
+    }
+
+    .cat-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cat-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0 0 2px;
+    }
+
+    .cat-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .cat-tag.essential {
+      background: rgba(76, 175, 80, 0.12);
+      color: #2e7d32;
+    }
+
+    .cat-tag.non-essential {
+      background: rgba(255, 152, 0, 0.12);
+      color: #e65100;
+    }
+
+    .cat-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cat-currency {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .cat-amount {
+      width: 90px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      font-size: 15px;
+      font-weight: 700;
+      font-family: var(--font-body);
+      text-align: right;
+      background: var(--surface);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .cat-amount:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(232, 84, 106, 0.1);
+    }
+
+    /* Summary sticky card */
+    .summary-sticky {
+      position: sticky;
+      top: 110px;
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .summary-title {
+      font-family: var(--font-heading);
+      font-size: 20px;
+      margin: 0 0 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--divider);
+    }
+
+    .summary-row:last-of-type {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .summary-value {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .summary-value.essential {
+      color: #2e7d32;
+    }
+
+    .summary-value.non-essential {
+      color: #e65100;
+    }
+
+    .summary-value.total {
+      font-size: 20px;
+    }
+
+    .summary-divider {
+      height: 1px;
+      background: var(--divider);
+      margin: 16px 0;
+    }
+
+    .check-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 16px;
+      border: none;
+      border-radius: var(--radius-pill);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+      box-shadow: var(--shadow-brand);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .check-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .check-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .summary-note {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 14px;
+      line-height: 1.6;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="nav-brand">
+        <a href="{{ url_for('main.landing') }}" class="logo-link">
+          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
+        </a>
+      </div>
+      <div class="nav-links">
+        <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
+        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container spending-page">
+    <div class="spending-header">
+      <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+        <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
+        Back to Dashboard
+      </a>
+      <h1 class="page-inner-title" style="margin-top:20px;">Track My Spending</h1>
+      <p class="page-inner-subtitle">Enter how much you spend across different categories each week to see your
+        financial position.</p>
+    </div>
+
+    <!-- Weekly income banner -->
+    <div class="income-banner">
+      <div class="income-banner-icon gradient-bg">
+        <span class="material-symbols-outlined">payments</span>
+      </div>
+      <div>
+        <p class="income-banner-label">Your weekly income</p>
+        <p class="income-banner-value" id="weeklyIncomeDisplay">$—</p>
+      </div>
+    </div>
+
+    <div class="spending-grid">
+      <!-- Left: Category Inputs -->
+      <div class="spending-form-card">
+        <h2 style="font-family:var(--font-heading);font-size:22px;margin:0 0 20px;">Weekly Expenses</h2>
+        <p style="color:var(--text-muted);font-size:14px;margin:0 0 24px;line-height:1.6;">
+          Enter your weekly spend for each category. Leave at $0 if it doesn't apply to you.
+        </p>
+        <div class="category-list" id="categoryList">
+          <!-- Categories injected by JS -->
+        </div>
+      </div>
+
+      <!-- Right: Running Summary -->
+      <div class="summary-sticky">
+        <div class="summary-card">
+          <h3 class="summary-title">Weekly Summary</h3>
+
+          <div class="summary-row">
+            <span class="summary-label">✅ Essentials</span>
+            <span class="summary-value essential" id="essentialTotal">$0</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">🛍 Non-essentials</span>
+            <span class="summary-value non-essential" id="nonEssentialTotal">$0</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row">
+            <span class="summary-label" style="font-weight:700;color:var(--text-main);">Total Expenses</span>
+            <span class="summary-value total" id="grandTotal">$0</span>
+          </div>
+
+          <button class="check-btn" id="checkBtn" onclick="goToResults()">
+            Check my financial position →
+          </button>
+          <p class="summary-note">Your data is only stored in your browser session and is never saved to a database.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="{{ url_for('main.landing') }}" class="logo-link">
+          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
+        </a>
+      </div>
+      <div class="nav-links">
+        <a href="#" class="nav-link">Privacy Policy</a>
+        <a href="#" class="nav-link">Terms of Service</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sync Flask server-side session profile → browser sessionStorage
+    // (profile_data is passed from routes.py via Jinja2)
+    (function syncProfile() {
+      const serverProfile = {{ profile_data | tojson }};
+      if (serverProfile && Object.keys(serverProfile).length > 0) {
+        sessionStorage.setItem("profile", JSON.stringify(serverProfile));
+      }
+    })();
+
+    // Category definitions
+    const CATEGORIES = [
+      { key: "rent", name: "Rent", icon: "home", type: "essential", color: "#e8546a" },
+      { key: "utilities", name: "Utilities & Bills", icon: "bolt", type: "essential", color: "#c45fa8" },
+      { key: "groceries", name: "Groceries", icon: "shopping_basket", type: "essential", color: "#9b72cf" },
+      { key: "transport", name: "Transport", icon: "directions_bus", type: "essential", color: "#4e9af1" },
+      { key: "medical", name: "Medical", icon: "local_hospital", type: "essential", color: "#26c6da" },
+      { key: "eating_out", name: "Eating Out & Takeaway", icon: "restaurant", type: "non-essential", color: "#ff7043" },
+      { key: "entertain", name: "Entertainment & Subscriptions", icon: "play_circle", type: "non-essential", color: "#ab47bc" },
+      { key: "clothing", name: "Clothing & Personal Care", icon: "checkroom", type: "non-essential", color: "#ec407a" },
+      { key: "other", name: "Other", icon: "more_horiz", type: "non-essential", color: "#78909c" },
+    ];
+
+    // Render categories
+    const list = document.getElementById("categoryList");
+    CATEGORIES.forEach(cat => {
+      const row = document.createElement("div");
+      row.className = "category-row";
+      row.innerHTML = `
+        <div class="cat-icon" style="background:${cat.color};">
+          <span class="material-symbols-outlined">${cat.icon}</span>
+        </div>
+        <div class="cat-info">
+          <p class="cat-name">${cat.name}</p>
+          <span class="cat-tag ${cat.type}">${cat.type === "essential" ? "Essential" : "Non-essential"}</span>
+        </div>
+        <div class="cat-input-wrap">
+          <span class="cat-currency">$</span>
+          <input class="cat-amount" type="number" min="0" step="1" value="0"
+            id="cat_${cat.key}" data-type="${cat.type}"
+            oninput="updateTotals()" />
+        </div>`;
+      list.appendChild(row);
+    });
+
+    // Read weekly income from sessionStorage
+    function getWeeklyIncome() {
+      const profile = JSON.parse(sessionStorage.getItem("profile") || "{}");
+      return parseFloat(profile.income) || 0;
+    }
+
+    const weeklyIncome = getWeeklyIncome();
+    document.getElementById("weeklyIncomeDisplay").textContent =
+      weeklyIncome > 0 ? `$${weeklyIncome.toFixed(0)}/week` : "$—";
+
+    // If the user lives at home, hide rent row (they may not pay rent)
+    const profile = JSON.parse(sessionStorage.getItem("profile") || "{}");
+    if (profile.living === "At home with family") {
+      const rentInput = document.getElementById("cat_rent");
+      if (rentInput) rentInput.closest(".category-row").style.display = "none";
+    }
+
+    function updateTotals() {
+      let essential = 0, nonEssential = 0;
+      CATEGORIES.forEach(cat => {
+        const el = document.getElementById("cat_" + cat.key);
+        if (!el) return;
+        const val = parseFloat(el.value) || 0;
+        if (cat.type === "essential") essential += val;
+        else nonEssential += val;
+      });
+      document.getElementById("essentialTotal").textContent = `$${essential.toFixed(0)}`;
+      document.getElementById("nonEssentialTotal").textContent = `$${nonEssential.toFixed(0)}`;
+      document.getElementById("grandTotal").textContent = `$${(essential + nonEssential).toFixed(0)}`;
+    }
+
+    function goToResults() {
+      const expenses = {};
+      let total = 0;
+      CATEGORIES.forEach(cat => {
+        const el = document.getElementById("cat_" + cat.key);
+        const val = parseFloat(el ? el.value : 0) || 0;
+        expenses[cat.key] = val;
+        total += val;
+      });
+
+      // Save to sessionStorage
+      const spendingData = {
+        expenses,
+        totalExpenses: total,
+        weeklyIncome: getWeeklyIncome(),
+        living: profile.living || ""
+      };
+      sessionStorage.setItem("spendingData", JSON.stringify(spendingData));
+      window.location.href = "{{ url_for('main.spending_result') }}";
+    }
+  </script>
+</body>
+
+</html>
