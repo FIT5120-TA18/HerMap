@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <!-- Chart.js for trend visualization -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
-  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/tutorial.css') }}" />
 </head>
 
 <body>
@@ -100,17 +100,6 @@
               </div>
             
             </div>
-          </div>
-
-          <!-- Info Card -->
-          <div class="rent-filter-card">
-            <p class="filter-title">ℹ️ How to Use</p>
-            <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-              1. Search your suburb or postcode to load your local area<br>
-              2. Use the map to compare suburb rent within that LGA<br>
-              3. Enter a budget and click <strong>See Suburbs Within Budget</strong> to highlight affordable suburbs<br>
-              4. Click any LGA on the map to view rent, affordability, and rent trends
-            </p>
           </div>
         </aside>
 
@@ -413,6 +402,58 @@
   </script>
   
   <script src="{{ url_for('static', filename='js/rent_comparison.js') }}"></script>
+
+  <!-- 1. Tutorial HTML -->
+  <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+    <span class="material-symbols-outlined">help</span>
+  </button>
+  <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+  <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+  <div class="tutorial-popover" id="tutorialPopover">
+    <div class="tutorial-step-indicator">
+      <span id="tutorialStepLabel">Step 1 of 5</span>
+    </div>
+    <h2 id="tutorialTitle"></h2>
+    <p id="tutorialDesc"></p>
+    <div class="tutorial-actions">
+      <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+      <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+    </div>
+  </div>
+
+  <!-- 2. TUTORIAL_STEPS -->
+  <script>
+  const TUTORIAL_STEPS = [
+    {
+      targetId: 'locationSearchInput',
+      title: 'Search your area',
+      desc: 'Type a suburb or postcode to zoom the map to your area and see local rent prices.'
+    },
+    {
+      targetId: 'budgetInput',
+      title: 'Set your budget',
+      desc: 'Enter your weekly rent budget and tap the button to highlight only the suburbs you can afford.'
+    },
+    {
+      targetId: 'mapContainer',
+      title: 'Explore the map',
+      desc: 'Suburbs are coloured by weekly rent. Tap any suburb to see detailed rent data, affordability, and trend information.'
+    },
+    {
+      targetId: 'suburbBubbleChart',
+      title: 'Bubble chart view',
+      desc: 'Switch to the bubble chart to compare suburbs across rent, transport, and green space all at once.'
+    },
+    {
+      targetId: 'lgaDetailPanel',
+      title: 'Suburb detail panel',
+      desc: 'When you tap a suburb on the map, the full breakdown appears here — rent, affordability rating, and price trend.'
+    }
+  ];
+  </script>
+
+  <!-- 3. tutorial.js -->
+  <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
 </body>
 
 </html>
