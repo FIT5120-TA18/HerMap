@@ -1,19 +1,18 @@
 // Rent Comparison Page - JavaScript
+
 let lgaRentLayer = null;
 let suburbRentLayer = null;
 let currentLgaRentGeoJson = null;
-let currentSuburbs = [];
 let currentLgaGeoJson = null;
-let map = null;
-let suburbGeoJsonLayer = null;
 let currentGeoJson = null;
+let map = null;
+
 let budgetFilterActive = false;
-// let selectedState = null;
-// let selectedLGA = null;
+let selectedLGA = null;
 let selectedLGAName = null;
-let selectedSuburb = null;
 let currentBudget = null;
 let userIncome = null;
+
 let trendChart = null;
 let userDefaultLGAName = null;
 let userDefaultLGACode = null;
@@ -22,11 +21,30 @@ let suburbBubbleChart = null;
 let suburbBubbleData = [];
 let addedBubbleSuburbs = [];
 
+/*
+  Handles local and /underdevelopment deployment paths safely.
+  If your Nginx already supports /api, this still works locally.
+*/
+const BASE_PATH = window.location.pathname.startsWith("/underdevelopment")
+  ? "/underdevelopment"
+  : "";
+
+function apiUrl(path) {
+  return `${BASE_PATH}${path}`;
+}
+
+/* =========================================================
+   Bubble chart quadrant plugin
+   ========================================================= */
+
 const quadrantPlugin = {
   id: "quadrantPlugin",
-  
+
   afterDraw(chart) {
     const { ctx, chartArea, scales } = chart;
+
+    if (!chartArea || !scales.x || !scales.y) return;
+
     const xScale = scales.x;
     const yScale = scales.y;
 
@@ -37,17 +55,18 @@ const quadrantPlugin = {
     const yMid = yScale.getPixelForValue(yMidValue);
 
     ctx.save();
-    // Highlight sweet spot quadrant: top-right
-ctx.fillStyle = "rgba(79, 111, 216, 0.08)";
-ctx.fillRect(
-  xMid,
-  chartArea.top,
-  chartArea.right - xMid,
-  yMid - chartArea.top
-);
 
-ctx.strokeStyle = "rgba(47, 90, 168, 0.55)";
-ctx.lineWidth = 2;
+    // Sweet spot quadrant: lower cost + higher access.
+    ctx.fillStyle = "rgba(79, 111, 216, 0.08)";
+    ctx.fillRect(
+      chartArea.left,
+      chartArea.top,
+      xMid - chartArea.left,
+      yMid - chartArea.top,
+    );
+
+    ctx.strokeStyle = "rgba(47, 90, 168, 0.45)";
+    ctx.lineWidth = 2;
     ctx.setLineDash([6, 6]);
 
     ctx.beginPath();
@@ -61,58 +80,85 @@ ctx.lineWidth = 2;
     ctx.stroke();
 
     ctx.setLineDash([]);
+
     ctx.textAlign = "center";
+    ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
+    ctx.font = "12px Inter, sans-serif";
 
-ctx.fillStyle = "rgba(28, 23, 20, 0.75)";
-ctx.font = "12px Inter";
+    ctx.fillText(
+      "Lower cost + Higher access",
+      chartArea.left + 130,
+      chartArea.top + 22,
+    );
 
-ctx.fillText(
-  "Higher cost + Higher access",
-  chartArea.left + 140,
-  chartArea.top + 22
-);
+    ctx.fillText(
+      "Higher cost + Higher access",
+      chartArea.right - 145,
+      chartArea.top + 22,
+    );
 
-ctx.fillText(
-  "Higher cost + Lower access",
-  chartArea.left + 140,
-  chartArea.bottom - 12
-);
+    ctx.fillText(
+      "Lower cost + Lower access",
+      chartArea.left + 130,
+      chartArea.bottom - 12,
+    );
 
-ctx.fillText(
-  "Lower cost + Lower access",
-  chartArea.right - 140,
-  chartArea.bottom - 12
-);
-
-// Sweet spot label
-ctx.fillStyle = "#2f4fb8";
-ctx.font = "bold 13px Inter";
-
-ctx.fillText(
-  "★ Sweet spot: Lower cost + Higher access",
-  chartArea.right - 170,
-  chartArea.top + 24
-);
+    ctx.fillText(
+      "Higher cost + Lower access",
+      chartArea.right - 145,
+      chartArea.bottom - 12,
+    );
 
     ctx.restore();
-  }
+  },
 };
 
-// Initialize page
+/* =========================================================
+   Init
+   ========================================================= */
+
 document.addEventListener("DOMContentLoaded", async function () {
   initializeEventListeners();
+  initializeFooterModals();
+
   await loadLgaRentLayer();
-  loadUserData();
+  await loadUserData();
 });
+
+/* =========================================================
+   API / loading helpers
+   ========================================================= */
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Request failed: ${response.status} ${url}`);
+  }
+
+  return response.json();
+}
 
 async function loadLgaRentLayer() {
   try {
-    // const response = await fetch(`${BASE_PATH}/api/lga-rent-map`);
-    const response = await fetch(`/api/lga-rent-map`);
-    currentLgaRentGeoJson = await response.json();
+    showMapLoading("Loading rental map data...");
+
+    currentLgaRentGeoJson = await fetchJson(apiUrl("/api/lga-rent-map"));
+
     console.log("Loaded all LGA rent layer:", currentLgaRentGeoJson);
+
+    if (
+      !currentLgaRentGeoJson ||
+      !currentLgaRentGeoJson.features ||
+      !currentLgaRentGeoJson.features.length
+    ) {
+      showMapError("No rental map data was returned from the database.");
+    }
   } catch (error) {
     console.error("Error loading LGA rent layer:", error);
+    showMapError(
+      "Could not load rental map data. Please check the API route and database.",
+    );
   }
 }
 
@@ -141,6 +187,163 @@ function showMapError(message) {
   `;
 }
 
+function showMapPlaceholder(
+  message = "Select a LGA to view suburbs on the map",
+) {
+  const container = document.getElementById("mapContainer");
+  if (!container) return;
+
+  container.classList.add("map-placeholder");
+  container.innerHTML = `
+    <div class="map-loading">
+      <div class="map-spinner"></div>
+      <div>${message}</div>
+    </div>
+  `;
+}
+
+/* =========================================================
+   Event listeners
+   ========================================================= */
+
+function initializeEventListeners() {
+  const locationSearchInput = document.getElementById("locationSearchInput");
+  const locationSearchSuggestions = document.getElementById(
+    "locationSearchSuggestions",
+  );
+
+  const selectedLgaInput = document.getElementById("selectedLgaInput");
+  const selectedLgacodeInput = document.getElementById("selectedLgacodeInput");
+
+  const resetMapBtn = document.getElementById("resetMapBtn");
+  if (resetMapBtn) {
+    resetMapBtn.addEventListener("click", resetMapToUserArea);
+  }
+
+  const filterButton = document.getElementById("filterButton");
+  if (filterButton) {
+    filterButton.addEventListener("click", handleBudgetFilter);
+  }
+
+  const budgetInput = document.getElementById("budgetInput");
+  if (budgetInput) {
+    budgetInput.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        handleBudgetFilter();
+      }
+    });
+  }
+
+  const closeDetailBtn = document.getElementById("closeDetailBtn");
+  if (closeDetailBtn) {
+    closeDetailBtn.addEventListener("click", closeDetailPanel);
+  }
+
+  // Search suburb/postcode and resolve to LGA.
+  if (locationSearchInput && locationSearchSuggestions) {
+    locationSearchInput.addEventListener("input", async function () {
+      const query = locationSearchInput.value.trim();
+
+      if (selectedLgaInput) selectedLgaInput.value = "";
+      if (selectedLgacodeInput) selectedLgacodeInput.value = "";
+
+      selectedLGAName = null;
+
+      if (query.length < 2) {
+        locationSearchSuggestions.innerHTML = "";
+        return;
+      }
+
+      try {
+        const locations = await fetchJson(
+          apiUrl(`/api/locations?q=${encodeURIComponent(query)}`),
+        );
+
+        if (!locations.length) {
+          locationSearchSuggestions.innerHTML = `
+            <div class="location-suggestion-item no-result">
+              No matching suburb found
+            </div>
+          `;
+          return;
+        }
+
+        locationSearchSuggestions.innerHTML = locations
+          .map(
+            (item) => `
+              <button
+                type="button"
+                class="location-suggestion-item"
+                data-locality="${escapeHtml(item.locality)}"
+                data-postcode="${escapeHtml(item.postcode)}"
+              >
+                ${escapeHtml(item.locality)} (${escapeHtml(item.postcode)})
+              </button>
+            `,
+          )
+          .join("");
+      } catch (error) {
+        console.error("Location fetch error:", error);
+        locationSearchSuggestions.innerHTML = "";
+      }
+    });
+
+    locationSearchSuggestions.addEventListener("click", async function (event) {
+      const item = event.target.closest(".location-suggestion-item");
+
+      if (!item || item.classList.contains("no-result")) return;
+
+      const locality = item.dataset.locality;
+      const postcode = item.dataset.postcode;
+
+      locationSearchInput.value = `${locality} (${postcode})`;
+      locationSearchSuggestions.innerHTML = "";
+
+      await resolveLocationToLga(locality, postcode);
+    });
+  }
+
+  // Bubble chart option buttons.
+  document.querySelectorAll(".bubble-choice-buttons").forEach((group) => {
+    group.addEventListener("click", function (event) {
+      const button = event.target.closest(".bubble-choice-btn");
+      if (!button) return;
+
+      const targetInputId = group.dataset.target;
+      const hiddenInput = document.getElementById(targetInputId);
+
+      if (!hiddenInput) return;
+
+      hiddenInput.value = button.dataset.value;
+
+      group.querySelectorAll(".bubble-choice-btn").forEach((btn) => {
+        btn.classList.remove("active");
+      });
+
+      button.classList.add("active");
+
+      renderSuburbBubbleChart();
+    });
+  });
+
+  initializeLocationAutocomplete({
+    inputId: "bubbleSuburbSearch",
+    suggestionsId: "bubbleSuburbSuggestions",
+    onSelect: ({ locality, postcode }) => {
+      addSuburbToBubbleChart(locality, postcode);
+    },
+  });
+
+  const clearAddedSuburbsBtn = document.getElementById("clearAddedSuburbsBtn");
+  if (clearAddedSuburbsBtn) {
+    clearAddedSuburbsBtn.addEventListener("click", function () {
+      addedBubbleSuburbs = [];
+      renderAddedSuburbTags();
+      renderSuburbBubbleChart();
+    });
+  }
+}
+
 function initializeLocationAutocomplete({ inputId, suggestionsId, onSelect }) {
   const input = document.getElementById(inputId);
   const suggestions = document.getElementById(suggestionsId);
@@ -156,22 +359,33 @@ function initializeLocationAutocomplete({ inputId, suggestionsId, onSelect }) {
     }
 
     try {
-      const response = await fetch(`/api/locations?q=${encodeURIComponent(query)}`);
-      const locations = await response.json();
+      const locations = await fetchJson(
+        apiUrl(`/api/locations?q=${encodeURIComponent(query)}`),
+      );
 
       if (!locations.length) {
         suggestions.innerHTML = `
-          <div class="location-suggestion-item no-result">No matching suburb found</div>`;
+          <div class="location-suggestion-item no-result">
+            No matching suburb found
+          </div>
+        `;
         return;
       }
 
-      suggestions.innerHTML = locations.map(item => `
-        <button type="button" class="location-suggestion-item"
-          data-locality="${item.locality}" data-postcode="${item.postcode}">
-          ${item.locality} (${item.postcode})
-        </button>
-      `).join("");
-
+      suggestions.innerHTML = locations
+        .map(
+          (item) => `
+            <button
+              type="button"
+              class="location-suggestion-item"
+              data-locality="${escapeHtml(item.locality)}"
+              data-postcode="${escapeHtml(item.postcode)}"
+            >
+              ${escapeHtml(item.locality)} (${escapeHtml(item.postcode)})
+            </button>
+          `,
+        )
+        .join("");
     } catch (error) {
       console.error("Location autocomplete error:", error);
       suggestions.innerHTML = "";
@@ -180,6 +394,7 @@ function initializeLocationAutocomplete({ inputId, suggestionsId, onSelect }) {
 
   suggestions.addEventListener("click", function (event) {
     const item = event.target.closest(".location-suggestion-item");
+
     if (!item || item.classList.contains("no-result")) return;
 
     const locality = item.dataset.locality;
@@ -194,293 +409,27 @@ function initializeLocationAutocomplete({ inputId, suggestionsId, onSelect }) {
   });
 }
 
-function initializeEventListeners() {
-  const locationSearchInput = document.getElementById("locationSearchInput");
-  const locationSearchSuggestions = document.getElementById("locationSearchSuggestions");
-  const selectedLgaInput = document.getElementById("selectedLgaInput");
-  const selectedLgacodeInput = document.getElementById("selectedLgacodeInput");
-
-  const resetMapBtn = document.getElementById("resetMapBtn");
-  if (resetMapBtn) {
-    resetMapBtn.addEventListener("click", resetMapToUserArea);
-  }
-
-  document.querySelectorAll(".bubble-choice-buttons").forEach(group => {
-    group.addEventListener("click", function (event) {
-      const button = event.target.closest(".bubble-choice-btn");
-      if (!button) return;
-  
-      const targetInputId = group.dataset.target;
-      const hiddenInput = document.getElementById(targetInputId);
-  
-      if (!hiddenInput) return;
-  
-      hiddenInput.value = button.dataset.value;
-  
-      group.querySelectorAll(".bubble-choice-btn").forEach(btn => {
-        btn.classList.remove("active");
-      });
-  
-      button.classList.add("active");
-  
-      renderSuburbBubbleChart();
-    });
-  });
-
-  initializeLocationAutocomplete({
-    inputId: "bubbleSuburbSearch",
-    suggestionsId: "bubbleSuburbSuggestions",
-    onSelect: ({ locality, postcode }) => {
-      addSuburbToBubbleChart(locality, postcode);
-    }
-  });
-
-  const clearAddedSuburbsBtn = document.getElementById("clearAddedSuburbsBtn");
-  if (clearAddedSuburbsBtn) {
-    clearAddedSuburbsBtn.addEventListener("click", function () {
-      addedBubbleSuburbs = [];
-      renderAddedSuburbTags();
-      renderSuburbBubbleChart();
-    });
-  }
-
-  if (locationSearchInput && locationSearchSuggestions) {
-    locationSearchInput.addEventListener("input", async function () {
-      const query = locationSearchInput.value.trim();
-  // Get the LGA search input (visible text field)
-  const lgaInput = document.getElementById("lgaInput");
-
-  // Get the dropdown container where LGA suggestions will appear
-  const lgaSuggestions = document.getElementById("lgaSuggestions");
-
-  // Hidden input to store the selected LGA value
-  const selectedLgaInput = document.getElementById("selectedLgaInput");
-
-  // Only continue if both the input and suggestion box exist
-  if (lgaInput && lgaSuggestions) {
-    // Listen for user typing in the LGA search box
-    lgaInput.addEventListener("input", async function () {
-      const query = lgaInput.value.trim(); // Get what user typed
-
-      if (selectedLgaInput) selectedLgaInput.value = "";
-      if (selectedLgacodeInput) selectedLgacodeInput.value = "";
-      selectedLGAName = null;
-
-      if (query.length < 2) {
-        locationSearchSuggestions.innerHTML = "";
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/locations?q=${encodeURIComponent(query)}`);
-        const locations = await response.json();
-
-        if (!locations.length) {
-          locationSearchSuggestions.innerHTML = `
-            <div class="location-suggestion-item no-result">No matching suburb found</div>`;
-          return;
-        }
-
-        locationSearchSuggestions.innerHTML = locations.map(item => `
-          <button type="button" class="location-suggestion-item"
-            data-locality="${item.locality}" data-postcode="${item.postcode}">
-            ${item.locality} (${item.postcode})
-          </button>`).join("");
-        // Call backend API to fetch matching LGA names
-        // const response = await fetch(`${BASE_PATH}/api/lgas?q=${encodeURIComponent(query)}`)
-        const response = await fetch(
-          `/api/lgas?q=${encodeURIComponent(query)}`,
-        );
-
-        // Convert response into JSON
-        const lgas = await response.json();
-
-        // If no matching LGA found, show message in dropdown
-        if (!lgas.length) {
-          lgaSuggestions.innerHTML = `
-            <div class="location-suggestion-item no-result">
-              No matching LGA found
-            </div>
-          `;
-          return;
-        }
-
-        // Render matching LGAs into clickable dropdown buttons
-        lgaSuggestions.innerHTML = lgas
-          .map(
-            (item) => `
-          <button
-            type="button"
-            class="location-suggestion-item"
-            data-lga="${item.lga_name}"
-            data-lgacode="${item.lgacode}"
-          >
-            ${item.lga_name}
-          </button>
-        `,
-          )
-          .join("");
-      } catch (error) {
-        console.error("Location fetch error:", error);
-        locationSearchSuggestions.innerHTML = "";
-      }
-    });
-
-    locationSearchSuggestions.addEventListener("click", async function (event) {
-      const item = event.target.closest(".location-suggestion-item");
-      if (!item || item.classList.contains("no-result")) return;
-
-      const locality = item.dataset.locality;
-      const postcode = item.dataset.postcode;
-    const lgaDropdownBtn = document.getElementById("lgaDropdownBtn");
-
-    if (lgaDropdownBtn) {
-      lgaDropdownBtn.addEventListener("click", async function () {
-        try {
-          const response = await fetch(`/api/all-lgas`);
-          // const response = await fetch(`${BASE_PATH}/api/all-lgas`);
-          const lgas = await response.json();
-
-          lgaSuggestions.innerHTML = lgas
-            .map(
-              (item) => `
-        <button
-          type="button"
-          class="location-suggestion-item"
-          data-lga="${item.lga_name}"
-          data-lgacode="${item.lgacode}"
-        >
-          ${item.lga_name}
-        </button>
-      `,
-            )
-            .join("");
-        } catch (error) {
-          console.error("All LGA fetch error:", error);
-        }
-      });
-    }
-
-      locationSearchInput.value = `${locality} (${postcode})`;
-      locationSearchSuggestions.innerHTML = "";
-
-      try {
-        const response = await fetch(
-          `/api/lga-from-location?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`
-        );
-
-        const data = await response.json();
-
-        if (data.lga_name && data.lgacode) {
-          if (selectedLgaInput) selectedLgaInput.value = data.lga_name;
-          if (selectedLgacodeInput) selectedLgacodeInput.value = data.lgacode;
-          selectedLGAName = data.lga_name;
-
-          const display = document.getElementById("resolvedLgaDisplay");
-          if (display) {
-            display.textContent = `Local Government Area: ${data.lga_name}`;
-            display.style.display = "block";
-          }
-
-          handleLGASelect(data.lga_name, data.lgacode);
-        } else {
-          alert("Could not find an LGA for that location. Please try a different suburb or postcode.");
-        }
-      } catch (error) {
-        console.error("LGA lookup error:", error);
-      }
-    });
-  }
-
-  const filterButton = document.getElementById("filterButton");
-  if (filterButton) filterButton.addEventListener("click", handleBudgetFilter);
-
-  const budgetInput = document.getElementById("budgetInput");
-  if (budgetInput) {
-    budgetInput.addEventListener("keypress", function (e) {
-    lgaSuggestions.addEventListener("click", function (event) {
-      const item = event.target.closest(".location-suggestion-item");
-
-      if (!item || item.classList.contains("no-result")) return;
-
-      const lgaName = item.dataset.lga;
-      const lgacode = item.dataset.lgacode;
-
-      // Fill visible input
-      lgaInput.value = lgaName;
-
-      // Save selected LGA name
-      if (selectedLgaInput) {
-        selectedLgaInput.value = lgaName;
-      }
-
-      // Save selected LGA code
-      const selectedLgacodeInput = document.getElementById(
-        "selectedLgacodeInput",
-      );
-      if (selectedLgacodeInput) {
-        selectedLgacodeInput.value = lgacode;
-      }
-
-      // Save in JS state
-      selectedLGAName = lgaName;
-
-      console.log("Selected LGA:", {
-        lga_name: lgaName,
-        lgacode: lgacode,
-      });
-
-      // Later this will trigger real DB suburb map
-      handleLGASelect(lgaName, lgacode);
-
-      // Clear dropdown
-      lgaSuggestions.innerHTML = "";
-    });
-  }
-
-  // Budget filter button click → apply budget filter to map
-  document
-    .getElementById("filterButton")
-    .addEventListener("click", handleBudgetFilter);
-
-  // Pressing Enter in budget input also applies budget filter
-  document
-    .getElementById("budgetInput")
-    .addEventListener("keypress", function (e) {
-      if (e.key === "Enter") {
-        handleBudgetFilter();
-      }
-    });
-  }
-
-  const closeDetailBtn = document.getElementById("closeDetailBtn");
-  if (closeDetailBtn) closeDetailBtn.addEventListener("click", closeDetailPanel);
-
-  // Close button hides the suburb detail panel
-  document
-    .getElementById("closeDetailBtn")
-    .addEventListener("click", closeDetailPanel);
-}
+/* =========================================================
+   User profile / LGA selection
+   ========================================================= */
 
 async function loadUserData() {
   const budgetInput = document.getElementById("budgetInput");
   const locationSearchInput = document.getElementById("locationSearchInput");
-  const lgaInput = document.getElementById("lgaInput");
-  const selectedLgaInput = document.getElementById("selectedLgaInput");
-  const selectedLgacodeInput = document.getElementById("selectedLgacodeInput");
 
   if (!window.userProfileData) {
     userIncome = 500;
+    updateMapModeBox();
+    showMapPlaceholder();
     return;
   }
 
-  userIncome = window.userProfileData.income || 500;
+  userIncome = Number(window.userProfileData.income) || 500;
 
   let defaultBudget = null;
 
   if (window.userProfileData.rent && Number(window.userProfileData.rent) > 0) {
     defaultBudget = Number(window.userProfileData.rent);
-  } else if (window.userProfileData.income && Number(window.userProfileData.income) > 0) {
   } else if (
     window.userProfileData.income &&
     Number(window.userProfileData.income) > 0
@@ -499,72 +448,92 @@ async function loadUserData() {
 
   if (locality || postcode) {
     if (locationSearchInput) {
-      locationSearchInput.value = locality ? `${locality} (${postcode})` : postcode;
+      locationSearchInput.value = locality
+        ? `${locality} (${postcode})`
+        : postcode;
     }
 
-    try {
-      const response = await fetch(
-        `/api/lga-from-location?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`
-        // `${BASE_PATH}/api/lga-from-location?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`
-        `/api/lga-from-location?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`,
-      );
-
-      const data = await response.json();
-
-      if (data.lga_name) {
-        if (selectedLgaInput) selectedLgaInput.value = data.lga_name;
-        if (selectedLgacodeInput) selectedLgacodeInput.value = data.lgacode;
-
-        selectedLGAName = data.lga_name;
-        userDefaultLGAName = data.lga_name;
-        userDefaultLGACode = data.lgacode;
-
-        const display = document.getElementById("resolvedLgaDisplay");
-        if (display) {
-          display.textContent = `Local Government Area: ${data.lga_name}`;
-          display.style.display = "block";
-        }
-
-        if (data.lgacode) {
-          handleLGASelect(data.lga_name, data.lgacode);
-        }
-      }
-    } catch (error) {
-      console.error("Error finding LGA from profile location:", error);
-    }
+    await resolveLocationToLga(locality, postcode, true);
+  } else {
+    updateMapModeBox();
+    showMapPlaceholder();
   }
-
-  updateMapModeBox();
 }
 
-// Handle LGA selection
+async function resolveLocationToLga(locality, postcode, isDefault = false) {
+  const selectedLgaInput = document.getElementById("selectedLgaInput");
+  const selectedLgacodeInput = document.getElementById("selectedLgacodeInput");
+  const display = document.getElementById("resolvedLgaDisplay");
+
+  try {
+    const data = await fetchJson(
+      apiUrl(
+        `/api/lga-from-location?locality=${encodeURIComponent(
+          locality || "",
+        )}&postcode=${encodeURIComponent(postcode || "")}`,
+      ),
+    );
+
+    if (!data.lga_name || !data.lgacode) {
+      alert(
+        "Could not find an LGA for that location. Please try a different suburb or postcode.",
+      );
+      return;
+    }
+
+    if (selectedLgaInput) selectedLgaInput.value = data.lga_name;
+    if (selectedLgacodeInput) selectedLgacodeInput.value = data.lgacode;
+
+    selectedLGAName = data.lga_name;
+
+    if (isDefault) {
+      userDefaultLGAName = data.lga_name;
+      userDefaultLGACode = data.lgacode;
+    }
+
+    if (display) {
+      display.textContent = `Local Government Area: ${data.lga_name}`;
+      display.style.display = "block";
+    }
+
+    await handleLGASelect(data.lga_name, data.lgacode);
+  } catch (error) {
+    console.error("LGA lookup error:", error);
+    showMapError(
+      "Could not find your Local Government Area from the selected location.",
+    );
+  }
+}
+
 async function handleLGASelect(lgaName, lgacode) {
   selectedLGAName = lgaName;
   addedBubbleSuburbs = [];
+
   showMapLoading(`Loading ${lgaName} map...`);
 
   const mapTitle = document.getElementById("mapTitle");
-  if (mapTitle) mapTitle.textContent = `${lgaName} — Rental Prices by Suburb`;
+  if (mapTitle) {
+    mapTitle.textContent = `${lgaName} — Rental Prices by Suburb`;
+  }
 
   try {
-    const [suburbResponse, lgaResponse] = await Promise.all([
-      fetch(`/api/suburb-rent-map?lgacode=${encodeURIComponent(lgacode)}`),
-      fetch(`/api/lga-boundary?lgacode=${encodeURIComponent(lgacode)}`),
+    const [suburbGeojson, lgaGeojson] = await Promise.all([
+      fetchJson(
+        apiUrl(`/api/suburb-rent-map?lgacode=${encodeURIComponent(lgacode)}`),
+      ),
+      fetchJson(
+        apiUrl(`/api/lga-boundary?lgacode=${encodeURIComponent(lgacode)}`),
+      ),
     ]);
-
-    const suburbGeojson = await suburbResponse.json();
-    const lgaGeojson = await lgaResponse.json();
 
     currentGeoJson = suburbGeojson;
     currentLgaGeoJson = lgaGeojson;
     budgetFilterActive = false;
+
     updateMapModeBox();
-
-    console.log("Loaded suburb GeoJSON:", suburbGeojson);
-    console.log("Loaded LGA boundary:", lgaGeojson);
-
     initializeMap(suburbGeojson, lgaGeojson);
-    loadSuburbBubbleData(lgacode);
+
+    await loadSuburbBubbleData(lgacode);
 
     const selectedLgaFeature = currentLgaRentGeoJson?.features?.find(
       (feature) => String(feature.properties.lgacode) === String(lgacode),
@@ -587,14 +556,19 @@ async function handleLGASelect(lgaName, lgacode) {
   }
 }
 
-// Initialize map for selected LGA
+/* =========================================================
+   Leaflet map
+   ========================================================= */
+
 function initializeMap(suburbGeojson, lgaGeojson) {
   const container = document.getElementById("mapContainer");
+
+  if (!container) return;
 
   if (!lgaGeojson || !lgaGeojson.features || !lgaGeojson.features.length) {
     container.innerHTML = `
       <div style="padding: 20px;">
-        No LGA boundary data found for ${selectedLGAName}.
+        No LGA boundary data found for ${escapeHtml(selectedLGAName || "this area")}.
       </div>
     `;
     return;
@@ -605,15 +579,16 @@ function initializeMap(suburbGeojson, lgaGeojson) {
 
   if (map) {
     map.remove();
+    map = null;
   }
 
   map = L.map(container, {
     maxBounds: [
       [-39.3, 140.7],
-      [-33.8, 150.2]
+      [-33.8, 150.2],
     ],
     maxBoundsViscosity: 1.0,
-    minZoom: 7
+    minZoom: 7,
   });
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -621,7 +596,12 @@ function initializeMap(suburbGeojson, lgaGeojson) {
     maxZoom: 19,
   }).addTo(map);
 
-  if (currentLgaRentGeoJson) {
+  // Full LGA rent background layer.
+  if (
+    currentLgaRentGeoJson &&
+    currentLgaRentGeoJson.features &&
+    currentLgaRentGeoJson.features.length
+  ) {
     lgaRentLayer = L.geoJSON(currentLgaRentGeoJson, {
       style: function (feature) {
         const rent = feature.properties.rent;
@@ -630,7 +610,7 @@ function initializeMap(suburbGeojson, lgaGeojson) {
           color: "#666",
           weight: 0.7,
           fillColor: getLgaRentColor(rent),
-          fillOpacity: 0.8,
+          fillOpacity: 0.45,
         };
       },
 
@@ -651,21 +631,14 @@ function initializeMap(suburbGeojson, lgaGeojson) {
         });
 
         layer.bindPopup(`
-          <strong>${props.lga_name}</strong><br>
+          <strong>${escapeHtml(props.lga_name)}</strong><br>
           LGA median/average rent: ${rentText}
         `);
-
-        layer.bindTooltip(props.lga_name, {
-          permanent: true,
-          direction: "center",
-          className: "lga-label",
-        });
       },
     }).addTo(map);
   }
 
-  if (suburbGeojson && suburbGeojson.features && suburbGeojson.features.length) {
-  // 2. Draw selected LGA suburb polygons on top
+  // Selected LGA suburbs layer.
   if (
     suburbGeojson &&
     suburbGeojson.features &&
@@ -688,8 +661,8 @@ function initializeMap(suburbGeojson, lgaGeojson) {
         const rentText = props.rent ? `$${props.rent}/week` : "No rent data";
 
         layer.bindPopup(`
-          <strong>${props.suburb_name}</strong><br>
-          ${props.postcode ? `Postcode: ${props.postcode}<br>` : ""}
+          <strong>${escapeHtml(props.suburb_name)}</strong><br>
+          ${props.postcode ? `Postcode: ${escapeHtml(props.postcode)}<br>` : ""}
           Median rent: ${rentText}
         `);
 
@@ -698,19 +671,11 @@ function initializeMap(suburbGeojson, lgaGeojson) {
           direction: "center",
           className: "suburb-label",
         });
-      }
-
-        // layer.on("click", function () {
-        //   showSuburbDetail({
-        //     name: props.suburb_name,
-        //     postcode: props.postcode,
-        //     rent: props.rent
-        //   });
-        // });
       },
     }).addTo(map);
   }
 
+  // Selected LGA outline.
   const selectedLgaBoundaryLayer = L.geoJSON(lgaGeojson, {
     interactive: false,
     style: {
@@ -728,44 +693,69 @@ function initializeMap(suburbGeojson, lgaGeojson) {
 function getLgaRentColor(rent) {
   if (!rent) return "#eeeeee";
 
-  if (rent >= 650) return "#4a148c";
-  if (rent >= 550) return "#7b1fa2";
-  if (rent >= 450) return "#ab47bc";
-  if (rent >= 350) return "#ce93d8";
+  const value = Number(rent);
+
+  if (value >= 650) return "#4a148c";
+  if (value >= 550) return "#7b1fa2";
+  if (value >= 450) return "#ab47bc";
+  if (value >= 350) return "#ce93d8";
+
   return "#f3e5f5";
 }
 
 function getRentColor(rent) {
   if (!rent) return "#cccccc";
 
+  const value = Number(rent);
+
   if (budgetFilterActive && currentBudget) {
-    return rent <= currentBudget ? "#2e7d32" : "#c62828";
+    return value <= currentBudget ? "#2e7d32" : "#c62828";
   }
 
-  if (rent >= 650) return "#7f0000";
-  if (rent >= 550) return "#c62828";
-  if (rent >= 450) return "#ef6c00";
-  if (rent >= 350) return "#f9a825";
+  if (value >= 650) return "#7f0000";
+  if (value >= 550) return "#c62828";
+  if (value >= 450) return "#ef6c00";
+  if (value >= 350) return "#f9a825";
+
   return "#2e7d32";
 }
 
+/* =========================================================
+   Detail panel
+   ========================================================= */
+
 function showLgaDetail(lga) {
-  document.getElementById("lgaDetailName").textContent = lga.name;
+  selectedLGA = lga;
 
-  const rent = Math.round(lga.rent || 0);
-  document.getElementById("detailRentPrice").textContent = rent ? `$${rent}` : "No data";
+  const lgaDetailName = document.getElementById("lgaDetailName");
+  const detailRentPrice = document.getElementById("detailRentPrice");
+  const detailAffordability = document.getElementById("detailAffordability");
+  const detailAffordabilityLabel = document.getElementById(
+    "detailAffordabilityLabel",
+  );
+  const affordabilityBadge = document.getElementById("affordabilityBadge");
+  const lgaDetailPanel = document.getElementById("lgaDetailPanel");
+
+  if (lgaDetailName) {
+    lgaDetailName.textContent = lga.name || "--";
+  }
+
+  const rent = Math.round(Number(lga.rent) || 0);
+
+  if (detailRentPrice) {
+    detailRentPrice.textContent = rent ? `$${rent}` : "No data";
+  }
 
   if (userIncome && rent) {
     const affordabilityPercent = Math.round((rent / userIncome) * 100);
-    document.getElementById("detailAffordability").textContent = `${affordabilityPercent}%`;
-  document.getElementById("detailRentPrice").textContent = rent
-    ? `$${rent}`
-    : "No data";
 
-  if (userIncome && rent) {
-    const affordabilityPercent = Math.round((rent / userIncome) * 100);
-    document.getElementById("detailAffordability").textContent =
-      `${affordabilityPercent}%`;
+    if (detailAffordability) {
+      detailAffordability.textContent = `${affordabilityPercent}%`;
+    }
+
+    if (detailAffordabilityLabel) {
+      detailAffordabilityLabel.textContent = "of your weekly income";
+    }
 
     let affordabilityClass = "affordability-affordable";
     let affordabilityText = "Affordable";
@@ -778,77 +768,60 @@ function showLgaDetail(lga) {
       affordabilityText = "Stretched";
     }
 
-    document.getElementById("detailAffordabilityLabel").textContent = "of your weekly income";
-    document.getElementById("detailAffordabilityLabel").textContent =
-      "of your weekly income";
-
-    const badge = document.getElementById("affordabilityBadge");
-    badge.textContent = affordabilityText;
-    badge.className = `affordability-badge ${affordabilityClass}`;
+    if (affordabilityBadge) {
+      affordabilityBadge.textContent = affordabilityText;
+      affordabilityBadge.className = `affordability-badge ${affordabilityClass}`;
+    }
   } else {
-    document.getElementById("detailAffordability").textContent = "--";
-    document.getElementById("detailAffordabilityLabel").textContent = "income not available";
-    document.getElementById("detailAffordabilityLabel").textContent =
-      "income not available";
+    if (detailAffordability) {
+      detailAffordability.textContent = "--";
+    }
+
+    if (detailAffordabilityLabel) {
+      detailAffordabilityLabel.textContent = "income not available";
+    }
+
+    if (affordabilityBadge) {
+      affordabilityBadge.textContent = "No income data";
+      affordabilityBadge.className = "affordability-badge";
+    }
   }
 
   renderLgaTrendChart(lga);
   generateLgaTrendInsight(lga);
 
-  document.getElementById("lgaDetailPanel").classList.remove("hidden");
+  if (lgaDetailPanel) {
+    lgaDetailPanel.classList.remove("hidden");
+  }
 }
 
-function resetMapToUserArea() {
-  if (!userDefaultLGAName || !userDefaultLGACode) {
-    alert("Your saved profile location is not available.");
-    return;
+function closeDetailPanel() {
+  const lgaDetailPanel = document.getElementById("lgaDetailPanel");
+  if (lgaDetailPanel) {
+    lgaDetailPanel.classList.add("hidden");
   }
-
-  selectedLGAName = userDefaultLGAName;
-
-  const selectedLgaInput = document.getElementById("selectedLgaInput");
-  const selectedLgacodeInput = document.getElementById("selectedLgacodeInput");
-  const display = document.getElementById("resolvedLgaDisplay");
-
-  if (selectedLgaInput) selectedLgaInput.value = userDefaultLGAName;
-  if (selectedLgacodeInput) selectedLgacodeInput.value = userDefaultLGACode;
-
-  if (display) {
-    display.textContent = `Local Government Area: ${userDefaultLGAName}`;
-    display.style.display = "block";
-  }
-
-  handleLGASelect(userDefaultLGAName, userDefaultLGACode);
 }
 
-// Render trend chart
 function renderLgaTrendChart(lga) {
   if (trendChart) {
     trendChart.destroy();
+    trendChart = null;
   }
 
-  const ctx = document.getElementById("trendChart").getContext("2d");
+  const canvas = document.getElementById("trendChart");
+  if (!canvas) return;
+
+  const ctx = canvas.getContext("2d");
 
   const labels = lga.historyLabels || [];
-  const data = lga.history || [];
+  const data = (lga.history || []).map((value) =>
+    value === null || value === undefined ? null : Number(value),
+  );
 
   trendChart = new Chart(ctx, {
     type: "line",
     data: {
       labels: labels,
-      datasets: [{
-        label: `${lga.name} average weekly rent`,
-        data: data,
-        borderColor: "rgb(232, 84, 106)",
-        backgroundColor: "rgba(232, 84, 106, 0.05)",
-        borderWidth: 3,
-        fill: true,
-        tension: 0.35,
-        pointBackgroundColor: "rgb(232, 84, 106)",
-        pointBorderColor: "#fff",
-        pointBorderWidth: 2,
-        pointRadius: 4
-      }]
       datasets: [
         {
           label: `${lga.name} average weekly rent`,
@@ -871,7 +844,6 @@ function renderLgaTrendChart(lga) {
       plugins: {
         legend: {
           display: true,
-          position: "top"
           position: "top",
         },
         tooltip: {
@@ -897,179 +869,226 @@ function renderLgaTrendChart(lga) {
 }
 
 function generateLgaTrendInsight(lga) {
-  const history = (lga.history || []).filter(
-    (value) => value !== null && value !== undefined,
-  );
+  const insight = document.getElementById("trendInsight");
+  const badge = document.getElementById("trendStatusBadge");
+
+  if (!insight || !badge) return;
+
+  const history = (lga.history || [])
+    .filter((value) => value !== null && value !== undefined)
+    .map(Number);
 
   if (history.length < 2) {
-    document.getElementById("trendStatusBadge").textContent = "No data";
-    document.getElementById("trendInsight").innerHTML =
-      `Not enough rental history is available for ${lga.name}.`;
+    insight.textContent =
+      "There is not enough trend data available for this area yet.";
+    badge.textContent = "Limited data";
+    badge.className = "affordability-badge";
     return;
   }
 
-  const firstRent = history[0];
-  const lastRent = history[history.length - 1];
+  const first = history[0];
+  const latest = history[history.length - 1];
 
-  const totalIncrease = lastRent - firstRent;
-  const percentIncrease = Math.round((totalIncrease / firstRent) * 100);
-
-  const recent = history.slice(-4);
-  const recentIncrease = recent[recent.length - 1] - recent[0];
-
-  let trendStatus = "Stable";
-  let trendClass = "affordability-affordable";
-
-  if (recentIncrease > 20) {
-    trendStatus = "Rising";
-    trendClass = "affordability-unaffordable";
-  } else if (recentIncrease < -20) {
-    trendStatus = "Declining";
-    trendClass = "affordability-affordable";
+  if (!first || !latest) {
+    insight.textContent =
+      "There is not enough trend data available for this area yet.";
+    badge.textContent = "Limited data";
+    badge.className = "affordability-badge";
+    return;
   }
 
-  const badge = document.getElementById("trendStatusBadge");
-  badge.textContent = trendStatus;
-  badge.className = `affordability-badge ${trendClass}`;
+  const change = latest - first;
+  const percentChange = Math.round((change / first) * 100);
 
-  const yearlyIncrease = totalIncrease / 4.5;
-
-  document.getElementById("trendInsight").innerHTML = `
-    <strong>${lga.name} rent trend:</strong>
-    Average weekly rent changed from <strong>$${Math.round(firstRent)}</strong>
-    to <strong>$${Math.round(lastRent)}</strong> between 03-21 and 09-25.
-    This is a change of <strong>$${Math.round(totalIncrease)}</strong>
-    (${percentIncrease}%), or about <strong>$${Math.round(yearlyIncrease)}</strong> per year.
-  `;
-}
-
-function closeDetailPanel() {
-  document.getElementById("lgaDetailPanel").classList.add("hidden");
-  selectedLGA = null;
-  if (trendChart) {
-    trendChart.destroy();
+  if (percentChange >= 20) {
+    badge.textContent = "Rising quickly";
+    badge.className = "affordability-badge affordability-unaffordable";
+    insight.textContent = `${lga.name} has become noticeably more expensive over time, with rents increasing by about ${percentChange}% across the available period.`;
+  } else if (percentChange >= 8) {
+    badge.textContent = "Rising";
+    badge.className = "affordability-badge affordability-stretched";
+    insight.textContent = `${lga.name} has seen rents rise by around ${percentChange}% across the available period. It may still be worth comparing nearby suburbs before deciding.`;
+  } else if (percentChange > -5) {
+    badge.textContent = "Relatively stable";
+    badge.className = "affordability-badge affordability-affordable";
+    insight.textContent = `${lga.name} has had relatively stable rent movement across the available period.`;
+  } else {
+    badge.textContent = "Falling";
+    badge.className = "affordability-badge affordability-affordable";
+    insight.textContent = `${lga.name} has become slightly cheaper across the available period, based on the rental trend shown.`;
   }
 }
+
+/* =========================================================
+   Budget / map mode
+   ========================================================= */
 
 function handleBudgetFilter() {
-  const budgetValue = document.getElementById("budgetInput").value;
+  const budgetInput = document.getElementById("budgetInput");
 
-  if (!budgetValue || isNaN(budgetValue) || budgetValue < 0) {
-    alert("Please enter a valid budget amount");
+  if (!budgetInput) return;
+
+  const budget = Number(budgetInput.value);
+
+  if (!budget || budget <= 0) {
+    alert("Please enter a weekly rent budget.");
     return;
   }
 
-  currentBudget = parseInt(budgetValue);
+  currentBudget = budget;
   budgetFilterActive = true;
-  updateMapModeBox();
 
   updateBudgetDisplay();
-  renderSuburbBubbleChart();
+  updateMapModeBox();
 
-  if (!selectedLGAName || !currentGeoJson) {
-    alert("Please select an LGA first");
-    return;
+  if (suburbRentLayer) {
+    suburbRentLayer.setStyle(function (feature) {
+      const rent = feature.properties.rent;
+
+      return {
+        color: "#ffffff",
+        weight: 1.2,
+        fillColor: getRentColor(rent),
+        fillOpacity: rent ? 0.8 : 0.25,
+      };
+    });
   }
 
-  initializeMap(currentGeoJson, currentLgaGeoJson);
+  renderSuburbBubbleChart();
 }
 
-// Update budget display
 function updateBudgetDisplay() {
-  const display = document.getElementById("currentBudgetDisplay");
-  const value = document.getElementById("budgetDisplayValue");
+  const budgetInput = document.getElementById("budgetInput");
 
-  if (!display || !value) {
-    return;
-  }
-
-  if (currentBudget) {
-    value.textContent = `$${currentBudget}`;
-    display.classList.remove("hidden");
-  } else {
-    display.classList.add("hidden");
+  if (budgetInput && currentBudget) {
+    budgetInput.value = currentBudget;
   }
 }
 
 function updateUserIncome(income) {
-  userIncome = income;
-  if (selectedLGA) {
-    showLGADetail(selectedLGA);
-  }
+  userIncome = Number(income) || userIncome;
+  updateMapModeBox();
+  renderSuburbBubbleChart();
 }
 
 function updateMapModeBox() {
-  const title = document.getElementById("mapModeTitle");
-  const text = document.getElementById("mapModeText");
-  const legend = document.getElementById("mapModeLegend");
+  const mapModeTitle = document.getElementById("mapModeTitle");
+  const mapModeText = document.getElementById("mapModeText");
+  const mapModeLegend = document.getElementById("mapModeLegend");
 
-  if (!title || !text || !legend) return;
+  if (!mapModeTitle || !mapModeText || !mapModeLegend) return;
 
-  if (budgetFilterActive) {
-    title.textContent = "Map mode: Budget View";
-    text.textContent = "Suburbs are coloured by your budget.";
-    legend.innerHTML = `
-      <div class="map-mode-item"><span class="map-dot green"></span>Within budget</div>
-      <div class="map-mode-item"><span class="map-dot red"></span>Above budget</div>
-      <div class="map-mode-item"><span class="map-dot grey"></span>No rent data</div>
+  if (budgetFilterActive && currentBudget) {
+    mapModeTitle.textContent = "Map mode: Budget View";
+    mapModeText.textContent = `Suburbs are coloured by whether their weekly rent is within your $${currentBudget} budget.`;
+
+    mapModeLegend.innerHTML = `
+      <div class="budget-legend-item">
+        <span class="budget-legend-dot affordable"></span>
+        Within budget
+      </div>
+      <div class="budget-legend-item">
+        <span class="budget-legend-dot unaffordable"></span>
+        Above budget
+      </div>
     `;
   } else {
-    title.textContent = "Map mode: Rent View";
-    text.textContent = "Suburbs are coloured by weekly rent.";
-    legend.innerHTML = `
-      <div class="map-mode-item"><span class="map-dot green"></span>Lower rent</div>
-      <div class="map-mode-item"><span class="map-dot yellow"></span>Moderate rent</div>
-      <div class="map-mode-item"><span class="map-dot red"></span>Higher rent</div>
-      <div class="map-mode-item"><span class="map-dot grey"></span>No rent data</div>
+    mapModeTitle.textContent = "Map mode: Rent View";
+    mapModeText.textContent = "Suburbs are coloured by weekly rent.";
+
+    mapModeLegend.innerHTML = `
+      <div class="budget-legend-item">
+        <span class="budget-legend-dot affordable"></span>
+        Lower rent
+      </div>
+      <div class="budget-legend-item">
+        <span class="budget-legend-dot unaffordable"></span>
+        Higher rent
+      </div>
     `;
   }
 }
 
+function resetMapToUserArea() {
+  if (!userDefaultLGAName || !userDefaultLGACode) {
+    alert("Your saved profile location is not available.");
+    return;
+  }
+
+  const selectedLgaInput = document.getElementById("selectedLgaInput");
+  const selectedLgacodeInput = document.getElementById("selectedLgacodeInput");
+  const display = document.getElementById("resolvedLgaDisplay");
+
+  if (selectedLgaInput) selectedLgaInput.value = userDefaultLGAName;
+  if (selectedLgacodeInput) selectedLgacodeInput.value = userDefaultLGACode;
+
+  if (display) {
+    display.textContent = `Local Government Area: ${userDefaultLGAName}`;
+    display.style.display = "block";
+  }
+
+  handleLGASelect(userDefaultLGAName, userDefaultLGACode);
+}
+
+/* =========================================================
+   Bubble chart
+   ========================================================= */
+
 async function loadSuburbBubbleData(lgacode) {
   try {
-    const response = await fetch(`/api/suburb-comparison-data?lgacode=${encodeURIComponent(lgacode)}`);
-    suburbBubbleData = await response.json();
+    suburbBubbleData = await fetchJson(
+      apiUrl(
+        `/api/suburb-comparison-data?lgacode=${encodeURIComponent(lgacode)}`,
+      ),
+    );
 
+    renderAddedSuburbTags();
     renderSuburbBubbleChart();
   } catch (error) {
-    console.error("Error loading suburb comparison data:", error);
+    console.error("Error loading suburb bubble data:", error);
+    suburbBubbleData = [];
+    renderSuburbBubbleChart();
   }
 }
 
 async function addSuburbToBubbleChart(locality, postcode) {
   try {
-    const response = await fetch(
-      `/api/suburb-comparison-one?locality=${encodeURIComponent(locality)}&postcode=${encodeURIComponent(postcode)}`
+    const suburb = await fetchJson(
+      apiUrl(
+        `/api/suburb-comparison-one?locality=${encodeURIComponent(
+          locality,
+        )}&postcode=${encodeURIComponent(postcode)}`,
+      ),
     );
 
-    const suburb = await response.json();
-
     if (!suburb || !suburb.suburb_name) {
-      alert("No comparison data found for this suburb.");
+      alert("Could not load comparison data for that suburb.");
       return;
     }
 
     const alreadyInLga = suburbBubbleData.some(
-      s => s.suburb_name.toLowerCase() === suburb.suburb_name.toLowerCase()
+      (row) =>
+        row.suburb_name === suburb.suburb_name &&
+        String(row.postcode) === String(suburb.postcode),
     );
 
     const alreadyAdded = addedBubbleSuburbs.some(
-      s => s.suburb_name.toLowerCase() === suburb.suburb_name.toLowerCase()
+      (row) =>
+        row.suburb_name === suburb.suburb_name &&
+        String(row.postcode) === String(suburb.postcode),
     );
 
     if (alreadyInLga) {
-      alert(`${suburb.suburb_name} is already shown in the selected LGA.`);
+      alert("This suburb is already shown in the selected LGA.");
       return;
     }
 
     if (!alreadyAdded) {
       addedBubbleSuburbs.push(suburb);
       renderAddedSuburbTags();
-
     }
 
     renderSuburbBubbleChart();
-
   } catch (error) {
     console.error("Error adding suburb to bubble chart:", error);
   }
@@ -1087,7 +1106,7 @@ function getBubbleMetricLabel(metric) {
     parks_count: "Parks",
     gyms_count: "Gyms",
     libraries_count: "Libraries",
-    cafes_count: "Cafes"
+    cafes_count: "Cafes",
   };
 
   return labels[metric] || metric;
@@ -1096,90 +1115,100 @@ function getBubbleMetricLabel(metric) {
 function getBubbleValue(row, metric) {
   if (metric === "rent_income_pct") {
     if (!userIncome || !row.rent) return null;
-    return Math.round((row.rent / userIncome) * 100);
+    return Math.round((Number(row.rent) / Number(userIncome)) * 100);
   }
 
-  return row[metric];
+  const value = row[metric];
+
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  return Number(value);
 }
 
 function renderSuburbBubbleChart() {
   const canvas = document.getElementById("suburbBubbleChart");
-  if (!canvas || !suburbBubbleData.length) return;
+  const insightsContainer = document.getElementById("bubbleChartInsights");
 
-  const xMetric = document.getElementById("bubbleXAxis").value;
-  const yMetric = document.getElementById("bubbleYAxis").value;
-  const sizeMetric = document.getElementById("bubbleSizeMetric").value;
+  if (!canvas) return;
+
+  const xMetric = document.getElementById("bubbleXAxis")?.value || "rent";
+  const yMetric =
+    document.getElementById("bubbleYAxis")?.value || "train_station_count";
+  const sizeMetric =
+    document.getElementById("bubbleSizeMetric")?.value || "parks_count";
 
   const combinedData = [
-    ...suburbBubbleData.map(row => ({ ...row, isAddedSuburb: false })),
-    ...addedBubbleSuburbs.map(row => ({ ...row, isAddedSuburb: true }))
+    ...suburbBubbleData.map((row) => ({ ...row, isAddedSuburb: false })),
+    ...addedBubbleSuburbs.map((row) => ({ ...row, isAddedSuburb: true })),
   ];
-  console.log(
-    combinedData.find(
-      suburb => suburb.suburb_name === "Ferntree Gully"
-    )
-  );
+
+  if (!combinedData.length) {
+    if (suburbBubbleChart) {
+      suburbBubbleChart.destroy();
+      suburbBubbleChart = null;
+    }
+
+    if (insightsContainer) {
+      insightsContainer.innerHTML = `
+        <li>Select an area to compare suburbs by affordability and access.</li>
+      `;
+    }
+
+    return;
+  }
 
   const points = combinedData
-    .map(row => {
+    .map((row) => {
       const x = getBubbleValue(row, xMetric);
       const y = getBubbleValue(row, yMetric);
       const sizeValue = getBubbleValue(row, sizeMetric) || 0;
 
-      if (x === null || x === undefined || y === null || y === undefined) {
+      if (x === null || y === null || Number.isNaN(x) || Number.isNaN(y)) {
         return null;
       }
 
       const isWithinBudget =
-        currentBudget &&
-        row.rent &&
-        row.rent <= currentBudget;
+        currentBudget && row.rent && Number(row.rent) <= Number(currentBudget);
 
       return {
         x,
         y,
         r: Math.max(10, Math.min(40, 10 + sizeValue * 2.2)),
         suburb: row.suburb_name,
-        rent: row.rent,
+        postcode: row.postcode,
+        rent: Number(row.rent) || null,
         sizeValue,
         isWithinBudget,
-        isAddedSuburb: row.isAddedSuburb
+        isAddedSuburb: row.isAddedSuburb,
+        raw: row,
       };
     })
     .filter(Boolean);
-    const xValues = points.map(p => p.x);
-const yValues = points.map(p => p.y);
 
-const xMin = Math.min(...xValues);
-const xMax = Math.max(...xValues);
-const yMin = Math.min(...yValues);
-const yMax = Math.max(...yValues);
+  if (!points.length) {
+    if (suburbBubbleChart) {
+      suburbBubbleChart.destroy();
+      suburbBubbleChart = null;
+    }
 
-const xMidValue = (xMin + xMax) / 2;
-const yMidValue = (yMin + yMax) / 2;
+    if (insightsContainer) {
+      insightsContainer.innerHTML = `
+        <li>No suburbs have enough data for this comparison. Try another metric.</li>
+      `;
+    }
 
-const tolerance = 0.0001;
+    return;
+  }
 
-points.forEach(point => {
-  point.isSweetSpot =
-    point.x <= xMidValue + tolerance &&
-    point.y >= yMidValue - tolerance;
-});
-console.log("Sweet spot debug:", points.map(p => ({
-  suburb: p.suburb,
-  x: p.x,
-  y: p.y,
-  xMidValue,
-  yMidValue,
-  isSweetSpot: p.isSweetSpot
-})));
-
-console.log("Sweet spot suburbs:", points.filter(p => p.isSweetSpot));
+  markSweetSpotPoints(points);
 
   generateBubbleChartInsights(points, xMetric, yMetric, sizeMetric);
 
   if (suburbBubbleChart) {
     suburbBubbleChart.destroy();
+    suburbBubbleChart = null;
   }
 
   const ctx = canvas.getContext("2d");
@@ -1187,38 +1216,33 @@ console.log("Sweet spot suburbs:", points.filter(p => p.isSweetSpot));
   suburbBubbleChart = new Chart(ctx, {
     type: "bubble",
     data: {
-      datasets: [{
-        label: "Suburbs",
-        data: points,
-        backgroundColor: points.map(point => {
-          // if (point.isSweetSpot) return "rgba(47, 90, 168, 0.55)";
-          if (point.isAddedSuburb) return "rgba(47, 90, 168, 0.45)";
+      datasets: [
+        {
+          label: "Suburbs",
+          data: points,
+          backgroundColor: points.map((point) => {
+            if (point.isSweetSpot) return "rgba(47, 90, 168, 0.45)";
+            if (point.isAddedSuburb) return "rgba(47, 90, 168, 0.35)";
 
-          return point.isWithinBudget
-            ? "rgba(232, 84, 106, 0.38)"
-            : "rgba(120, 120, 120, 0.12)";
-        }),
-        borderColor: points.map(point => {
+            return point.isWithinBudget
+              ? "rgba(232, 84, 106, 0.38)"
+              : "rgba(120, 120, 120, 0.12)";
+          }),
+          borderColor: points.map((point) => {
+            if (point.isSweetSpot) return "rgba(47, 90, 168, 1)";
+            if (point.isAddedSuburb) return "rgba(47, 90, 168, 0.95)";
 
-          if (point.isSweetSpot) {
-            return "rgba(47, 90, 168, 1)";
-          }
-        
-          if (point.isAddedSuburb) {
-            return "rgba(47, 90, 168, 0.95)";
-          }
-
-          return point.isWithinBudget
-            ? "rgba(232, 84, 106, 0.9)"
-            : "rgba(140, 140, 140, 0.28)";
-        }),
-        borderWidth: points.map(point => {
-          if (point.isSweetSpot) return 4;
-          if (point.isAddedSuburb) return 3;
-        
-          return 1.5;
-        })
-      }]
+            return point.isWithinBudget
+              ? "rgba(232, 84, 106, 0.9)"
+              : "rgba(140, 140, 140, 0.28)";
+          }),
+          borderWidth: points.map((point) => {
+            if (point.isSweetSpot) return 4;
+            if (point.isAddedSuburb) return 3;
+            return 1.5;
+          }),
+        },
+      ],
     },
     options: {
       responsive: true,
@@ -1226,230 +1250,179 @@ console.log("Sweet spot suburbs:", points.filter(p => p.isSweetSpot));
 
       plugins: {
         legend: {
-          display: false
+          display: false,
         },
         tooltip: {
           callbacks: {
             label: function (context) {
               const point = context.raw;
+
               return [
                 point.suburb,
                 `${getBubbleMetricLabel(xMetric)}: ${point.x}`,
                 `${getBubbleMetricLabel(yMetric)}: ${point.y}`,
                 `${getBubbleMetricLabel(sizeMetric)}: ${point.sizeValue}`,
+                point.rent ? `Weekly rent: $${point.rent}` : "Rent unavailable",
                 point.isWithinBudget ? "Within budget" : "Above budget",
-                point.isAddedSuburb ? "Added comparison suburb" : "Selected LGA suburb"
-              ];
-            }
-          }
-        }
+                point.isSweetSpot ? "Sweet spot suburb" : "",
+                point.isAddedSuburb
+                  ? "Added comparison suburb"
+                  : "Selected LGA suburb",
+              ].filter(Boolean);
+            },
+          },
+        },
       },
 
       scales: {
         x: {
-          reverse: true,
+          reverse: xMetric === "rent" || xMetric === "rent_income_pct",
           title: {
             display: true,
-            text: getBubbleMetricLabel(xMetric)
-          }
+            text: getBubbleMetricLabel(xMetric),
+          },
         },
         y: {
           title: {
             display: true,
-            text: getBubbleMetricLabel(yMetric)
-          }
-        }
-      }
+            text: getBubbleMetricLabel(yMetric),
+          },
+        },
+      },
     },
-    plugins: [quadrantPlugin]
+    plugins: [quadrantPlugin],
   });
 }
 
-// function generateBubbleChartInsights(points, xMetric, yMetric, sizeMetric) {
-//   const insightsContainer = document.getElementById("bubbleChartInsights");
+function markSweetSpotPoints(points) {
+  const xValues = points.map((point) => point.x);
+  const yValues = points.map((point) => point.y);
 
-//   if (!insightsContainer || !points.length) {
-//     return;
-//   }
+  const xMin = Math.min(...xValues);
+  const xMax = Math.max(...xValues);
+  const yMin = Math.min(...yValues);
+  const yMax = Math.max(...yValues);
 
-//   const xLabel = getBubbleMetricLabel(xMetric);
-//   const yLabel = getBubbleMetricLabel(yMetric);
-//   const sizeLabel = getBubbleMetricLabel(sizeMetric);
+  const xMidValue = (xMin + xMax) / 2;
+  const yMidValue = (yMin + yMax) / 2;
 
-//   const xMid = (
-//     Math.min(...points.map(p => p.x)) +
-//     Math.max(...points.map(p => p.x))
-//   ) / 2;
-
-//   const yMid = (
-//     Math.min(...points.map(p => p.y)) +
-//     Math.max(...points.map(p => p.y))
-//   ) / 2;
-
-//   const topLeft = points.filter(p => p.x < xMid && p.y > yMid);
-//   const largestBubble = [...points].sort((a, b) => b.r - a.r)[0];
-//   const lowestX = [...points].sort((a, b) => a.x - b.x)[0];
-//   const highestY = [...points].sort((a, b) => b.y - a.y)[0];
-//   const withinBudget = points.filter(p => p.isWithinBudget);
-//   const addedSuburbs = points.filter(p => p.isAddedSuburb);
-
-//   const insights = [];
-
-//   if (currentBudget) {
-//     insights.push(`
-//       ${withinBudget.length} of ${points.length} displayed suburbs are within your selected weekly rent budget of $${currentBudget}.
-//     `);
-//   }
-
-//   if (addedSuburbs.length > 0) {
-//     insights.push(`
-//       ${addedSuburbs.length} added comparison suburb${addedSuburbs.length > 1 ? "s are" : " is"} shown in blue for comparison against your selected LGA.
-//     `);
-//   }
-
-//   insights.push(`
-//     Suburbs further right on the chart require a lower ${xLabel.toLowerCase()}.
-//   `);
-
-//   insights.push(`
-//     Suburbs higher on the chart provide stronger ${yLabel.toLowerCase()}.
-//   `);
-
-//   if (topLeft.length > 0) {
-//     const suburbNames = topLeft
-//       .slice(0, 3)
-//       .map(s => s.suburb)
-//       .join(", ");
-
-//     insights.push(`
-//       ${suburbNames} appear in the lower-cost and higher-access quadrant, suggesting a stronger balance between affordability and essential access.
-//     `);
-//   }
-
-//   if (largestBubble) {
-//     insights.push(`
-//       ${largestBubble.suburb} has the largest bubble size, indicating stronger ${sizeLabel.toLowerCase()} relative to nearby suburbs.
-//     `);
-//   }
-
-//   if (lowestX) {
-//     insights.push(`
-//       ${lowestX.suburb} shows the lowest ${xLabel.toLowerCase()} among displayed suburbs.
-//     `);
-//   }
-
-//   if (highestY) {
-//     insights.push(`
-//       ${highestY.suburb} provides the highest ${yLabel.toLowerCase()} in the current comparison.
-//     `);
-//   }
-
-//   insightsContainer.innerHTML = insights
-//     .map(insight => `<li>${insight}</li>`)
-//     .join("");
-// }
+  points.forEach((point) => {
+    // Lower x is better for rent/rent_income_pct. Higher y is better for access metrics.
+    point.isSweetSpot = point.x <= xMidValue && point.y >= yMidValue;
+  });
+}
 
 function renderAddedSuburbTags() {
   const container = document.getElementById("addedSuburbTags");
   if (!container) return;
 
-  container.innerHTML = addedBubbleSuburbs.map(suburb => `
-    <div class="added-suburb-tag">
-      ${suburb.suburb_name}
-    </div>
-  `).join("");
+  if (!addedBubbleSuburbs.length) {
+    container.innerHTML = "";
+    return;
+  }
+
+  container.innerHTML = addedBubbleSuburbs
+    .map(
+      (suburb) => `
+        <div class="added-suburb-tag">
+          ${escapeHtml(suburb.suburb_name)}
+        </div>
+      `,
+    )
+    .join("");
 }
+
 function generateBubbleChartInsights(points, xMetric, yMetric, sizeMetric) {
   const insightsContainer = document.getElementById("bubbleChartInsights");
 
   if (!insightsContainer || !points.length) return;
 
   const sweetSpotSuburbs = points
-    .filter(p => p.isSweetSpot)
-    .map(p => p.suburb);
+    .filter((point) => point.isSweetSpot)
+    .map((point) => point.suburb);
+
+  const withinBudgetCount = points.filter(
+    (point) => point.isWithinBudget,
+  ).length;
+
+  const insights = [];
+
+  if (currentBudget) {
+    insights.push(
+      `${withinBudgetCount} of ${points.length} displayed suburbs are within your selected weekly rent budget of $${currentBudget}.`,
+    );
+  }
 
   if (sweetSpotSuburbs.length > 0) {
-    insightsContainer.innerHTML = `
-      <li>
-        <strong>Sweet spot suburbs:</strong>
-        <div class="sweet-spot-tags">
-          ${sweetSpotSuburbs.map(name => `
-            <span class="sweet-spot-tag">${name}</span>
-          `).join("")}
-        </div>
-        <p class="sweet-spot-note">
-          These suburbs combine lower cost with higher access based on your selected comparison.
-        </p>
-      </li>
-    `;
+    insights.push(`
+      <strong>Sweet spot suburbs:</strong>
+      <div class="sweet-spot-tags">
+        ${sweetSpotSuburbs
+          .slice(0, 8)
+          .map(
+            (name) => `<span class="sweet-spot-tag">${escapeHtml(name)}</span>`,
+          )
+          .join("")}
+      </div>
+      <p class="sweet-spot-note">
+        These suburbs combine lower cost with higher access based on your selected comparison.
+      </p>
+    `);
   } else {
-    insightsContainer.innerHTML = `
-      <li>
-        <strong>No suburb is currently in the sweet spot.</strong>
-        <p class="sweet-spot-note">
-          Try changing the comparison options or adding another suburb to compare.
-        </p>
-      </li>
-    `;
+    insights.push(`
+      <strong>No suburb is currently in the sweet spot.</strong>
+      <p class="sweet-spot-note">
+        Try changing the comparison options or adding another suburb to compare.
+      </p>
+    `);
   }
+
+  insightsContainer.innerHTML = insights
+    .map((insight) => `<li>${insight}</li>`)
+    .join("");
 }
-// Terms of Service modal
-document.addEventListener("DOMContentLoaded", function () {
-  const tosModalTrigger = document.getElementById("tosModalTrigger");
-  const tosModal = document.getElementById("tosModal");
-  const tosModalClose = document.getElementById("tosModalClose");
 
-  if (!tosModalTrigger || !tosModal || !tosModalClose) {
-    return;
-  }
+/* =========================================================
+   Footer modals
+   ========================================================= */
 
-  tosModalTrigger.addEventListener("click", function () {
-    tosModal.classList.remove("hidden");
+function initializeFooterModals() {
+  setupModal("tosModalTrigger", "tosModal", "tosModalClose");
+  setupModal("absDataBtn", "absModal", "absModalClose");
+}
+
+function setupModal(triggerId, modalId, closeId) {
+  const trigger = document.getElementById(triggerId);
+  const modal = document.getElementById(modalId);
+  const close = document.getElementById(closeId);
+
+  if (!trigger || !modal || !close) return;
+
+  trigger.addEventListener("click", function (event) {
+    event.preventDefault();
+    modal.classList.remove("hidden");
   });
 
-  tosModalClose.addEventListener("click", function () {
-    tosModal.classList.add("hidden");
+  close.addEventListener("click", function () {
+    modal.classList.add("hidden");
   });
 
-  tosModal.addEventListener("click", function (event) {
-    if (event.target === tosModal) {
-      tosModal.classList.add("hidden");
+  modal.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.classList.add("hidden");
     }
   });
-});
+}
 
-// ABS Data Sources modal
-document.addEventListener("DOMContentLoaded", function () {
-  const absDataBtn = document.getElementById("absDataBtn");
-  const absModal = document.getElementById("absModal");
-  const absModalClose = document.getElementById("absModalClose");
+/* =========================================================
+   Utils
+   ========================================================= */
 
-  if (!absDataBtn || !absModal || !absModalClose) {
-    return;
-  }
-
-  function openAbsModal() {
-    absModal.classList.remove("hidden");
-  }
-
-  function closeAbsModal() {
-    absModal.classList.add("hidden");
-  }
-
-  absDataBtn.addEventListener("click", openAbsModal);
-  absModalClose.addEventListener("click", closeAbsModal);
-
-  // Close when clicking outside the modal box
-  absModal.addEventListener("click", function (event) {
-    if (event.target === absModal) {
-      closeAbsModal();
-    }
-  });
-
-  // Close with Escape key
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && !absModal.classList.contains("hidden")) {
-      closeAbsModal();
-    }
-  });
-});
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
