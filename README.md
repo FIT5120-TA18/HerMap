@@ -99,3 +99,12 @@ Currently, the project is still under development. However, you can access the w
   <li>Added maps based visualizations</li>
   <li>Financial snapshot provided using Google Gemini API</li>
 </ol>
+
+### Iteration - 3 Delivery
+
+<ol>
+  <li>Added Financial Literacy Module</li>
+  <li>Debt Projection Over time</li>
+  <li>Career Aspirations</li>
+  <li>Spending Tracker</li>
+</ol>
