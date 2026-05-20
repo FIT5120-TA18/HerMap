@@ -1,268 +1,243 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Page configuration -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Dashboard</title>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet"/>
+    <!-- Fonts used across the website -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
 
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/tutorial.css') }}" />
+    <!-- Global CSS contains shared variables, fonts, colours, and helpers -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Dashboard specific CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}"
+    />
   </head>
 
-  <body>
+  <body class="dashboard-page">
     <!-- Top Navigation Bar -->
-    <nav class="navbar">
-      <div class="container nav-inner">
-        <div class="nav-brand">
-          <a href="{{ url_for('main.landing') }}" class="logo-link">
+    <nav class="dashboard-navbar" aria-label="Main navigation">
+      <div class="dashboard-container dashboard-nav-inner">
+        <div class="dashboard-nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="dashboard-logo-link">
             <img
               src="{{ url_for('static', filename='img/hermap-logo.png') }}"
               alt="Hermap Logo"
-              class="logo"
+              class="dashboard-logo"
             />
           </a>
         </div>
 
-        <div class="nav-links">
-          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-          <a href="{{ url_for('main.landing') }}#how-it-works" class="nav-link"
-            >How it works</a
+        <div class="dashboard-nav-links">
+          <a href="{{ url_for('main.landing') }}" class="dashboard-nav-link">
+            Home
+          </a>
+
+          <a
+            href="{{ url_for('main.landing') }}#how-it-works"
+            class="dashboard-nav-link"
           >
+            How it works
+          </a>
         </div>
       </div>
     </nav>
 
-    <main class="container">
+    <main class="dashboard-container dashboard-main">
       <!-- Gemini-generated financial insight -->
-      <section class="insight-card">
-        <h2 class="insight-title">Your Financial Snapshot</h2>
-        <p class="insight-label">Based on your details</p>
+      <section class="dashboard-snapshot-card" id="dashboardSnapshot">
+        <h1 class="dashboard-snapshot-title">Your Financial Snapshot</h1>
 
-        <p id="typewriter-text" data-text="{{ financial_fact | e }}"></p>
+        <p class="dashboard-snapshot-label">Based on your details</p>
+
+        <!--
+          The financial fact is stored in data-text.
+          dashboard.js reads this value and renders it with a typewriter effect.
+        -->
+        <p
+          class="dashboard-typewriter-text"
+          id="typewriterText"
+          data-text="{{ financial_fact | e }}"
+        ></p>
       </section>
 
-      <!-- Dashboard insights section -->
-      <section class="dashboard-insights-section">
-        <!-- <div class="insights-header">
-        <h2>Insights</h2>
-        <p>Click on the graph to learn more</p>
-      </div> -->
+      <!-- Dashboard insight modules -->
+      <section
+        class="dashboard-insights-section"
+        aria-labelledby="dashboardModulesTitle"
+      >
+        <div class="dashboard-section-heading">
+          <h2 id="dashboardModulesTitle">Explore your modules</h2>
+          <p>Select a tile to view the relevant information.</p>
+        </div>
 
-        <div class="insights-grid" id="insightsGrid">
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
-            style="
-    --tile-bg: url('{{ url_for('static', filename='img/dashboard/financial-position.png') }}');
-    --tile-bg-opacity: 1;
-    --tile-bg-hover-opacity: 1;
-    --tile-overlay: rgba(255, 255, 255, 0.70);
-  "
+        <div class="dashboard-insights-grid" id="insightsGrid">
+          <!-- Income comparison tile -->
+          <article
+            class="dashboard-feature-card"
+            style="--tile-bg: url('{{ url_for('static', filename='img/dashboard/financial-position.png') }}')"
           >
             <a
               href="{{ url_for('main.income_comparison') }}"
               class="dashboard-feature-link"
             >
-              <!-- <div class="dashboard-feature-icon">
-                <span class="material-symbols-outlined">monitoring</span>
-              </div> -->
-
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">
+                <h3 class="dashboard-feature-title">
                   Understand my financial position
-                </p>
+                </h3>
+
                 <p class="dashboard-feature-text">
-                  Compare your income across Victoria
+                  Compare your income across Victoria.
                 </p>
               </div>
             </a>
-          </div>
+          </article>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
-            style="
-    --tile-bg: url('{{ url_for('static', filename='img/dashboard/living-options.png') }}');
-    --tile-bg-opacity: 1;
-    --tile-bg-hover-opacity: 1;
-    --tile-overlay: rgba(255, 255, 255, 0.70);
-  "
+          <!-- Rent comparison tile -->
+          <article
+            class="dashboard-feature-card"
+            style="--tile-bg: url('{{ url_for('static', filename='img/dashboard/living-options.png') }}')"
           >
             <a
               href="{{ url_for('main.rent_comparison') }}"
               class="dashboard-feature-link"
             >
-              <!-- <div class="dashboard-feature-icon">
-                <span class="material-symbols-outlined">home_work</span>
-              </div> -->
-
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">
-                  Explore Affordable Living Options
-                </p>
+                <h3 class="dashboard-feature-title">
+                  Explore affordable living options
+                </h3>
+
                 <p class="dashboard-feature-text">
-                  Compare rent across locations
+                  Compare rent across locations.
                 </p>
               </div>
             </a>
-          </div>
+          </article>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
-            style="
-    --tile-bg: url('{{ url_for('static', filename='img/dashboard/spending-tracker.png') }}');
-    --tile-bg-opacity: 1;
-    --tile-bg-hover-opacity: 1;
-    --tile-overlay: rgba(255, 255, 255, 0.70);
-  "
+          <!-- Spending tracker tile -->
+          <article
+            class="dashboard-feature-card"
+            style="--tile-bg: url('{{ url_for('static', filename='img/dashboard/spending-tracker.png') }}')"
           >
             <a
               href="{{ url_for('main.spending_input') }}"
               class="dashboard-feature-link"
             >
-              <!-- <div
-                class="dashboard-feature-icon"
-                style="background: linear-gradient(135deg, #f7971e, #ffd200)"
-              >
-                <span class="material-symbols-outlined" style="color: #fff"
-                  >savings</span
-                >
-              </div> -->
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">Track My Spending</p>
+                <h3 class="dashboard-feature-title">Track my spending</h3>
+
                 <p class="dashboard-feature-text">
-                  See where your money goes each week
+                  See where your money goes each week.
                 </p>
               </div>
             </a>
-          </div>
+          </article>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
-            style="
-    --tile-bg: url('{{ url_for('static', filename='img/dashboard/credit-debt-awareness.png') }}');
-    --tile-bg-opacity: 1;
-    --tile-bg-hover-opacity: 1;
-    --tile-overlay: rgba(255, 255, 255, 0.70);
-  "
+          <!-- Debt projection tile -->
+          <article
+            class="dashboard-feature-card"
+            style="--tile-bg: url('{{ url_for('static', filename='img/dashboard/credit-debt-awareness.png') }}')"
           >
             <a
               href="{{ url_for('main.debt_awareness') }}"
               class="dashboard-feature-link"
             >
-              <!-- <div
-                class="dashboard-feature-icon"
-                style="background: linear-gradient(135deg, #e8546a, #c45fa8)"
-              >
-                <span class="material-symbols-outlined" style="color: #fff"
-                  >finance</span
-                >
-              </div> -->
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">Debt Projection</p>
+                <h3 class="dashboard-feature-title">Debt projection</h3>
+
                 <p class="dashboard-feature-text">
-                  Understand credit cards and BNPL
+                  Understand credit cards and BNPL.
                 </p>
               </div>
             </a>
-          </div>
+          </article>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
-            style="
-    --tile-bg: url('{{ url_for('static', filename='img/dashboard/career-aspiration.png') }}');
-    --tile-bg-opacity: 1;
-    --tile-bg-hover-opacity: 1;
-    --tile-overlay: rgba(255, 255, 255, 0.70);
-  "
+          <!-- Career aspirations tile -->
+          <article
+            class="dashboard-feature-card"
+            style="--tile-bg: url('{{ url_for('static', filename='img/dashboard/career-aspiration.png') }}')"
           >
             <a
               href="{{ url_for('main.career_aspirations') }}"
               class="dashboard-feature-link"
             >
-              <!-- <div
-                class="dashboard-feature-icon"
-                style="background: linear-gradient(135deg, #4e9af1, #26c6da)"
-              >
-                <span class="material-symbols-outlined" style="color: #fff"
-                  >work</span
-                >
-              </div> -->
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">Career Aspirations</p>
+                <h3 class="dashboard-feature-title">Career aspirations</h3>
+
                 <p class="dashboard-feature-text">
-                  Explore salaries across industries
+                  Explore salaries across industries.
                 </p>
               </div>
             </a>
-          </div>
+          </article>
 
-          <div
-            class="insight-graph-card feature-card dashboard-feature-tile card-bg"
-            style="
-    --tile-bg: url('{{ url_for('static', filename='img/dashboard/financial-literacy.png') }}');
-    --tile-bg-opacity: 1;
-    --tile-bg-hover-opacity: 1;
-    --tile-overlay: rgba(255, 255, 255, 0.70);
-  "
+          <!-- Knowledge hub tile -->
+          <article
+            class="dashboard-feature-card"
+            style="--tile-bg: url('{{ url_for('static', filename='img/dashboard/financial-literacy.png') }}')"
           >
             <a
               href="{{ url_for('main.knowledge_hub') }}"
               class="dashboard-feature-link"
             >
-              <!-- <div
-                class="dashboard-feature-icon"
-                style="background: linear-gradient(135deg, #43a047, #66bb6a)"
-              >
-                <span class="material-symbols-outlined" style="color: #fff"
-                  >school</span
-                >
-              </div> -->
               <div class="dashboard-feature-copy">
-                <p class="dashboard-feature-title">
-                  Build My Financial Literacy
-                </p>
+                <h3 class="dashboard-feature-title">
+                  Build my financial literacy
+                </h3>
+
                 <p class="dashboard-feature-text">
-                  Learn budgeting techniques, tax, superannuation and more
+                  Learn budgeting techniques, tax, superannuation, and more.
                 </p>
               </div>
             </a>
-          </div>
+          </article>
         </div>
       </section>
     </main>
 
     <!-- Footer -->
-    <footer class="footer">
-      <div class="container footer-inner">
-        <div class="footer-brand">
-          <a href="{{ url_for('main.landing') }}" class="logo-link">
+    <footer class="dashboard-footer">
+      <div class="dashboard-container dashboard-footer-inner">
+        <div class="dashboard-footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="dashboard-logo-link">
             <img
               src="{{ url_for('static', filename='img/hermap-logo.png') }}"
               alt="Hermap Logo"
-              class="logo"
+              class="dashboard-logo"
             />
           </a>
         </div>
 
-        <div class="nav-links">
+        <div class="dashboard-footer-links">
           <button
             type="button"
-            class="nav-link footer-modal-link"
-            id="absDataBtn"
+            class="dashboard-footer-modal-link"
+            data-modal-target="absModal"
           >
             ABS Data Sources
           </button>
 
           <button
             type="button"
-            class="nav-link footer-modal-link"
-            id="tosModalTrigger"
+            class="dashboard-footer-modal-link"
+            data-modal-target="tosModal"
           >
             Terms of Service
           </button>
@@ -270,23 +245,29 @@
       </div>
     </footer>
 
-    <!-- ABS Data Sources Popup -->
-    <div class="modal-overlay hidden" id="absModal">
-      <div class="modal-box">
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="dashboard-modal-overlay dashboard-hidden hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
+      <div class="dashboard-modal-box">
         <button
           type="button"
-          class="modal-close"
-          id="absModalClose"
-          aria-label="Close popup"
+          class="dashboard-modal-close"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="modal-icon gradient-bg">
+        <div class="dashboard-modal-icon gradient-bg" aria-hidden="true">
           <span class="material-symbols-outlined">database</span>
         </div>
 
-        <h2>ABS Data Sources</h2>
+        <h2 id="absModalTitle">ABS Data Sources</h2>
 
         <p>
           The numbers and benchmarks used across this website are based on
@@ -312,28 +293,29 @@
 
     <!-- Terms of Service Modal -->
     <div
-      class="modal-overlay hidden"
+      class="dashboard-modal-overlay dashboard-hidden hidden"
       id="tosModal"
       role="dialog"
       aria-modal="true"
       aria-labelledby="tosModalTitle"
     >
-      <div class="modal-box">
+      <div class="dashboard-modal-box dashboard-modal-box-large">
         <button
-          class="modal-close"
-          id="tosModalClose"
+          type="button"
+          class="dashboard-modal-close"
+          data-modal-close
           aria-label="Close Terms of Service"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="modal-icon gradient-bg">
+        <div class="dashboard-modal-icon gradient-bg" aria-hidden="true">
           <span class="material-symbols-outlined">gavel</span>
         </div>
 
         <h2 id="tosModalTitle">Terms of Service</h2>
 
-        <div class="tos-modal-content">
+        <div class="dashboard-tos-content">
           <p>
             <strong>Privacy &amp; Data Collection</strong><br />
             This platform does not collect, store, or retain any personal
@@ -358,10 +340,10 @@
             any course of action.
           </p>
 
-          <div class="tos-credit-section">
+          <div class="dashboard-credit-section">
             <h3>Images on Dashboard &amp; Advice</h3>
 
-            <ul class="tos-credit-list">
+            <ul class="dashboard-credit-list">
               <li>
                 <strong>"Numbers And Finance"</strong> by kenteegardin is
                 licensed under CC BY-SA 2.0.
@@ -439,45 +421,61 @@
       </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
-    <!-- Tutorial FAB -->
-    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+    <!-- Tutorial Help Button -->
+    <button
+      type="button"
+      class="dashboard-tutorial-fab"
+      id="tutorialFab"
+      aria-label="Start dashboard tutorial"
+    >
       <span class="material-symbols-outlined">help</span>
     </button>
 
-    <!-- Tutorial overlay + popover -->
-    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
-    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
-    <div class="tutorial-popover" id="tutorialPopover">
-      <div class="tutorial-step-indicator">
+    <!-- Tutorial Overlay -->
+    <div
+      class="dashboard-tutorial-overlay dashboard-hidden"
+      id="tutorialOverlay"
+    ></div>
+
+    <div
+      class="dashboard-tutorial-highlight dashboard-hidden"
+      id="tutorialHighlight"
+    ></div>
+
+    <div
+      class="dashboard-tutorial-popover dashboard-hidden"
+      id="tutorialPopover"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tutorialTitle"
+    >
+      <div class="dashboard-tutorial-step-label">
         <span id="tutorialStepLabel">Step 1 of 2</span>
       </div>
+
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
-      <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
-        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+
+      <div class="dashboard-tutorial-actions">
+        <button
+          type="button"
+          class="dashboard-tutorial-skip-btn"
+          id="tutorialSkipBtn"
+        >
+          Skip tutorial
+        </button>
+
+        <button
+          type="button"
+          class="dashboard-tutorial-next-btn"
+          id="tutorialNextBtn"
+        >
+          Next
+        </button>
       </div>
     </div>
 
-    <!-- Tutorial steps -->
-    <script>
-    const TUTORIAL_STEPS = [
-      {
-        targetId: 'typewriter-text',
-        title: 'Your financial snapshot',
-        desc: 'This is your personalised summary based on the details you entered. It updates every time you rebuild your profile.'
-      },
-      {
-        targetId: 'insightsGrid',
-        title: 'Your insight modules',
-        desc: 'Each card takes you to a different part of HerMap. Tap any tile to explore income, rent, spending, debt, careers, or financial literacy.'
-      }
-    ];
-    </script>
-    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
+    <!-- Dashboard specific JavaScript -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
   </body>
 </html>

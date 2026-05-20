@@ -1,35 +1,39 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Page configuration -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Track My Spending - Hermap</title>
 
+    <!-- Fonts used across the site -->
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/spending_tracker.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/tutorial.css') }}"
-    />
-    <!-- Material Symbols -->
+
+    <!-- Material Symbols used by the tutorial help button -->
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Global CSS for shared variables, navbar, footer, fonts, and helpers -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Spending tracker specific CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/spendings.css') }}"
+    />
   </head>
 
-  <body>
+  <body class="spending-tracker-page">
+    <!-- Top navigation -->
     <nav class="navbar">
       <div class="container nav-inner">
         <div class="nav-brand">
@@ -43,26 +47,28 @@
         </div>
 
         <div class="nav-links">
-          <a href="{{ url_for('main.dashboard') }}" class="nav-link"
-            >Dashboard</a
-          >
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
         </div>
       </div>
     </nav>
 
     <main class="tracker-container">
+      <!-- Page heading -->
       <div class="tracker-header">
         <div>
           <h1>Track My <span class="gradient-text">Spending</span></h1>
+
           <p>
             Enter your weekly expenses to understand your surplus, deficit, rent
             pressure, and what this means for independent living.
           </p>
         </div>
 
-        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn"
-          >Back to Dashboard</a
-        >
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          Back to Dashboard
+        </a>
       </div>
 
       <div class="intro-note">
@@ -72,7 +78,11 @@
         next steps.
       </div>
 
-      <div class="income-banner split-banner">
+      <!-- Income and rent values are prefilled from the profile session when available. -->
+      <section
+        class="income-banner split-banner"
+        aria-label="Income and rent inputs"
+      >
         <div class="banner-half">
           <div class="income-banner-label">Weekly take-home income</div>
           <div class="income-banner-value" id="incomeBannerValue">$--</div>
@@ -92,9 +102,10 @@
             <input type="number" id="rentBannerInput" min="0" step="1" />
           </div>
         </div>
-      </div>
+      </section>
 
-      <section class="expenses-section">
+      <!-- Essential expense categories -->
+      <section class="expenses-section" id="essentialExpensesSection">
         <div class="expenses-section-title">
           <span class="section-badge badge-essential">Essential</span>
           Things you need to pay to live
@@ -105,18 +116,18 @@
           transport, medical needs, and utilities.
         </p>
 
+        <!-- Cards are inserted by spending_tracker.js -->
         <div class="expense-cards" id="essentialCards"></div>
 
         <div class="add-expense-row" id="addEssentialRow">
-          <select id="essentialDropdown">
+          <select id="essentialDropdown" aria-label="Add an essential expense">
             <option value="">+ Add an essential expense…</option>
           </select>
-
-          <!-- <button class="add-btn" id="addEssentialBtn" type="button">Add</button> -->
         </div>
       </section>
 
-      <section class="expenses-section">
+      <!-- Non-essential expense categories -->
+      <section class="expenses-section" id="nonEssentialExpensesSection">
         <div class="expenses-section-title">
           <span class="section-badge badge-nonessential">Non-essential</span>
           Things you enjoy but could reduce
@@ -127,18 +138,21 @@
           BNPL repayments, and hobbies.
         </p>
 
+        <!-- Cards are inserted by spending_tracker.js -->
         <div class="expense-cards" id="nonessentialCards"></div>
 
         <div class="add-expense-row" id="addNonEssentialRow">
-          <select id="nonessentialDropdown">
+          <select
+            id="nonessentialDropdown"
+            aria-label="Add a non-essential expense"
+          >
             <option value="">+ Add a non-essential expense…</option>
           </select>
-
-          <!-- <button class="add-btn" id="addNonEssentialBtn" type="button">Add</button> -->
         </div>
       </section>
 
-      <div class="totals-bar">
+      <!-- Live totals calculated from entered values -->
+      <section class="totals-bar" aria-label="Spending totals">
         <div class="total-item">
           <div class="total-label">Essentials</div>
           <div class="total-value essential-color" id="totalEssential">$0</div>
@@ -160,7 +174,7 @@
           <div class="total-label">Left over</div>
           <div class="total-value" id="totalSurplus">$0</div>
         </div>
-      </div>
+      </section>
 
       <div class="cta-row">
         <button class="primary-btn" id="checkPositionBtn" type="button">
@@ -169,6 +183,7 @@
       </div>
     </main>
 
+    <!-- Footer uses the global footer styling from style.css -->
     <footer class="footer">
       <div class="container footer-inner">
         <div class="footer-brand">
@@ -189,6 +204,45 @@
       </div>
     </footer>
 
+    <!-- Tutorial help button and overlay. The behaviour is handled in spending_tracker.js. -->
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      type="button"
+      aria-label="Start spending tracker tutorial"
+    >
+      <span class="material-symbols-outlined">help</span>
+    </button>
+
+    <div class="tutorial-spotlight-overlay hidden" id="tutorialOverlay"></div>
+    <div class="tutorial-highlight-box hidden" id="tutorialHighlight"></div>
+
+    <div
+      class="tutorial-popover hidden"
+      id="tutorialPopover"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tutorialTitle"
+    >
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 5</span>
+      </div>
+
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" id="tutorialSkipBtn" type="button">
+          Skip tutorial
+        </button>
+
+        <button class="tutorial-next-btn" id="tutorialNextBtn" type="button">
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- User profile data passed from Flask to spending_tracker.js -->
     <script>
       window.userProfileData = {
         income: parseFloat("{{ profile_data.get('income', '0') }}") || 0,
@@ -198,75 +252,7 @@
       };
     </script>
 
+    <!-- Spending tracker specific JavaScript -->
     <script src="{{ url_for('static', filename='js/spending_tracker.js') }}"></script>
-
-    <!-- 1. Tutorial HTML -->
-    <button
-      class="tutorial-fab"
-      id="tutorialFab"
-      onclick="startTutorial()"
-      aria-label="Start tutorial"
-    >
-      <span class="material-symbols-outlined">help</span>
-    </button>
-    <div
-      class="tutorial-spotlight-overlay"
-      id="tutorialOverlay"
-      style="display: none"
-    ></div>
-    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
-    <div class="tutorial-popover" id="tutorialPopover">
-      <div class="tutorial-step-indicator">
-        <span id="tutorialStepLabel">Step 1 of 5</span>
-      </div>
-      <h2 id="tutorialTitle"></h2>
-      <p id="tutorialDesc"></p>
-      <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" onclick="endTutorial()">
-          Skip tutorial
-        </button>
-        <button
-          class="tutorial-next-btn"
-          id="tutorialNextBtn"
-          onclick="tutorialNext()"
-        >
-          Next
-        </button>
-      </div>
-    </div>
-
-    <!-- 2. TUTORIAL_STEPS -->
-    <script>
-      const TUTORIAL_STEPS = [
-        {
-          targetId: "incomeInput",
-          title: "Your weekly income",
-          desc: "Enter what you actually take home each week after tax. This is your starting number for everything else.",
-        },
-        {
-          targetId: "rentBannerInput",
-          title: "Your weekly rent",
-          desc: "Enter what you pay in rent each week. If you live at home for free, enter 0.",
-        },
-        {
-          targetId: "addEssentialRow",
-          title: "Essential expenses",
-          desc: "These are your must-pay costs - transport, groceries, utilities. Tap each card to enter your weekly spend.",
-        },
-        {
-          targetId: "addNonEssentialRow",
-          title: "Non-essential spending",
-          desc: "These are lifestyle costs - eating out, subscriptions, entertainment. Small amounts add up fast.",
-        },
-        {
-          targetId: "checkPositionBtn",
-          title: "Check your position",
-          desc: "Tap here once everything is filled in to see your weekly surplus or deficit and how you compare to ABS benchmarks.",
-        },
-      ];
-    </script>
-
-    <!-- 3. tutorial.js -->
-    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

@@ -1,13 +1,16 @@
-// income_comparison.js
-// Purpose:
-// 1. Show the user's profile
-// 2. Load SA3 female annual income data
-// 3. Colour SA3 areas based on comparison with user's estimated annual income
-// 4. Show SA3 labels, hover tooltips, selected boundary, and trend line
+/* --------------------------------------------------------------------------
+   income_comparison.js
 
-// -----------------------------
-// GLOBAL VARIABLES
-// -----------------------------
+   Page-specific JavaScript for income_comparison.html.
+
+   Responsibilities:
+   1. Load the user's profile from Flask-rendered window.userProfileData.
+   2. Load SA3 income GeoJSON data from the backend.
+   3. Display a Leaflet map of Victorian SA3 areas.
+   4. Compare selected SA3 income with the user's estimated annual income.
+   5. Render the selected SA3 income trend using Chart.js.
+   6. Handle footer modals and the page tutorial.
+-------------------------------------------------------------------------- */
 
 let userProfile = {};
 let incomeMap = null;
@@ -17,22 +20,37 @@ let selectedSa3BoundaryLayer = null;
 let sa3IncomeData = null;
 let incomeTrendChart = null;
 
-// -----------------------------
-// PAGE LOAD
-// -----------------------------
-
 document.addEventListener("DOMContentLoaded", async function () {
   loadUserProfile();
   initialiseIncomeMap();
   initialiseEventListeners();
+  initialiseIncomeModals();
+  initialiseIncomeTutorial();
 
   await loadSa3IncomeMap();
   await prefillSa3FromUserLocation();
 });
 
-// -----------------------------
-// 1. LOAD USER PROFILE
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Deployment helper
+
+   This allows API calls to work both locally and when the site is deployed
+   under /underdevelopment.
+-------------------------------------------------------------------------- */
+
+function getAppBasePath() {
+  return window.location.pathname.startsWith("/underdevelopment")
+    ? "/underdevelopment"
+    : "";
+}
+
+function buildApiUrl(path) {
+  return `${getAppBasePath()}${path}`;
+}
+
+/* --------------------------------------------------------------------------
+   User profile
+-------------------------------------------------------------------------- */
 
 function loadUserProfile() {
   userProfile = window.userProfileData || {};
@@ -42,19 +60,7 @@ function loadUserProfile() {
       ? `${userProfile.locality} (${userProfile.postcode})`
       : userProfile.locality || "Not provided";
 
-  setTextIfExists("profileAge", userProfile.age || "--");
   setTextIfExists("profileLocation", locationText);
-  setTextIfExists("profileWorkStatus", userProfile.workStatus || "--");
-  setTextIfExists("profileIndustry", userProfile.industry || "--");
-
-  setTextIfExists(
-    "profileIncome",
-    userProfile.income
-      ? `$${Number(userProfile.income).toLocaleString()}/week`
-      : "--",
-  );
-
-  setTextIfExists("profileLiving", userProfile.living || "--");
 }
 
 function setTextIfExists(id, value) {
@@ -65,25 +71,28 @@ function setTextIfExists(id, value) {
   }
 }
 
-// -----------------------------
-// 2. INITIALISE MAP
-// -----------------------------
-
-// -----------------------------
-// 2. INITIALISE MAP
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Leaflet map setup
+-------------------------------------------------------------------------- */
 
 function initialiseIncomeMap() {
-  // Victoria's geographic bounding box
+  const mapContainer = document.getElementById("incomeMapContainer");
+
+  if (!mapContainer || typeof L === "undefined") {
+    console.error("Leaflet map container or Leaflet library is missing.");
+    return;
+  }
+
+  // Victoria's approximate bounding box.
   const victoriaBounds = L.latLngBounds(
-    L.latLng(-39.2, 140.95), // South-West corner
-    L.latLng(-33.98, 150.1), // North-East corner
+    L.latLng(-39.2, 140.95),
+    L.latLng(-33.98, 150.1),
   );
 
   incomeMap = L.map("incomeMapContainer", {
-    maxBounds: victoriaBounds, // Prevent panning outside Victoria
-    maxBoundsViscosity: 1.0, // Hard lock — snaps back on drag
-    minZoom: 6, // Prevent zooming out to see other states
+    maxBounds: victoriaBounds,
+    maxBoundsViscosity: 1.0,
+    minZoom: 6,
     maxZoom: 18,
   }).setView([-37.4713, 144.7852], 7);
 
@@ -93,74 +102,73 @@ function initialiseIncomeMap() {
   }).addTo(incomeMap);
 }
 
-// -----------------------------
-// 3. LOAD SA3 GEOJSON
-// -----------------------------
-
-// -----------------------------
-// 3. LOAD SA3 GEOJSON
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Load SA3 income map data
+-------------------------------------------------------------------------- */
 
 async function loadSa3IncomeMap() {
+  if (!incomeMap) return;
+
   try {
-    const response = await fetch("/api/sa3-income-map");
+    const response = await fetch(buildApiUrl("/api/sa3-income-map"));
 
     if (!response.ok) {
-      throw new Error("Failed to load suburb income map data");
+      throw new Error(
+        `Failed to load SA3 income map. Status: ${response.status}`,
+      );
     }
 
     const rawData = await response.json();
 
-    // Filter to Victoria-only SA3 areas (ABS SA3 codes 20000–29999)
+    // Keep Victorian SA3 areas only. Victorian SA3 codes are in the 20000 range.
     sa3IncomeData = {
       ...rawData,
-      features: rawData.features.filter((feature) => {
+      features: (rawData.features || []).filter(function (feature) {
         const code = String(feature.properties.sa3_code).trim();
         return code.startsWith("2") && code.length === 5;
       }),
     };
 
-    if (!sa3IncomeData.features || sa3IncomeData.features.length === 0) {
-      document.getElementById("incomeMapContainer").innerHTML =
-        "No suburb income map data found.";
+    if (!sa3IncomeData.features.length) {
+      showMapMessage("No suburb income map data found.");
       return;
     }
 
-    // Draw SA3 polygons
     sa3IncomeLayer = L.geoJSON(sa3IncomeData, {
       style: styleSa3IncomeArea,
       onEachFeature: onEachSa3Feature,
     }).addTo(incomeMap);
 
-    // Add permanent SA3 name labels
     addSa3Labels();
-
-    // Add legend/text explanation under the map
     createIncomeLegend();
 
-    // Only zoom to all Victoria SA3s if the user has no saved location.
-    // If the user has postcode/locality, prefillSa3FromUserLocation()
-    // will zoom to the user's SA3 instead.
     const hasUserLocation = userProfile.postcode || userProfile.locality;
 
     if (!hasUserLocation) {
       const bounds = sa3IncomeLayer.getBounds();
+
       if (bounds.isValid()) {
         incomeMap.fitBounds(bounds);
       }
     }
   } catch (error) {
     console.error("Error loading suburb income map:", error);
-    const mapContainer = document.getElementById("incomeMapContainer");
-    if (mapContainer) {
-      mapContainer.innerHTML = "Unable to load suburb income map.";
-    }
+    showMapMessage("Unable to load suburb income map.");
   }
 }
 
-// -----------------------------
-// 4. PRE-FILL SA3 FROM USER POSTCODE/LOCALITY
-// -----------------------------
+function showMapMessage(message) {
+  const mapContainer = document.getElementById("incomeMapContainer");
+
+  if (mapContainer) {
+    mapContainer.innerHTML = message;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Pre-fill selected SA3 from user's saved location
+-------------------------------------------------------------------------- */
+
 async function prefillSa3FromUserLocation() {
   if (!userProfile.postcode && !userProfile.locality) return;
   if (!sa3IncomeData || !sa3IncomeData.features) return;
@@ -171,49 +179,41 @@ async function prefillSa3FromUserLocation() {
       locality: userProfile.locality || "",
     });
 
-    const response = await fetch(`/api/sa3-from-location?${params.toString()}`);
+    const response = await fetch(
+      buildApiUrl(`/api/sa3-from-location?${params.toString()}`),
+    );
 
     if (!response.ok) {
-      throw new Error("Failed to find suburb from user location");
+      throw new Error(
+        `Failed to find SA3 from user location. Status: ${response.status}`,
+      );
     }
 
     const sa3 = await response.json();
 
-    console.log("suburb from user location:", sa3);
-    console.log(
-      "Available suburb sample:",
-      sa3IncomeData.features.slice(0, 5).map((f) => f.properties),
-    );
-
     if (!sa3.sa3_code || !sa3.sa3_name) {
-      console.warn("No matching suburb found for user location.");
+      console.warn("No matching SA3 found for the saved user location.");
       return;
     }
 
-    const matchedFeature = sa3IncomeData.features.find(
-      (feature) =>
+    const matchedFeature = sa3IncomeData.features.find(function (feature) {
+      return (
         String(feature.properties.sa3_code).trim() ===
-        String(sa3.sa3_code).trim(),
-    );
-
-    console.log("Matched suburb feature:", matchedFeature);
+        String(sa3.sa3_code).trim()
+      );
+    });
 
     if (matchedFeature) {
       selectSa3Feature(matchedFeature);
-    } else {
-      console.warn(
-        "suburb code found from location but not found in map GeoJSON:",
-        sa3.sa3_code,
-      );
     }
   } catch (error) {
     console.error("Error pre-filling SA3:", error);
   }
 }
 
-// -----------------------------
-// 5. MAP COLOURING
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Map styling
+-------------------------------------------------------------------------- */
 
 function styleSa3IncomeArea(feature) {
   const sa3Income = Number(feature.properties.income_2022_23);
@@ -229,71 +229,82 @@ function styleSa3IncomeArea(feature) {
 }
 
 function getComparisonColour(sa3Income, userAnnualIncome) {
-  // Grey if missing SA3 income or user income
   if (!sa3Income || !userAnnualIncome) return "#d9d9d9";
 
   const difference = sa3Income - userAnnualIncome;
   const percentDifference = Math.abs(difference) / userAnnualIncome;
 
-  // Similar if within 10%
   if (percentDifference <= 0.1) return "#f9a825";
-
-  // Green means SA3 average is below user income
   if (difference < 0) return "#2e7d32";
 
-  // Red means SA3 average is above user income
   return "#c62828";
 }
 
-// -----------------------------
-// 6. LEGEND / EXPLANATION BOX
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Legend
+-------------------------------------------------------------------------- */
 
 function createIncomeLegend() {
-  const mapCard = document.querySelector(".rent-filter-card");
+  const filterCard = document.querySelector(".income-filter-card");
 
-  if (!mapCard || document.getElementById("incomeLegendBox")) return;
+  if (!filterCard || document.getElementById("incomeLegendBox")) return;
 
   const userAnnualIncome = getUserAnnualIncome();
 
   const legend = document.createElement("div");
   legend.id = "incomeLegendBox";
-  legend.className = "map-mode-box";
+  legend.className = "income-map-legend";
 
   legend.innerHTML = `
     <strong>Map colouring: Income Comparison</strong>
+
     <p>
       Suburb areas are coloured by comparing young female annual income in each suburb
       with your estimated annual income.
       ${
         userAnnualIncome
           ? `Your estimated annual income is <strong>${formatAnnualMoney(userAnnualIncome)}</strong>.`
-          : `Enter your income in your profile to enable comparison colouring.`
+          : "Enter your income in your profile to enable comparison colouring."
       }
     </p>
 
-    <div class="map-mode-legend">
-      <div class="map-mode-item"><span class="map-dot green"></span>Suburb average below your income</div>
-      <div class="map-mode-item"><span class="map-dot yellow"></span>Similar to your income</div>
-      <div class="map-mode-item"><span class="map-dot red"></span>Suburb average above your income</div>
-      <div class="map-mode-item"><span class="map-dot grey"></span>No data / no user income</div>
+    <div class="income-map-legend-list">
+      <div class="income-map-legend-item">
+        <span class="income-map-dot green"></span>
+        Suburb average below your income
+      </div>
+
+      <div class="income-map-legend-item">
+        <span class="income-map-dot yellow"></span>
+        Similar to your income
+      </div>
+
+      <div class="income-map-legend-item">
+        <span class="income-map-dot red"></span>
+        Suburb average above your income
+      </div>
+
+      <div class="income-map-legend-item">
+        <span class="income-map-dot grey"></span>
+        No data or no user income
+      </div>
     </div>
   `;
 
-  mapCard.appendChild(legend);
+  filterCard.appendChild(legend);
 }
 
-// -----------------------------
-// 7. SA3 LABELS
-// -----------------------------
+/* --------------------------------------------------------------------------
+   SA3 map labels
+-------------------------------------------------------------------------- */
 
 function addSa3Labels() {
+  if (!incomeMap || !sa3IncomeData) return;
+
   sa3LabelLayer = L.layerGroup().addTo(incomeMap);
 
-  sa3IncomeData.features.forEach((feature) => {
+  sa3IncomeData.features.forEach(function (feature) {
     const props = feature.properties;
-
-    // Use polygon bounds centre as label position
     const polygonLayer = L.geoJSON(feature);
     const center = polygonLayer.getBounds().getCenter();
 
@@ -311,30 +322,37 @@ function addSa3Labels() {
   });
 }
 
-// -----------------------------
-// 8. HOVER + CLICK EVENTS
-// -----------------------------
+/* --------------------------------------------------------------------------
+   SA3 hover and click events
+-------------------------------------------------------------------------- */
 
 function onEachSa3Feature(feature, layer) {
   layer.on({
     click: function () {
-      // Guard: only allow interaction with Victorian SA3s (codes 20000–29999)
       const code = String(feature.properties.sa3_code).trim();
+
       if (!code.startsWith("2") || code.length !== 5) return;
 
       selectSa3Feature(feature);
     },
-    mouseover: function (e) {
-      const layer = e.target;
-      layer.setStyle({
+
+    mouseover: function (event) {
+      const hoveredLayer = event.target;
+
+      hoveredLayer.setStyle({
         weight: 2,
         color: "#333333",
         fillOpacity: 0.9,
       });
-      layer.bringToFront();
+
+      hoveredLayer.bringToFront();
     },
-    mouseout: function (e) {
-      sa3IncomeLayer.resetStyle(e.target);
+
+    mouseout: function (event) {
+      if (sa3IncomeLayer) {
+        sa3IncomeLayer.resetStyle(event.target);
+      }
+
       if (selectedSa3BoundaryLayer) {
         selectedSa3BoundaryLayer.bringToFront();
       }
@@ -342,18 +360,22 @@ function onEachSa3Feature(feature, layer) {
   });
 }
 
-// -----------------------------
-// 9. SELECT SA3
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Selecting an SA3
+-------------------------------------------------------------------------- */
 
 function selectSa3Feature(feature) {
   const props = feature.properties;
 
-  document.getElementById("sa3Input").value = props.sa3_name || "";
-  document.getElementById("selectedSa3Input").value = props.sa3_name || "";
-  document.getElementById("selectedSa3CodeInput").value = props.sa3_code || "";
+  setValueIfExists("sa3Input", props.sa3_name || "");
+  setValueIfExists("selectedSa3Input", props.sa3_name || "");
+  setValueIfExists("selectedSa3CodeInput", props.sa3_code || "");
 
-  document.getElementById("sa3Suggestions").innerHTML = "";
+  const suggestionsBox = document.getElementById("sa3Suggestions");
+
+  if (suggestionsBox) {
+    suggestionsBox.innerHTML = "";
+  }
 
   const selectedLayer = findLayerBySa3Code(props.sa3_code);
 
@@ -372,9 +394,13 @@ function selectSa3Feature(feature) {
   showSa3DetailPanel(props);
 }
 
-// -----------------------------
-// 10. DRAW SELECTED BOUNDARY
-// -----------------------------
+function setValueIfExists(id, value) {
+  const element = document.getElementById(id);
+
+  if (element) {
+    element.value = value;
+  }
+}
 
 function drawSelectedSa3Boundary(feature) {
   if (selectedSa3BoundaryLayer) {
@@ -391,23 +417,27 @@ function drawSelectedSa3Boundary(feature) {
   }).addTo(incomeMap);
 }
 
-// -----------------------------
-// 11. DETAIL PANEL
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Detail panel
+-------------------------------------------------------------------------- */
 
 function showSa3DetailPanel(props) {
   const panel = document.getElementById("sa3DetailPanel");
 
-  document.getElementById("sa3DetailName").textContent = props.sa3_name || "--";
+  if (!panel) return;
 
-  document.getElementById("detailAverageIncome").textContent =
-    formatAnnualMoney(props.income_2022_23);
+  setTextIfExists("sa3DetailName", props.sa3_name || "--");
+  setTextIfExists(
+    "detailAverageIncome",
+    formatAnnualMoney(props.income_2022_23),
+  );
 
   const userAnnualIncome = getUserAnnualIncome();
 
-  document.getElementById("detailUserIncome").textContent = userAnnualIncome
-    ? formatAnnualMoney(userAnnualIncome)
-    : "--";
+  setTextIfExists(
+    "detailUserIncome",
+    userAnnualIncome ? formatAnnualMoney(userAnnualIncome) : "--",
+  );
 
   updateIncomeComparison(props.income_2022_23);
   renderIncomeTrendChart(props);
@@ -416,20 +446,22 @@ function showSa3DetailPanel(props) {
   panel.classList.remove("hidden");
 }
 
-// -----------------------------
-// 12. COMPARISON TEXT
-// -----------------------------
-
 function updateIncomeComparison(sa3AnnualIncome) {
   const badge = document.getElementById("incomeComparisonBadge");
   const insight = document.getElementById("incomeInsight");
-
   const userAnnualIncome = getUserAnnualIncome();
+
+  if (!badge || !insight) return;
+
+  badge.className = "income-badge";
 
   if (!userAnnualIncome || !sa3AnnualIncome) {
     badge.textContent = "Not enough data";
+    badge.classList.add("is-neutral");
+
     insight.textContent =
       "Enter your income in your profile to compare it with the suburb annual average.";
+
     return;
   }
 
@@ -438,26 +470,38 @@ function updateIncomeComparison(sa3AnnualIncome) {
 
   if (Math.abs(difference) < userAnnualIncome * 0.1) {
     badge.textContent = "Similar income level";
+    badge.classList.add("is-neutral");
+
     insight.textContent =
       "Your estimated annual income is similar to the young female average income in this suburb area.";
-  } else if (difference > 0) {
-    badge.textContent = `${percentage}% above suburb average`;
-    insight.textContent = `Your estimated annual income is ${percentage}% higher than the young female average income in this suburb area.`;
-  } else {
-    badge.textContent = `${percentage}% below suburb average`;
-    insight.textContent = `Your estimated annual income is ${percentage}% lower than the young female average income in this suburb area.`;
+
+    return;
   }
+
+  if (difference > 0) {
+    badge.textContent = `${percentage}% above suburb average`;
+    badge.classList.add("is-positive");
+
+    insight.textContent = `Your estimated annual income is ${percentage}% higher than the young female average income in this suburb area.`;
+
+    return;
+  }
+
+  badge.textContent = `${percentage}% below suburb average`;
+  badge.classList.add("is-negative");
+
+  insight.textContent = `Your estimated annual income is ${percentage}% lower than the young female average income in this suburb area.`;
 }
 
-// -----------------------------
-// 13. TREND LINE
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Trend chart
+-------------------------------------------------------------------------- */
 
 function renderIncomeTrendChart(props) {
   const chartCanvas = document.getElementById("incomeTrendChart");
 
-  if (!chartCanvas) {
-    console.warn("incomeTrendChart canvas not found in HTML.");
+  if (!chartCanvas || typeof Chart === "undefined") {
+    console.warn("Chart.js or incomeTrendChart canvas is missing.");
     return;
   }
 
@@ -515,46 +559,49 @@ function renderIncomeTrendChart(props) {
   });
 }
 
-// -----------------------------
-// 14. TREND INSIGHT
-// -----------------------------
-
 function generateIncomeTrendInsight(props) {
   const trendStatusBadge = document.getElementById("incomeTrendStatusBadge");
   const trendInsight = document.getElementById("incomeTrendInsight");
 
   if (!trendStatusBadge || !trendInsight) return;
 
-  const history = (props.history || []).filter(
-    (value) => value !== null && value !== undefined,
-  );
+  const history = (props.history || []).filter(function (value) {
+    return value !== null && value !== undefined;
+  });
+
   const labels = props.history_labels || [];
+
+  trendStatusBadge.className = "income-badge";
 
   if (history.length < 2) {
     trendStatusBadge.textContent = "No trend data";
+    trendStatusBadge.classList.add("is-neutral");
+
     trendInsight.innerHTML = `Not enough income history is available for ${props.sa3_name}.`;
+
     return;
   }
 
   const firstIncome = history[0];
   const lastIncome = history[history.length - 1];
-
   const totalChange = lastIncome - firstIncome;
   const percentChange = Math.round((totalChange / firstIncome) * 100);
 
   let status = "Stable";
-  let statusClass = "affordability-affordable";
+  let statusClass = "is-neutral";
 
   if (percentChange > 10) {
     status = "Rising";
-    statusClass = "affordability-affordable";
-  } else if (percentChange < -10) {
+    statusClass = "is-positive";
+  }
+
+  if (percentChange < -10) {
     status = "Declining";
-    statusClass = "affordability-unaffordable";
+    statusClass = "is-negative";
   }
 
   trendStatusBadge.textContent = status;
-  trendStatusBadge.className = `affordability-badge ${statusClass}`;
+  trendStatusBadge.classList.add(statusClass);
 
   trendInsight.innerHTML = `
     <strong>${props.sa3_name} income trend:</strong>
@@ -568,41 +615,21 @@ function generateIncomeTrendInsight(props) {
   `;
 }
 
-// -----------------------------
-// 15. EVENT LISTENERS
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Events and search
+-------------------------------------------------------------------------- */
 
 function initialiseEventListeners() {
   const closeBtn = document.getElementById("closeSa3DetailBtn");
   const sa3Input = document.getElementById("sa3Input");
-  const dropdownBtn = document.getElementById("sa3DropdownBtn");
 
   if (closeBtn) {
-    closeBtn.addEventListener("click", function () {
-      document.getElementById("sa3DetailPanel").classList.add("hidden");
-
-      if (incomeTrendChart) {
-        incomeTrendChart.destroy();
-        incomeTrendChart = null;
-      }
-
-      if (selectedSa3BoundaryLayer) {
-        incomeMap.removeLayer(selectedSa3BoundaryLayer);
-        selectedSa3BoundaryLayer = null;
-      }
-    });
+    closeBtn.addEventListener("click", closeSa3DetailPanel);
   }
 
   if (sa3Input) {
     sa3Input.addEventListener("input", function () {
-      filterSa3Suggestions(this.value);
-    });
-  }
-
-  if (dropdownBtn) {
-    dropdownBtn.addEventListener("click", function () {
-      if (!sa3IncomeData || !sa3IncomeData.features) return;
-      filterSa3Suggestions(sa3Input.value || "");
+      filterSa3Suggestions(sa3Input.value);
     });
   }
 
@@ -612,7 +639,6 @@ function initialiseEventListeners() {
     if (
       suggestionsBox &&
       !event.target.closest("#sa3Input") &&
-      !event.target.closest("#sa3DropdownBtn") &&
       !event.target.closest("#sa3Suggestions")
     ) {
       suggestionsBox.innerHTML = "";
@@ -620,9 +646,23 @@ function initialiseEventListeners() {
   });
 }
 
-// -----------------------------
-// 16. SA3 SEARCH DROPDOWN
-// -----------------------------
+function closeSa3DetailPanel() {
+  const panel = document.getElementById("sa3DetailPanel");
+
+  if (panel) {
+    panel.classList.add("hidden");
+  }
+
+  if (incomeTrendChart) {
+    incomeTrendChart.destroy();
+    incomeTrendChart = null;
+  }
+
+  if (selectedSa3BoundaryLayer) {
+    incomeMap.removeLayer(selectedSa3BoundaryLayer);
+    selectedSa3BoundaryLayer = null;
+  }
+}
 
 function filterSa3Suggestions(searchText) {
   const suggestionsBox = document.getElementById("sa3Suggestions");
@@ -636,7 +676,7 @@ function filterSa3Suggestions(searchText) {
   const cleanSearchText = searchText.trim().toLowerCase();
 
   const matches = sa3IncomeData.features
-    .filter((feature) => {
+    .filter(function (feature) {
       const sa3Name = feature.properties.sa3_name || "";
       return (
         !cleanSearchText || sa3Name.toLowerCase().includes(cleanSearchText)
@@ -644,18 +684,19 @@ function filterSa3Suggestions(searchText) {
     })
     .slice(0, 12);
 
-  if (matches.length === 0) {
+  if (!matches.length) {
     const emptyItem = document.createElement("div");
-    emptyItem.className = "location-suggestion-item";
-    emptyItem.textContent = "No SA3 found";
+    emptyItem.className = "income-suggestion-item is-empty";
+    emptyItem.textContent = "No suburb area found";
     suggestionsBox.appendChild(emptyItem);
     return;
   }
 
-  matches.forEach((feature) => {
-    const item = document.createElement("div");
+  matches.forEach(function (feature) {
+    const item = document.createElement("button");
 
-    item.className = "location-suggestion-item";
+    item.type = "button";
+    item.className = "income-suggestion-item";
     item.textContent = feature.properties.sa3_name;
 
     item.addEventListener("click", function () {
@@ -666,9 +707,6 @@ function filterSa3Suggestions(searchText) {
   });
 }
 
-// -----------------------------
-// 17. FIND LAYER BY SA3 CODE
-// -----------------------------
 function findLayerBySa3Code(sa3Code) {
   let foundLayer = null;
 
@@ -686,14 +724,14 @@ function findLayerBySa3Code(sa3Code) {
   return foundLayer;
 }
 
-// -----------------------------
-// 18. HELPER FUNCTIONS
-// -----------------------------
+/* --------------------------------------------------------------------------
+   Helpers
+-------------------------------------------------------------------------- */
 
 function getUserAnnualIncome() {
   if (!userProfile.income) return null;
 
-  // Current app profile income is weekly
+  // The profile stores weekly income, so annual income is weekly income x 52.
   return Number(userProfile.income) * 52;
 }
 
@@ -703,63 +741,235 @@ function formatAnnualMoney(value) {
   return `$${Number(value).toLocaleString()}/year`;
 }
 
-// Terms of Service modal
-document.addEventListener("DOMContentLoaded", function () {
-  const tosModalTrigger = document.getElementById("tosModalTrigger");
-  const tosModal = document.getElementById("tosModal");
-  const tosModalClose = document.getElementById("tosModalClose");
+/* --------------------------------------------------------------------------
+   Footer modals
+-------------------------------------------------------------------------- */
 
-  if (!tosModalTrigger || !tosModal || !tosModalClose) {
-    return;
+function initialiseIncomeModals() {
+  const modalTriggers = document.querySelectorAll("[data-modal-target]");
+  const modalOverlays = document.querySelectorAll(".income-modal-overlay");
+
+  if (!modalTriggers.length || !modalOverlays.length) return;
+
+  function openModal(modal) {
+    if (!modal) return;
+
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
   }
 
-  tosModalTrigger.addEventListener("click", function () {
-    tosModal.classList.remove("hidden");
-  });
+  function closeModal(modal) {
+    if (!modal) return;
 
-  tosModalClose.addEventListener("click", function () {
-    tosModal.classList.add("hidden");
-  });
-
-  tosModal.addEventListener("click", function (event) {
-    if (event.target === tosModal) {
-      tosModal.classList.add("hidden");
-    }
-  });
-});
-
-// ABS Data Sources modal
-document.addEventListener("DOMContentLoaded", function () {
-  const absDataBtn = document.getElementById("absDataBtn");
-  const absModal = document.getElementById("absModal");
-  const absModalClose = document.getElementById("absModalClose");
-
-  if (!absDataBtn || !absModal || !absModalClose) {
-    return;
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
   }
 
-  function openAbsModal() {
-    absModal.classList.remove("hidden");
+  function closeAllModals() {
+    modalOverlays.forEach(function (modal) {
+      closeModal(modal);
+    });
   }
 
-  function closeAbsModal() {
-    absModal.classList.add("hidden");
-  }
+  modalTriggers.forEach(function (trigger) {
+    trigger.addEventListener("click", function () {
+      const modalId = trigger.dataset.modalTarget;
+      const modal = document.getElementById(modalId);
 
-  absDataBtn.addEventListener("click", openAbsModal);
-  absModalClose.addEventListener("click", closeAbsModal);
-
-  // Close when clicking outside the modal box
-  absModal.addEventListener("click", function (event) {
-    if (event.target === absModal) {
-      closeAbsModal();
-    }
+      openModal(modal);
+    });
   });
 
-  // Close with Escape key
+  modalOverlays.forEach(function (modal) {
+    const closeButtons = modal.querySelectorAll("[data-modal-close]");
+
+    closeButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        closeModal(modal);
+      });
+    });
+
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeModal(modal);
+      }
+    });
+  });
+
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && !absModal.classList.contains("hidden")) {
-      closeAbsModal();
+    if (event.key === "Escape") {
+      closeAllModals();
     }
   });
-});
+}
+
+/* --------------------------------------------------------------------------
+   Income comparison tutorial
+-------------------------------------------------------------------------- */
+
+function initialiseIncomeTutorial() {
+  const fab = document.getElementById("incomeTutorialFab");
+  const overlay = document.getElementById("incomeTutorialOverlay");
+  const highlight = document.getElementById("incomeTutorialHighlight");
+  const popover = document.getElementById("incomeTutorialPopover");
+  const stepLabel = document.getElementById("incomeTutorialStepLabel");
+  const title = document.getElementById("incomeTutorialTitle");
+  const description = document.getElementById("incomeTutorialDesc");
+  const skipBtn = document.getElementById("incomeTutorialSkipBtn");
+  const nextBtn = document.getElementById("incomeTutorialNextBtn");
+
+  if (
+    !fab ||
+    !overlay ||
+    !highlight ||
+    !popover ||
+    !stepLabel ||
+    !title ||
+    !description ||
+    !skipBtn ||
+    !nextBtn
+  ) {
+    return;
+  }
+
+  const steps = [
+    {
+      targetId: "sa3Input",
+      title: "Find your area",
+      description:
+        "Search for your suburb or region. This helps you compare your income with a local Victorian suburb area.",
+    },
+    {
+      targetId: "profileLocation",
+      title: "Your profile location",
+      description:
+        "This location is pulled from your profile. If it looks wrong, go back to the profile builder and update it.",
+    },
+    {
+      targetId: "incomeMapContainer",
+      title: "Income map",
+      description:
+        "Areas are coloured by comparing average income with your estimated annual income. Select any area to view more detail.",
+    },
+  ];
+
+  let currentStepIndex = 0;
+  let isActive = false;
+
+  function startTutorial() {
+    currentStepIndex = 0;
+    isActive = true;
+
+    overlay.classList.remove("hidden");
+    highlight.classList.remove("hidden");
+    popover.classList.remove("hidden");
+
+    document.body.style.overflow = "hidden";
+
+    renderStep();
+  }
+
+  function endTutorial() {
+    isActive = false;
+
+    overlay.classList.add("hidden");
+    highlight.classList.add("hidden");
+    popover.classList.add("hidden");
+
+    document.body.style.overflow = "";
+  }
+
+  function goToNextStep() {
+    if (currentStepIndex >= steps.length - 1) {
+      endTutorial();
+      return;
+    }
+
+    currentStepIndex += 1;
+    renderStep();
+  }
+
+  function renderStep() {
+    const step = steps[currentStepIndex];
+    const target = document.getElementById(step.targetId);
+
+    if (!target) {
+      goToNextStep();
+      return;
+    }
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+
+    window.setTimeout(function () {
+      positionHighlight(target);
+      positionPopover(target);
+
+      stepLabel.textContent = `Step ${currentStepIndex + 1} of ${steps.length}`;
+      title.textContent = step.title;
+      description.textContent = step.description;
+
+      nextBtn.textContent =
+        currentStepIndex === steps.length - 1 ? "Finish" : "Next";
+    }, 250);
+  }
+
+  function positionHighlight(target) {
+    const rect = target.getBoundingClientRect();
+    const padding = 12;
+
+    highlight.style.top = `${Math.max(rect.top - padding, 16)}px`;
+    highlight.style.left = `${Math.max(rect.left - padding, 16)}px`;
+    highlight.style.width = `${Math.min(
+      rect.width + padding * 2,
+      window.innerWidth - 32,
+    )}px`;
+    highlight.style.height = `${rect.height + padding * 2}px`;
+  }
+
+  function positionPopover(target) {
+    const rect = target.getBoundingClientRect();
+    const popoverWidth = Math.min(360, window.innerWidth - 32);
+    const gap = 18;
+
+    let top = rect.bottom + gap;
+    let left = rect.left;
+
+    if (top + 260 > window.innerHeight) {
+      top = rect.top - 260 - gap;
+    }
+
+    if (left + popoverWidth > window.innerWidth - 16) {
+      left = window.innerWidth - popoverWidth - 16;
+    }
+
+    if (left < 16) {
+      left = 16;
+    }
+
+    if (top < 16) {
+      top = 16;
+    }
+
+    popover.style.top = `${top}px`;
+    popover.style.left = `${left}px`;
+  }
+
+  fab.addEventListener("click", startTutorial);
+  skipBtn.addEventListener("click", endTutorial);
+  nextBtn.addEventListener("click", goToNextStep);
+
+  window.addEventListener("resize", function () {
+    if (isActive) {
+      renderStep();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (isActive && event.key === "Escape") {
+      endTutorial();
+    }
+  });
+}
