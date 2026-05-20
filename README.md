@@ -89,22 +89,23 @@ Currently, the project is still under development. However, you can access the w
 ### Iteration - 1 Delivery
 
 <ol>
-  <li>Created a landing page for the application.</li>
-  <li>Added a profile builder section to collect user inputs.</li>
+  <li>Landing Page</li>
+  <li>Profile Builder</li>
 </ol>
 
 ### Iteration - 2 Delivery
 
 <ol>
-  <li>Added maps based visualizations</li>
   <li>Financial snapshot provided using Google Gemini API</li>
+  <li>Income Comparison based on suburbs</li>
+  <li>Rent Comparison</li>
 </ol>
 
 ### Iteration - 3 Delivery
 
 <ol>
-  <li>Added Financial Literacy Module</li>
-  <li>Debt Projection Over time</li>
-  <li>Career Aspirations</li>
   <li>Spending Tracker</li>
+  <li>Financial Literacy Module</li>
+  <li>Debt Projection Over Time</li>
+  <li>Career Aspirations</li>
 </ol>

@@ -1,9 +1,3 @@
-/* ============================================================
-   tutorial.css — Shared spotlight tutorial styles
-   Used by: dashboard, forecast, rent_comparison,
-            spending_tracker, income_comparison, debt_projection
-   ============================================================ */
-
 /* FAB (floating action button) that re-opens the tutorial */
 .tutorial-fab {
   position: fixed;
