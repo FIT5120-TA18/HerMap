@@ -5,15 +5,30 @@
 }
 
 .hub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
   margin-bottom: 40px;
 }
 
+.hub-heading {
+  flex: 1;
+  min-width: 0;
+}
+
 .back-icon {
-  font-size: 18px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.hub-back-btn {
+  flex-shrink: 0;
+  margin-top: 16px;
 }
 
 .hub-title {
-  margin: 24px 0 12px;
+  margin: 0 0 12px;
   font-family: var(--font-heading);
   font-size: clamp(34px, 5vw, 52px);
   line-height: 1.1;

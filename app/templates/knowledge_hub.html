@@ -44,9 +44,6 @@
         </div>
 
         <div class="nav-links">
-          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
-            Dashboard
-          </a>
           <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
         </div>
       </div>
@@ -55,17 +52,21 @@
     <!-- Main Content -->
     <main class="container hub-page">
       <div class="hub-header">
-        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
-          <span class="material-symbols-outlined back-icon">arrow_back</span>
+        <div class="hub-heading">
+          <h1 class="hub-title">Build My Financial Literacy</h1>
+
+          <p class="hub-subtitle">
+            Explore financial education topics at your own pace. Each topic is
+            plain English, practical, and linked to trusted Australian sources.
+          </p>
+        </div>
+
+        <a
+          href="{{ url_for('main.dashboard') }}"
+          class="back-home-btn hub-back-btn"
+        >
           Back to Dashboard
         </a>
-
-        <h1 class="hub-title">Build My Financial Literacy</h1>
-
-        <p class="hub-subtitle">
-          Explore financial education topics at your own pace. Each topic is
-          plain English, practical, and linked to trusted Australian sources.
-        </p>
       </div>
 
       <!-- Personalised scenario note -->
@@ -89,7 +90,7 @@
         >
           <div class="hub-card-content">
             <div class="hub-card-copy">
-              <h3 class="hub-tile-title">Credit &amp; BNPL 101</h3>
+              <h3 class="hub-tile-title">Credit &amp; BNPL</h3>
               <p class="hub-tile-preview">
                 Understand repayments, fees, and the real cost behind “easy”
                 credit.

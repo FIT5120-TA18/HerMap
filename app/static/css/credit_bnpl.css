@@ -656,3 +656,42 @@
     font-size: 16px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Credit page header alignment
+   Moves Back to Knowledge Hub button to the top-right.
+-------------------------------------------------------------------------- */
+
+.credit-hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.credit-hero-top .credit-hero-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.credit-back-btn {
+  flex-shrink: 0;
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+.credit-back-btn .material-symbols-outlined {
+  font-size: 22px;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .credit-hero-top {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .credit-back-btn {
+    margin-top: 0;
+  }
+}

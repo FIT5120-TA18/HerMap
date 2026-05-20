@@ -663,3 +663,48 @@
 #absModal.hidden {
   display: none !important;
 }
+
+/* --------------------------------------------------------------------------
+   Career page header alignment
+   Moves Back to Dashboard button to the top-right.
+-------------------------------------------------------------------------- */
+
+.career-page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.career-page-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.career-page-header .page-inner-title {
+  margin-top: 0 !important;
+}
+
+.career-page-header .back-home-btn,
+.career-back-btn {
+  flex-shrink: 0;
+  margin-top: 16px;
+}
+
+.career-back-btn .material-symbols-outlined {
+  font-size: 22px;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .career-page-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .career-page-header .back-home-btn,
+  .career-back-btn {
+    margin-top: 0;
+  }
+}

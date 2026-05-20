@@ -56,23 +56,27 @@
     <main class="credit-page">
       <!-- Header -->
       <section class="credit-hero">
-        <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
-          <span class="material-symbols-outlined">arrow_back</span>
-          Back to Knowledge Hub
-        </a>
+        <div class="credit-hero-top">
+          <div class="credit-hero-content">
+            <div class="credit-hero-icon gradient-bg">
+              <span class="material-symbols-outlined">credit_card</span>
+            </div>
 
-        <div class="credit-hero-content">
-          <div class="credit-hero-icon gradient-bg">
-            <span class="material-symbols-outlined">credit_card</span>
+            <div>
+              <h1>Credit &amp; BNPL</h1>
+              <p>
+                Learn about credit products in plain language, and understand
+                how to manage multiple financial commitments at once.
+              </p>
+            </div>
           </div>
 
-          <div>
-            <h1>Credit &amp; BNPL 101</h1>
-            <p>
-              Learn about credit products in plain language, and understand how
-              to manage multiple financial commitments at once.
-            </p>
-          </div>
+          <a
+            href="{{ url_for('main.knowledge_hub') }}"
+            class="back-home-btn credit-back-btn"
+          >
+            Back to Knowledge Hub
+          </a>
         </div>
       </section>
 
@@ -286,6 +290,25 @@
         </a>
       </section>
     </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="#" class="nav-link">Privacy Policy</a>
+          <a href="#" class="nav-link">Terms of Service</a>
+        </div>
+      </div>
+    </footer>
 
     <script src="{{ url_for('static', filename='js/credit_bnpl.js') }}"></script>
   </body>

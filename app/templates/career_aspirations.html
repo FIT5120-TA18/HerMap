@@ -41,29 +41,27 @@
           </a>
         </div>
         <div class="nav-links">
-          <a href="{{ url_for('main.dashboard') }}" class="nav-link"
-            >Dashboard</a
-          >
           <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
         </div>
       </div>
     </nav>
 
     <main class="container career-page">
-      <div style="margin-bottom: 32px">
-        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
-          <span class="material-symbols-outlined" style="font-size: 18px"
-            >arrow_back</span
-          >
+      <div class="career-page-header">
+        <div class="career-page-heading">
+          <h1 class="page-inner-title">Career Aspirations</h1>
+          <p class="page-inner-subtitle">
+            Explore what women typically earn in full-time roles across
+            different industries in Australia.
+          </p>
+        </div>
+
+        <a
+          href="{{ url_for('main.dashboard') }}"
+          class="back-home-btn career-back-btn"
+        >
           Back to Dashboard
         </a>
-        <h1 class="page-inner-title" style="margin-top: 20px">
-          Career Aspirations
-        </h1>
-        <p class="page-inner-subtitle">
-          Explore what women typically earn in full-time roles across different
-          industries in Australia.
-        </p>
       </div>
 
       <!-- Your industry indicator -->

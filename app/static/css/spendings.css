@@ -3651,3 +3651,36 @@ body,
     min-height: 48px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Spending tracker header alignment fix
+   Keeps Back to Dashboard aligned with the page heading.
+-------------------------------------------------------------------------- */
+
+.spending-tracker-page .tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.spending-tracker-page .tracker-header > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.spending-tracker-page .tracker-header .back-home-btn {
+  flex-shrink: 0;
+  margin-top: 18px;
+}
+
+@media (max-width: 768px) {
+  .spending-tracker-page .tracker-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .spending-tracker-page .tracker-header .back-home-btn {
+    margin-top: 0;
+  }
+}
