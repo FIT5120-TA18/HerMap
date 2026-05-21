@@ -131,6 +131,7 @@ const sweetBoxY = chartArea.top + 32;
 
 
 
+
 ctx.fillStyle = "rgba(47, 90, 168, 1)";
 ctx.beginPath();
 ctx.roundRect(sweetBoxX, sweetBoxY, sweetBoxW, sweetBoxH, 4);
@@ -148,6 +149,42 @@ ctx.save();
 ctx.font = "11px Inter, sans-serif";
 ctx.fillStyle = "rgba(47, 90, 168, 1)";
 ctx.textAlign = "center";
+const dataset = chart.data.datasets[0];
+const meta = chart.getDatasetMeta(0);
+
+dataset.data.forEach((point, index) => {
+  if (!point.isSweetSpot) return;
+  const element = meta.data[index];
+  if (!element) return;
+
+  const cx = element.x;
+  const cy = element.y;
+  const r = element.options.radius || 10;
+
+  ctx.save();
+  ctx.fillStyle = "#FFD700";
+  ctx.beginPath();
+
+  const spikes = 5;
+  const outerR = r * 0.8;
+  const innerR = r * 0.35;
+
+  for (let i = 0; i < spikes * 2; i++) {
+    const angle = (i * Math.PI) / spikes - Math.PI / 2;
+    const radius = i % 2 === 0 ? outerR : innerR;
+    const x = cx + Math.cos(angle) * radius;
+    const y = cy + Math.sin(angle) * radius;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+});
+
+
+
+
 
 
 
@@ -1268,7 +1305,7 @@ function renderSuburbBubbleChart() {
           label: "Suburbs",
           data: points,
           backgroundColor: points.map((point) => {
-            if (point.isSweetSpot) return "rgba(47, 90, 168, 0.45)";
+            if (point.isSweetSpot) return "rgba(47, 90, 168, 0.35)";
             if (point.isAddedSuburb) return "rgba(47, 90, 168, 0.35)";
 
             return point.isWithinBudget
@@ -1276,7 +1313,7 @@ function renderSuburbBubbleChart() {
               : "rgba(120, 120, 120, 0.12)";
           }),
           borderColor: points.map((point) => {
-            if (point.isSweetSpot) return "rgba(47, 90, 168, 1)";
+            if (point.isSweetSpot) return "rgba(47, 90, 168, 0.95)";
             if (point.isAddedSuburb) return "rgba(47, 90, 168, 0.95)";
 
             return point.isWithinBudget
