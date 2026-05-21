@@ -90,7 +90,6 @@ function getStepSizeForMax (max) {
 
 function initChart() {
     document.getElementById('keyMessage').style.display = 'block';
-    document.getElementById('ctaBox').style.display = 'block';
 
     if (state.chartInstance) {
         state.chartInstance.destroy();
@@ -272,7 +271,7 @@ function skipToEnd() {
 }
 
 function onRevealComplete() {
-
+    document.getElementById('ctaBox').style.display = 'block';
 }
 
 function updateRevealUI() {
