@@ -370,6 +370,9 @@ function initializeEventListeners() {
         locationSearchSuggestions.innerHTML = "";
       }
     });
+    locationSearchInput.addEventListener("click", function() {
+      locationSearchInput.value = "";
+    });
 
     locationSearchSuggestions.addEventListener("click", async function (event) {
       const item = event.target.closest(".location-suggestion-item");
@@ -381,9 +384,11 @@ function initializeEventListeners() {
 
       locationSearchInput.value = `${locality} (${postcode})`;
       locationSearchSuggestions.innerHTML = "";
+    
 
       await resolveLocationToLga(locality, postcode);
-    });
+    }
+  );
   }
 
   // Bubble chart option buttons.
