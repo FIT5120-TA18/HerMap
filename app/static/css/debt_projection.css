@@ -210,6 +210,28 @@
     line-height: 1.6;
 }
 
+.debt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.debt-header h1 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.debt-header p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
 
 
 /* Key message box  */
