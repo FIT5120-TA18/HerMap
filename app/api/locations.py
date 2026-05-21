@@ -1,7 +1,7 @@
 # Import necessary Dependencies
 from flask import Blueprint, request, jsonify
 import json
-from sqlalchemy import or_, func, cast, String
+from sqlalchemy import or_, func, cast, String, and_
 from models import (
     LocationData,
     PostcodeLGACodeVIC,
@@ -71,7 +71,7 @@ def get_lga_from_location():
             PostcodeLGACodeVIC.lgacode == LGABoundaryVIC.lgacode
         )
         .filter(
-            or_(
+            and_(
                 PostcodeLGACodeVIC.postcode == postcode,
                 PostcodeLGACodeVIC.locality == locality
             )
