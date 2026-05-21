@@ -31,18 +31,18 @@
 
 .rent-header {
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
+  align-items: center;
   gap: 24px;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 
 .rent-header h1 {
-  margin: 0 0 10px;
-  color: var(--text-main);
+  margin: 0 0 8px;
   font-family: var(--font-heading);
-  font-size: clamp(36px, 5vw, 56px);
-  line-height: 1.08;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
 .rent-header p {
