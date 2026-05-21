@@ -89,6 +89,9 @@ function getStepSizeForMax (max) {
 }
 
 function initChart() {
+    document.getElementById('keyMessage').style.display = 'block';
+    document.getElementById('ctaBox').style.display = 'block';
+
     if (state.chartInstance) {
         state.chartInstance.destroy();
         state.chartInstance = null;
@@ -269,8 +272,7 @@ function skipToEnd() {
 }
 
 function onRevealComplete() {
-    document.getElementById('keyMessage').style.display = 'block';
-    document.getElementById('ctaBox').style.display = 'block';
+
 }
 
 function updateRevealUI() {
