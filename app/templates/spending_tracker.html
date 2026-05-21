@@ -55,15 +55,16 @@
     <main class="tracker-container">
       <!-- Page heading -->
       <div class="tracker-header">
-        <div>
-          <h1>Track My <span class="gradient-text">Spending</span></h1>
-
+        
+        <div class="tracker-header-left">
+        <h1>
+          Track My 
+          <span class="gradient-text">Spending</span>
+          </h1>
           <p>
-            Enter your weekly expenses to understand your surplus, deficit, rent
-            pressure, and what this means for independent living.
+            Enter your weekly expenses to understand your surplus, deficit, rent pressure, and what this means for independent living.
           </p>
-        </div>
-
+      </div>
         <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
           Back to Dashboard
         </a>
