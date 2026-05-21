@@ -78,11 +78,6 @@
             style="color:var(--primary);font-weight:700;">Australian Government (ASIC, 2020)</a></em>
           </p>
         </div>
-
-        <div class="cta-box" style="display:none;" id="ctaBox">
-          <p>Now that you can see how debt grows, learn about credit products and how to avoid the trap.</p>
-          <a href="{{ url_for('main.knowledge_hub') }}#credit" class="cta-link">Learn about credit products</a>
-        </div>
       </div>
 
       <!-- Right: Stats -->
@@ -155,6 +150,10 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="cta-box" style="display:none;" id="ctaBox">
+      <p>Now that you can see how debt grows, learn about credit products and how to avoid the trap.</p>
+      <a href="{{ url_for('main.knowledge_hub') }}#credit" class="cta-link">Learn about credit products</a>
     </div>
     <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
       <span class="material-symbols-outlined">help</span>
