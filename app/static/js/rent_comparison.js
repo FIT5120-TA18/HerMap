@@ -53,6 +53,7 @@ const quadrantPlugin = {
 
     const xMid = xScale.getPixelForValue(xMidValue);
     const yMid = yScale.getPixelForValue(yMidValue);
+    
 
     ctx.save();
 
@@ -108,6 +109,48 @@ const quadrantPlugin = {
       chartArea.right - 145,
       chartArea.bottom - 12,
     );
+
+    // Top left
+ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
+ctx.fillText("Higher cost + Higher access", chartArea.left + 130, chartArea.top + 22);
+
+// Bottom left
+ctx.fillText("Higher cost + Lower access", chartArea.left + 130, chartArea.bottom - 12);
+
+// Bottom right
+ctx.fillText("Lower cost + Lower access", chartArea.right - 145, chartArea.bottom - 12);
+
+// Top right — sweet spot label with blue background
+const sweetLabel = "⭐ Sweet Spot";
+ctx.font = "bold 12px Inter, sans-serif";
+const sweetTextWidth = ctx.measureText(sweetLabel).width;
+const sweetBoxW = sweetTextWidth + 14;
+const sweetBoxH = 22;
+const sweetBoxX = chartArea.right - sweetBoxW - 8;
+const sweetBoxY = chartArea.top + 32;
+
+
+
+ctx.fillStyle = "rgba(47, 90, 168, 1)";
+ctx.beginPath();
+ctx.roundRect(sweetBoxX, sweetBoxY, sweetBoxW, sweetBoxH, 4);
+ctx.fill();
+
+ctx.fillStyle = "#ffffff";
+ctx.textAlign = "center";
+ctx.fillText(sweetLabel, sweetBoxX + sweetBoxW / 2, sweetBoxY + 15);
+
+// Reset font for other labels
+ctx.font = "12px Inter, sans-serif";
+ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
+
+ctx.save();
+ctx.font = "11px Inter, sans-serif";
+ctx.fillStyle = "rgba(47, 90, 168, 1)";
+ctx.textAlign = "center";
+
+
+
 
     ctx.restore();
   },
@@ -403,7 +446,8 @@ function initializeLocationAutocomplete({ inputId, suggestionsId, onSelect }) {
     const locality = item.dataset.locality;
     const postcode = item.dataset.postcode;
 
-    input.value = `${locality} (${postcode})`;
+    // input.value = `${locality} (${postcode})`;
+    input.value = "";
     suggestions.innerHTML = "";
 
     if (onSelect) {
@@ -1360,12 +1404,17 @@ function generateBubbleChartInsights(points, xMetric, yMetric, sizeMetric) {
     insights.push(`
       <strong>Sweet spot suburbs:</strong>
       <div class="sweet-spot-tags">
-        ${sweetSpotSuburbs
-          .slice(0, 8)
-          .map(
-            (name) => `<span class="sweet-spot-tag">${escapeHtml(name)}</span>`,
-          )
-          .join("")}
+      ${points
+        .filter((point) => point.isSweetSpot)
+        .slice(0, 8)
+        .map((point) => `
+          <div class="sweet-spot-card">
+            <strong>${escapeHtml(point.suburb)}</strong>
+            <span>🏠 Rent: $${point.rent ?? "N/A"}/wk</span>
+            <span>${getBubbleMetricLabel(yMetric)}: ${point.y}</span>
+            <span>${getBubbleMetricLabel(sizeMetric)}: ${point.sizeValue}</span>
+          </div>
+        `).join("")}
       </div>
       <p class="sweet-spot-note">
         These suburbs combine lower cost with higher access based on your selected comparison.
