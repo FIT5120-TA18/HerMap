@@ -53,6 +53,7 @@ const quadrantPlugin = {
 
     const xMid = xScale.getPixelForValue(xMidValue);
     const yMid = yScale.getPixelForValue(yMidValue);
+    
 
     ctx.save();
 
@@ -108,6 +109,85 @@ const quadrantPlugin = {
       chartArea.right - 145,
       chartArea.bottom - 12,
     );
+
+    // Top left
+ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
+ctx.fillText("Higher cost + Higher access", chartArea.left + 130, chartArea.top + 22);
+
+// Bottom left
+ctx.fillText("Higher cost + Lower access", chartArea.left + 130, chartArea.bottom - 12);
+
+// Bottom right
+ctx.fillText("Lower cost + Lower access", chartArea.right - 145, chartArea.bottom - 12);
+
+// Top right — sweet spot label with blue background
+const sweetLabel = "⭐ Sweet Spot";
+ctx.font = "bold 12px Inter, sans-serif";
+const sweetTextWidth = ctx.measureText(sweetLabel).width;
+const sweetBoxW = sweetTextWidth + 14;
+const sweetBoxH = 22;
+const sweetBoxX = chartArea.right - sweetBoxW - 8;
+const sweetBoxY = chartArea.top + 32;
+
+
+
+
+ctx.fillStyle = "rgba(47, 90, 168, 1)";
+ctx.beginPath();
+ctx.roundRect(sweetBoxX, sweetBoxY, sweetBoxW, sweetBoxH, 4);
+ctx.fill();
+
+ctx.fillStyle = "#ffffff";
+ctx.textAlign = "center";
+ctx.fillText(sweetLabel, sweetBoxX + sweetBoxW / 2, sweetBoxY + 15);
+
+// Reset font for other labels
+ctx.font = "12px Inter, sans-serif";
+ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
+
+ctx.save();
+ctx.font = "11px Inter, sans-serif";
+ctx.fillStyle = "rgba(47, 90, 168, 1)";
+ctx.textAlign = "center";
+const dataset = chart.data.datasets[0];
+const meta = chart.getDatasetMeta(0);
+
+dataset.data.forEach((point, index) => {
+  if (!point.isSweetSpot) return;
+  const element = meta.data[index];
+  if (!element) return;
+
+  const cx = element.x;
+  const cy = element.y;
+  const r = element.options.radius || 10;
+
+  ctx.save();
+  ctx.fillStyle = "#FFD700";
+  ctx.beginPath();
+
+  const spikes = 5;
+  const outerR = r * 0.8;
+  const innerR = r * 0.35;
+
+  for (let i = 0; i < spikes * 2; i++) {
+    const angle = (i * Math.PI) / spikes - Math.PI / 2;
+    const radius = i % 2 === 0 ? outerR : innerR;
+    const x = cx + Math.cos(angle) * radius;
+    const y = cy + Math.sin(angle) * radius;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+});
+
+
+
+
+
+
+
 
     ctx.restore();
   },
@@ -290,6 +370,9 @@ function initializeEventListeners() {
         locationSearchSuggestions.innerHTML = "";
       }
     });
+    locationSearchInput.addEventListener("click", function() {
+      locationSearchInput.value = "";
+    });
 
     locationSearchSuggestions.addEventListener("click", async function (event) {
       const item = event.target.closest(".location-suggestion-item");
@@ -301,9 +384,11 @@ function initializeEventListeners() {
 
       locationSearchInput.value = `${locality} (${postcode})`;
       locationSearchSuggestions.innerHTML = "";
+    
 
       await resolveLocationToLga(locality, postcode);
-    });
+    }
+  );
   }
 
   // Bubble chart option buttons.
@@ -403,7 +488,8 @@ function initializeLocationAutocomplete({ inputId, suggestionsId, onSelect }) {
     const locality = item.dataset.locality;
     const postcode = item.dataset.postcode;
 
-    input.value = `${locality} (${postcode})`;
+    // input.value = `${locality} (${postcode})`;
+    input.value = "";
     suggestions.innerHTML = "";
 
     if (onSelect) {
@@ -1224,7 +1310,7 @@ function renderSuburbBubbleChart() {
           label: "Suburbs",
           data: points,
           backgroundColor: points.map((point) => {
-            if (point.isSweetSpot) return "rgba(47, 90, 168, 0.45)";
+            if (point.isSweetSpot) return "rgba(47, 90, 168, 0.35)";
             if (point.isAddedSuburb) return "rgba(47, 90, 168, 0.35)";
 
             return point.isWithinBudget
@@ -1232,7 +1318,7 @@ function renderSuburbBubbleChart() {
               : "rgba(120, 120, 120, 0.12)";
           }),
           borderColor: points.map((point) => {
-            if (point.isSweetSpot) return "rgba(47, 90, 168, 1)";
+            if (point.isSweetSpot) return "rgba(47, 90, 168, 0.95)";
             if (point.isAddedSuburb) return "rgba(47, 90, 168, 0.95)";
 
             return point.isWithinBudget
@@ -1360,12 +1446,17 @@ function generateBubbleChartInsights(points, xMetric, yMetric, sizeMetric) {
     insights.push(`
       <strong>Sweet spot suburbs:</strong>
       <div class="sweet-spot-tags">
-        ${sweetSpotSuburbs
-          .slice(0, 8)
-          .map(
-            (name) => `<span class="sweet-spot-tag">${escapeHtml(name)}</span>`,
-          )
-          .join("")}
+      ${points
+        .filter((point) => point.isSweetSpot)
+        .slice(0, 8)
+        .map((point) => `
+          <div class="sweet-spot-card">
+            <strong>${escapeHtml(point.suburb)}</strong>
+            <span>🏠 Rent: $${point.rent ?? "N/A"}/wk</span>
+            <span>${getBubbleMetricLabel(yMetric)}: ${point.y}</span>
+            <span>${getBubbleMetricLabel(sizeMetric)}: ${point.sizeValue}</span>
+          </div>
+        `).join("")}
       </div>
       <p class="sweet-spot-note">
         These suburbs combine lower cost with higher access based on your selected comparison.
