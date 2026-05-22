@@ -53,7 +53,6 @@ const quadrantPlugin = {
 
     const xMid = xScale.getPixelForValue(xMidValue);
     const yMid = yScale.getPixelForValue(yMidValue);
-    
 
     ctx.save();
 
@@ -111,83 +110,85 @@ const quadrantPlugin = {
     );
 
     // Top left
-ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
-ctx.fillText("Higher cost + Higher access", chartArea.left + 130, chartArea.top + 22);
+    ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
+    ctx.fillText(
+      "Higher cost + Higher access",
+      chartArea.left + 130,
+      chartArea.top + 22,
+    );
 
-// Bottom left
-ctx.fillText("Higher cost + Lower access", chartArea.left + 130, chartArea.bottom - 12);
+    // Bottom left
+    ctx.fillText(
+      "Higher cost + Lower access",
+      chartArea.left + 130,
+      chartArea.bottom - 12,
+    );
 
-// Bottom right
-ctx.fillText("Lower cost + Lower access", chartArea.right - 145, chartArea.bottom - 12);
+    // Bottom right
+    ctx.fillText(
+      "Lower cost + Lower access",
+      chartArea.right - 145,
+      chartArea.bottom - 12,
+    );
 
-// Top right — sweet spot label with blue background
-const sweetLabel = "⭐ Sweet Spot";
-ctx.font = "bold 12px Inter, sans-serif";
-const sweetTextWidth = ctx.measureText(sweetLabel).width;
-const sweetBoxW = sweetTextWidth + 14;
-const sweetBoxH = 22;
-const sweetBoxX = chartArea.right - sweetBoxW - 8;
-const sweetBoxY = chartArea.top + 32;
+    // Top right — sweet spot label with blue background
+    const sweetLabel = "⭐ Sweet Spot";
+    ctx.font = "bold 12px Inter, sans-serif";
+    const sweetTextWidth = ctx.measureText(sweetLabel).width;
+    const sweetBoxW = sweetTextWidth + 14;
+    const sweetBoxH = 22;
+    const sweetBoxX = chartArea.right - sweetBoxW - 8;
+    const sweetBoxY = chartArea.top + 32;
 
+    ctx.fillStyle = "rgba(47, 90, 168, 1)";
+    ctx.beginPath();
+    ctx.roundRect(sweetBoxX, sweetBoxY, sweetBoxW, sweetBoxH, 4);
+    ctx.fill();
 
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.fillText(sweetLabel, sweetBoxX + sweetBoxW / 2, sweetBoxY + 15);
 
+    // Reset font for other labels
+    ctx.font = "12px Inter, sans-serif";
+    ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
 
-ctx.fillStyle = "rgba(47, 90, 168, 1)";
-ctx.beginPath();
-ctx.roundRect(sweetBoxX, sweetBoxY, sweetBoxW, sweetBoxH, 4);
-ctx.fill();
+    ctx.save();
+    ctx.font = "11px Inter, sans-serif";
+    ctx.fillStyle = "rgba(47, 90, 168, 1)";
+    ctx.textAlign = "center";
+    const dataset = chart.data.datasets[0];
+    const meta = chart.getDatasetMeta(0);
 
-ctx.fillStyle = "#ffffff";
-ctx.textAlign = "center";
-ctx.fillText(sweetLabel, sweetBoxX + sweetBoxW / 2, sweetBoxY + 15);
+    dataset.data.forEach((point, index) => {
+      if (!point.isSweetSpot) return;
+      const element = meta.data[index];
+      if (!element) return;
 
-// Reset font for other labels
-ctx.font = "12px Inter, sans-serif";
-ctx.fillStyle = "rgba(28, 23, 20, 0.72)";
+      const cx = element.x;
+      const cy = element.y;
+      const r = element.options.radius || 10;
 
-ctx.save();
-ctx.font = "11px Inter, sans-serif";
-ctx.fillStyle = "rgba(47, 90, 168, 1)";
-ctx.textAlign = "center";
-const dataset = chart.data.datasets[0];
-const meta = chart.getDatasetMeta(0);
+      ctx.save();
+      ctx.fillStyle = "#FFD700";
+      ctx.beginPath();
 
-dataset.data.forEach((point, index) => {
-  if (!point.isSweetSpot) return;
-  const element = meta.data[index];
-  if (!element) return;
+      const spikes = 5;
+      const outerR = r * 0.8;
+      const innerR = r * 0.35;
 
-  const cx = element.x;
-  const cy = element.y;
-  const r = element.options.radius || 10;
+      for (let i = 0; i < spikes * 2; i++) {
+        const angle = (i * Math.PI) / spikes - Math.PI / 2;
+        const radius = i % 2 === 0 ? outerR : innerR;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
 
-  ctx.save();
-  ctx.fillStyle = "#FFD700";
-  ctx.beginPath();
-
-  const spikes = 5;
-  const outerR = r * 0.8;
-  const innerR = r * 0.35;
-
-  for (let i = 0; i < spikes * 2; i++) {
-    const angle = (i * Math.PI) / spikes - Math.PI / 2;
-    const radius = i % 2 === 0 ? outerR : innerR;
-    const x = cx + Math.cos(angle) * radius;
-    const y = cy + Math.sin(angle) * radius;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  }
-
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-});
-
-
-
-
-
-
-
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    });
 
     ctx.restore();
   },
@@ -309,7 +310,31 @@ function initializeEventListeners() {
   }
 
   const budgetInput = document.getElementById("budgetInput");
+
   if (budgetInput) {
+    budgetInput.addEventListener("input", function () {
+      const budget = Number(budgetInput.value);
+
+      if (budget && budget > 0) {
+        currentBudget = budget;
+        budgetFilterActive = true;
+        updateMapModeBox();
+
+        if (suburbRentLayer) {
+          suburbRentLayer.setStyle(function (feature) {
+            const rent = feature.properties.rent;
+
+            return {
+              color: "#ffffff",
+              weight: 1.2,
+              fillColor: getRentColor(rent),
+              fillOpacity: rent ? 0.8 : 0.25,
+            };
+          });
+        }
+      }
+    });
+
     budgetInput.addEventListener("keypress", function (event) {
       if (event.key === "Enter") {
         handleBudgetFilter();
@@ -370,7 +395,7 @@ function initializeEventListeners() {
         locationSearchSuggestions.innerHTML = "";
       }
     });
-    locationSearchInput.addEventListener("click", function() {
+    locationSearchInput.addEventListener("click", function () {
       locationSearchInput.value = "";
     });
 
@@ -384,11 +409,9 @@ function initializeEventListeners() {
 
       locationSearchInput.value = `${locality} (${postcode})`;
       locationSearchSuggestions.innerHTML = "";
-    
 
       await resolveLocationToLga(locality, postcode);
-    }
-  );
+    });
   }
 
   // Bubble chart option buttons.
@@ -792,21 +815,49 @@ function getLgaRentColor(rent) {
   return "#f3e5f5";
 }
 
+function getBudgetReference() {
+  const budgetInput = document.getElementById("budgetInput");
+
+  const inputBudget = budgetInput ? Number(budgetInput.value) : null;
+
+  if (inputBudget && inputBudget > 0) {
+    return inputBudget;
+  }
+
+  if (currentBudget && Number(currentBudget) > 0) {
+    return Number(currentBudget);
+  }
+
+  return null;
+}
+
+function getBudgetRentBands() {
+  const budget = getBudgetReference();
+
+  if (!budget) return null;
+
+  return {
+    greenMax: budget,
+    yellowMax: Math.round(budget * 1.15),
+    orangeMax: Math.round(budget * 1.3),
+  };
+}
+
 function getRentColor(rent) {
   if (!rent) return "#cccccc";
 
   const value = Number(rent);
+  const bands = getBudgetRentBands();
 
-  if (budgetFilterActive && currentBudget) {
-    return value <= currentBudget ? "#2e7d32" : "#c62828";
+  if (bands) {
+    if (value <= bands.greenMax) return "#2e7d32";
+    if (value <= bands.yellowMax) return "#f9a825";
+    if (value <= bands.orangeMax) return "#ef6c00";
+
+    return "#c62828";
   }
 
-  if (value >= 650) return "#7f0000";
-  if (value >= 550) return "#c62828";
-  if (value >= 450) return "#ef6c00";
-  if (value >= 350) return "#f9a825";
-
-  return "#2e7d32";
+  return "#cccccc";
 }
 
 /* =========================================================
@@ -1067,35 +1118,50 @@ function updateMapModeBox() {
 
   if (!mapModeTitle || !mapModeText || !mapModeLegend) return;
 
-  if (budgetFilterActive && currentBudget) {
-    mapModeTitle.textContent = "Map mode: Budget View";
-    mapModeText.textContent = `Suburbs are coloured by whether their weekly rent is within your $${currentBudget} budget.`;
+  const budget = getBudgetReference();
+  const bands = getBudgetRentBands();
 
-    mapModeLegend.innerHTML = `
-      <div class="budget-legend-item">
-        <span class="budget-legend-dot affordable"></span>
-        Within budget
-      </div>
-      <div class="budget-legend-item">
-        <span class="budget-legend-dot unaffordable"></span>
-        Above budget
-      </div>
-    `;
-  } else {
+  if (!budget || !bands) {
     mapModeTitle.textContent = "Map mode: Rent View";
-    mapModeText.textContent = "Suburbs are coloured by weekly rent.";
+    mapModeText.textContent =
+      "Enter your weekly rent budget to colour suburbs based on affordability.";
 
     mapModeLegend.innerHTML = `
-      <div class="budget-legend-item">
-        <span class="budget-legend-dot affordable"></span>
-        Lower rent
-      </div>
-      <div class="budget-legend-item">
-        <span class="budget-legend-dot unaffordable"></span>
-        Higher rent
+      <div class="map-rent-legend-row">
+        <span class="map-rent-swatch" style="background: #cccccc;"></span>
+        <span>Waiting for budget input</span>
       </div>
     `;
+
+    return;
   }
+
+  mapModeTitle.textContent = "Map mode: Budget View";
+  mapModeText.textContent = `Suburbs are coloured using your weekly rent budget of $${budget} as the reference.`;
+
+  mapModeLegend.innerHTML = `
+    <div class="map-rent-scale">
+      <div class="map-rent-legend-row">
+        <span class="map-rent-swatch" style="background: #2e7d32;"></span>
+        <span>$${bands.greenMax} or less</span>
+      </div>
+
+      <div class="map-rent-legend-row">
+        <span class="map-rent-swatch" style="background: #f9a825;"></span>
+        <span>$${bands.greenMax + 1} - $${bands.yellowMax}</span>
+      </div>
+
+      <div class="map-rent-legend-row">
+        <span class="map-rent-swatch" style="background: #ef6c00;"></span>
+        <span>$${bands.yellowMax + 1} - $${bands.orangeMax}</span>
+      </div>
+
+      <div class="map-rent-legend-row">
+        <span class="map-rent-swatch" style="background: #c62828;"></span>
+        <span>Above $${bands.orangeMax}</span>
+      </div>
+    </div>
+  `;
 }
 
 function resetMapToUserArea() {
@@ -1449,14 +1515,17 @@ function generateBubbleChartInsights(points, xMetric, yMetric, sizeMetric) {
       ${points
         .filter((point) => point.isSweetSpot)
         .slice(0, 8)
-        .map((point) => `
+        .map(
+          (point) => `
           <div class="sweet-spot-card">
             <strong>${escapeHtml(point.suburb)}</strong>
             <span>🏠 Rent: $${point.rent ?? "N/A"}/wk</span>
             <span>${getBubbleMetricLabel(yMetric)}: ${point.y}</span>
             <span>${getBubbleMetricLabel(sizeMetric)}: ${point.sizeValue}</span>
           </div>
-        `).join("")}
+        `,
+        )
+        .join("")}
       </div>
       <p class="sweet-spot-note">
         These suburbs combine lower cost with higher access based on your selected comparison.

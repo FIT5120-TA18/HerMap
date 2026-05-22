@@ -40,9 +40,7 @@
         </div>
 
         <div class="nav-links">
-          <a href="{{ url_for('main.landing') }}" class="nav-link">
-            Home
-          </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
         </div>
       </div>
     </nav>
@@ -70,7 +68,7 @@
         class="dashboard-insights-section"
         aria-labelledby="dashboardModulesTitle"
       >
-        <div class="section-heading">
+        <div class="dashboard-section-heading">
           <h2 id="dashboardModulesTitle">Explore your modules</h2>
           <p>Select a tile to view the relevant information.</p>
         </div>
@@ -409,10 +407,19 @@
     </div>
 
     <!-- Tutorial -->
-    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
       <span class="material-symbols-outlined">help</span>
     </button>
-    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
     <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
     <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
@@ -421,24 +428,33 @@
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
       <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
-        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
       </div>
     </div>
     <script>
       const TUTORIAL_STEPS = [
         {
-          targetId: 'typewriterText',
-          title: 'Your financial snapshot',
-          desc: 'This updates based on your profile — your age, income, location, and living situation. It gives you a personalised starting point.'
+          targetId: "typewriterText",
+          title: "Your financial snapshot",
+          desc: "This updates based on your profile — your age, income, location, and living situation. It gives you a personalised starting point.",
         },
         {
-          targetId: 'insightsGrid',
-          title: 'Your modules',
-          desc: 'Each tile takes you to a different part of Hermap. Start with spending to track your weekly costs, or explore rent comparison to see what you can afford.'
-        }
+          targetId: "insightsGrid",
+          title: "Your modules",
+          desc: "Each tile takes you to a different part of Hermap. Start with spending to track your weekly costs, or explore rent comparison to see what you can afford.",
+        },
       ];
     </script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

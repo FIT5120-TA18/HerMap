@@ -68,7 +68,6 @@
         <div class="page-grid">
           <!-- Sidebar filters -->
           <aside class="page-sidebar">
-            <!-- Location search -->
             <div class="filter-card">
               <p class="filter-card-title">Search Location</p>
 
@@ -79,7 +78,7 @@
 
               <div class="input-group">
                 <label for="locationSearchInput" class="input-label">
-                  <br>Suburb or Postcode
+                  <br />Suburb or Postcode
                 </label>
 
                 <input
@@ -104,14 +103,15 @@
                   class="profile-location-display hidden"
                 ></div>
 
-                <p class="filter-card-title"><br>Filter by Budget</p>
+                <p class="filter-card-title"><br />Filter by Budget</p>
+
                 <div class="filter-info-message">
                   Enter your weekly rent budget to highlight affordable areas.
                 </div>
 
                 <div class="input-group">
                   <label for="budgetInput" class="input-label">
-                    <br>Weekly Budget ($)
+                    <br />Weekly Budget ($)
                   </label>
 
                   <input
@@ -122,37 +122,6 @@
                     min="0"
                     step="10"
                   />
-
-                  <button type="button" class="budget-button" id="filterButton">
-                    See Suburbs Within Budget
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Budget filter -->
-            <div class="filter-card">
-              
-
-              
-
-              <div id="mapModeBox" class="map-mode-box">
-                <strong id="mapModeTitle">Map mode: Rent View</strong>
-                <p id="mapModeText">Suburbs are coloured by weekly rent.</p>
-                <div id="mapModeLegend" class="map-mode-legend"></div>
-              </div>
-
-              <div class="budget-legend">
-                <strong>Bubble Chart: Rent View</strong>
-
-                <div class="budget-legend-item">
-                  <span class="budget-legend-dot affordable"></span>
-                  <span>Within budget</span>
-                </div>
-
-                <div class="budget-legend-item">
-                  <span class="budget-legend-dot unaffordable"></span>
-                  <span>Above budget</span>
                 </div>
               </div>
             </div>
@@ -169,8 +138,17 @@
               <div id="mapContainer" class="income-map-placeholder">
                 <div class="map-loading">
                   <div class="map-spinner"></div>
-                  <span>Select a suburb to view that and nearby suburbs on the map</span>
+                  <span>
+                    Select a suburb to view that and nearby suburbs on the map
+                  </span>
                 </div>
+              </div>
+
+              <!-- Map legend moved near map -->
+              <div id="mapModeBox" class="map-mode-box">
+                <strong id="mapModeTitle">Map mode: Rent View</strong>
+                <p id="mapModeText">Suburbs are coloured by weekly rent.</p>
+                <div id="mapModeLegend" class="map-mode-legend"></div>
               </div>
             </div>
 
@@ -182,158 +160,164 @@
             <div class="bubble-content-card" id="rentBubbleChartSection">
               <div class="bubble-add-suburb">
                 <div class="bubble-chart-header">
-                <div>
-                  <h2>Compare suburbs by affordability and access</h2>
-                  <p>
-                    Choose what to compare. The chart starts your selected suburb.
-                  </p>
-                </div>
-              </div>
-
-              <div class="bubble-choice-panel" id="bubbleChoicePanel">
-                <!-- X axis choice -->
-                <div class="bubble-choice-section">
-                  <div class="bubble-choice-heading">
-                    <h3>🏠 Housing Cost</h3>
-                    <p>Choose how affordability is shown on the chart.</p>
+                  <div>
+                    <h2>Compare suburbs by affordability and access</h2>
+                    <p>
+                      Choose what to compare. The chart starts your selected
+                      suburb.
+                    </p>
                   </div>
-
-                  <div class="bubble-choice-buttons" data-target="bubbleXAxis">
-                    <button
-                      type="button"
-                      class="bubble-choice-btn active"
-                      data-value="rent"
-                    >
-                      Weekly rent
-                    </button>
-
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="rent_income_pct"
-                    >
-                      % income on rent
-                    </button>
-
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="rent_growth_pct"
-                    >
-                      Rent growth
-                    </button>
-                  </div>
-
-                  <input type="hidden" id="bubbleXAxis" value="rent" />
                 </div>
 
-                <!-- Y axis choice -->
-                <div class="bubble-choice-section">
-                  <div class="bubble-choice-heading">
-                    <h3>🚉 Essential Access</h3>
-                    <p>Choose which daily need matters most.</p>
+                <div class="bubble-choice-panel" id="bubbleChoicePanel">
+                  <!-- X axis choice -->
+                  <div class="bubble-choice-section">
+                    <div class="bubble-choice-heading">
+                      <h3>🏠 Housing Cost</h3>
+                      <p>Choose how affordability is shown on the chart.</p>
+                    </div>
+
+                    <div
+                      class="bubble-choice-buttons"
+                      data-target="bubbleXAxis"
+                    >
+                      <button
+                        type="button"
+                        class="bubble-choice-btn active"
+                        data-value="rent"
+                      >
+                        Weekly rent
+                      </button>
+
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="rent_income_pct"
+                      >
+                        % income on rent
+                      </button>
+
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="rent_growth_pct"
+                      >
+                        Rent growth
+                      </button>
+                    </div>
+
+                    <input type="hidden" id="bubbleXAxis" value="rent" />
                   </div>
 
-                  <div class="bubble-choice-buttons" data-target="bubbleYAxis">
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="supermarket_count"
-                    >
-                      Supermarkets
-                    </button>
+                  <!-- Y axis choice -->
+                  <div class="bubble-choice-section">
+                    <div class="bubble-choice-heading">
+                      <h3>🚉 Essential Access</h3>
+                      <p>Choose which daily need matters most.</p>
+                    </div>
 
-                    <button
-                      type="button"
-                      class="bubble-choice-btn active"
-                      data-value="train_station_count"
+                    <div
+                      class="bubble-choice-buttons"
+                      data-target="bubbleYAxis"
                     >
-                      Train stations
-                    </button>
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="supermarket_count"
+                      >
+                        Supermarkets
+                      </button>
 
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="hospital_count"
-                    >
-                      Hospitals
-                    </button>
+                      <button
+                        type="button"
+                        class="bubble-choice-btn active"
+                        data-value="train_station_count"
+                      >
+                        Train stations
+                      </button>
 
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="pharmacy_count"
-                    >
-                      Pharmacies
-                    </button>
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="hospital_count"
+                      >
+                        Hospitals
+                      </button>
+
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="pharmacy_count"
+                      >
+                        Pharmacies
+                      </button>
+                    </div>
+
+                    <input
+                      type="hidden"
+                      id="bubbleYAxis"
+                      value="train_station_count"
+                    />
                   </div>
 
-                  <input
-                    type="hidden"
-                    id="bubbleYAxis"
-                    value="train_station_count"
-                  />
+                  <!-- Bubble size choice -->
+                  <div class="bubble-choice-section">
+                    <div class="bubble-choice-heading">
+                      <h3>🌿 Lifestyle Focus</h3>
+                      <p>Choose what controls the bubble size.</p>
+                    </div>
+
+                    <div
+                      class="bubble-choice-buttons"
+                      data-target="bubbleSizeMetric"
+                    >
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="cafes_count"
+                      >
+                        Cafes
+                      </button>
+
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="gyms_count"
+                      >
+                        Gyms
+                      </button>
+
+                      <button
+                        type="button"
+                        class="bubble-choice-btn"
+                        data-value="libraries_count"
+                      >
+                        Libraries
+                      </button>
+
+                      <button
+                        type="button"
+                        class="bubble-choice-btn active"
+                        data-value="parks_count"
+                      >
+                        Parks
+                      </button>
+                    </div>
+
+                    <input
+                      type="hidden"
+                      id="bubbleSizeMetric"
+                      value="parks_count"
+                    />
+                  </div>
                 </div>
 
-                <!-- Bubble size choice -->
-                <div class="bubble-choice-section">
-                  <div class="bubble-choice-heading">
-                    <h3>🌿 Lifestyle Focus</h3>
-                    <p>Choose what controls the bubble size.</p>
-                  </div>
-
-                  <div
-                    class="bubble-choice-buttons"
-                    data-target="bubbleSizeMetric"
-                  >
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="cafes_count"
-                    >
-                      Cafes
-                    </button>
-
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="gyms_count"
-                    >
-                      Gyms
-                    </button>
-
-                    <button
-                      type="button"
-                      class="bubble-choice-btn"
-                      data-value="libraries_count"
-                    >
-                      Libraries
-                    </button>
-
-                    <button
-                      type="button"
-                      class="bubble-choice-btn active"
-                      data-value="parks_count"
-                    >
-                      Parks
-                    </button>
-                  </div>
-
-                  <input
-                    type="hidden"
-                    id="bubbleSizeMetric"
-                    value="parks_count"
-                  />
-                </div>
-              </div>
-
-              <!-- Add suburb comparison -->
-              
+                <!-- Add suburb comparison -->
                 <div class="bubble-add-title">Compare another suburb</div>
 
                 <div class="bubble-add-description">
-                  Search and add any other suburb you want to look at. 
-                  Added suburbs appear in blue on the chart.
+                  Search and add any other suburb you want to look at. Added
+                  suburbs appear in blue on the chart.
                 </div>
 
                 <div class="bubble-add-row">
@@ -360,6 +344,45 @@
                 ></div>
 
                 <div id="addedSuburbTags" class="added-suburb-tags"></div>
+
+                <!-- Bubble chart legend moved near bubble chart -->
+                <div class="budget-legend bubble-chart-guide">
+                  <strong>How to read this chart</strong>
+
+                  <p>
+                    Each bubble represents a suburb. Suburbs further to the
+                    right have lower weekly rent, while suburbs higher up have
+                    better access based on the option you selected, such as
+                    train stations, supermarkets, hospitals, or pharmacies.
+                  </p>
+
+                  <p>
+                    Larger bubbles show more of the lifestyle option you
+                    selected, such as parks, cafes, gyms, or libraries.
+                  </p>
+
+                  <div class="budget-legend-item">
+                    <span class="bubble-guide-dot highlighted"></span>
+                    <span
+                      >Blue starred bubbles highlight stronger suburb
+                      options.</span
+                    >
+                  </div>
+
+                  <div class="budget-legend-item">
+                    <span class="bubble-guide-dot standard"></span>
+                    <span
+                      >Grey bubbles show other suburbs included in the
+                      comparison.</span
+                    >
+                  </div>
+
+                  <p>
+                    The top-right area is the sweet spot because it combines
+                    lower rent with better access.
+                  </p>
+                </div>
+
                 <div class="bubble-chart-wrapper">
                   <canvas id="suburbBubbleChart"></canvas>
                 </div>
@@ -506,32 +529,33 @@
     <script>
       const TUTORIAL_STEPS = [
         {
-          targetId: 'locationSearchInput',
-          title: 'Search your area',
-          desc: 'Type your suburb or postcode to load rental prices for your Local Government Area. Your profile location is pre-filled if available.'
+          targetId: "locationSearchInput",
+          title: "Search your area",
+          desc: "Type your suburb or postcode to load rental prices for your Local Government Area. Your profile location is pre-filled if available.",
         },
         {
-          targetId: 'budgetInput',
-          title: 'Filter by budget',
-          desc: 'Enter your weekly rent budget and tap the button. The map will highlight suburbs within your budget in green so you can see exactly where is realistic for you.'
+          targetId: "budgetInput",
+          title: "Filter by budget",
+          desc: "Enter your weekly rent budget and tap the button. The map will highlight suburbs within your budget in green so you can see exactly where is realistic for you.",
         },
         {
-          targetId: 'mapModeBox',
-          title: 'Map legend',
-          desc: 'The map colours suburbs by weekly rent. Green means lower rent, red means higher. Switch to budget mode after entering your weekly budget to see what you can afford.'
+          targetId: "mapModeBox",
+          title: "Map legend",
+          desc: "The map colours suburbs by weekly rent. Green means lower rent, red means higher. Switch to budget mode after entering your weekly budget to see what you can afford.",
         },
         {
-          targetId: 'mapContainer',
-          title: 'Suburb rental map',
-          desc: 'Each suburb is shaded based on its median weekly rent. Tap any suburb to zoom in and see exact rental figures and affordability for your income.'
+          targetId: "mapContainer",
+          title: "Suburb rental map",
+          desc: "Each suburb is shaded based on its median weekly rent. Tap any suburb to zoom in and see exact rental figures and affordability for your income.",
         },
         {
-          targetId: 'bubbleChoicePanel',
-          title: 'Compare suburbs',
-          desc: 'This chart plots suburbs by rent, income, and access to services. Use the axis controls to change what you are comparing — great for finding hidden affordable suburbs.'
-        }
+          targetId: "bubbleChoicePanel",
+          title: "Compare suburbs",
+          desc: "This chart plots suburbs by rent, income, and access to services. Use the axis controls to change what you are comparing, which is great for finding hidden affordable suburbs.",
+        },
       ];
     </script>
+
     <!-- Leaflet JS for the map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -549,22 +573,46 @@
     <script src="{{ url_for('static', filename='js/rent_comparison.js') }}"></script>
 
     <!-- Tutorial -->
-    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
       <span class="material-symbols-outlined">help</span>
     </button>
-    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
+
     <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+
     <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
         <span id="tutorialStepLabel">Step 1 of 5</span>
       </div>
+
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
+
       <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
-        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
       </div>
     </div>
+
     <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

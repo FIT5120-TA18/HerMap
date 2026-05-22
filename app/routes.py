@@ -217,91 +217,127 @@ def generate_financial_fact(profile_data):
 
 def generate_spending_insight(spending_data):
     """
-    Generate a personalised spending insight for the spending results page.
+    Generate a personalised spending summary for the spending results page.
 
-    The fallback messages make sure the route still works even if Gemini is
-    unavailable or the API request fails.
+    This uses the user's spending categories, weekly income, rent, total spending,
+    and surplus/deficit to create:
+    1. A short summary
+    2. 3-4 practical next steps
+    3. A safe fallback message if Gemini is unavailable
     """
     api_key = os.getenv("GEMINI_API_KEY")
 
-    income = spending_data.get("income", 0)
-    rent = spending_data.get("rent", 0)
-    essential = spending_data.get("essential", 0)
-    nonessential = spending_data.get("nonessential", 0)
-    total = spending_data.get("total", 0)
-    surplus = spending_data.get("surplus", 0)
+    income = float(spending_data.get("income") or 0)
+    rent = float(spending_data.get("rent") or 0)
+    essential = float(spending_data.get("essential") or 0)
+    nonessential = float(spending_data.get("nonessential") or 0)
+    total = float(spending_data.get("total") or 0)
+    surplus = float(spending_data.get("surplus") or 0)
     living = spending_data.get("living", "not provided")
     locality = spending_data.get("locality", "not provided")
     items = spending_data.get("items", [])
 
     def fallback_spending_message():
         """
-        Return a simple insight when Gemini is not available.
-
-        This nested helper avoids repeating the same fallback logic in multiple
-        places inside the function.
+        Return a useful fallback insight if Gemini is unavailable,
+        the API key is missing, or the API request fails.
         """
         if surplus < 0:
             return (
                 "Your weekly spending is currently higher than your income. "
-                "A helpful first step is to review your largest flexible costs "
-                "and reduce one category slightly this week."
+                "This means your budget may become harder to manage if the same pattern continues.\n\n"
+                "Suggested next steps:\n"
+                "• Review your largest flexible spending category first.\n"
+                "• Try reducing one non-essential cost for the next week.\n"
+                "• Check whether rent or fixed costs are putting pressure on your income.\n"
+                "• Revisit your spending plan after one week and compare the difference."
             )
 
         if surplus == 0:
             return (
                 "Your weekly income is fully used by your current spending. "
-                "This means there may be little room for emergencies, so building "
-                "even a small weekly buffer could help."
+                "This means you are breaking even, but there may be limited room for emergencies or unexpected costs.\n\n"
+                "Suggested next steps:\n"
+                "• Choose one small category where you can reduce spending.\n"
+                "• Aim to create a small weekly buffer, even if it is only $10-$20.\n"
+                "• Review any recurring payments or subscriptions.\n"
+                "• Track your spending again next week to see if your position improves."
             )
 
         return (
-            "You currently have some money left over each week. "
-            "A small regular saving habit could help you build more independence "
-            "and confidence over time."
+            "Your spending is currently within your weekly income, which gives you some room to save, plan, or manage unexpected costs. "
+            "The next step is to make sure your leftover amount is being used intentionally.\n\n"
+            "Suggested next steps:\n"
+            "• Set aside part of your leftover money for emergency savings.\n"
+            "• Review your largest non-essential category to see if it still feels worthwhile.\n"
+            "• Plan ahead for rent, bills, bond, or moving costs.\n"
+            "• Keep tracking weekly spending so your surplus does not disappear unnoticed."
         )
 
-    item_lines = []
+    category_lines = []
 
     for item in items:
-        item_lines.append(
-            f"- {item.get('name', 'Unknown expense')}: "
-            f"${item.get('value', 0)} per week "
-            f"({item.get('type', 'unknown')})"
-        )
+        name = item.get("name", "Unknown category")
+        value = float(item.get("value") or 0)
+        item_type = item.get("type", "unknown")
 
-    item_text = "\n".join(item_lines) if item_lines else "No itemised expenses provided."
+        if value > 0:
+            category_lines.append(
+                f"- {name}: ${value:.2f} per week ({item_type})"
+            )
+
+    category_text = (
+        "\n".join(category_lines)
+        if category_lines
+        else "No individual spending categories were provided."
+    )
 
     if not api_key or genai is None:
         return fallback_spending_message()
 
     prompt = f"""
-    You are writing for a young Australian woman aged 18-22 using a financial literacy web app.
+You are writing for a young Australian woman aged 18-22 using a financial literacy web app.
 
-    User spending details:
-    Weekly income: ${income}
-    Weekly rent: ${rent}
-    Essential expenses: ${essential}
-    Non-essential expenses: ${nonessential}
-    Total weekly spending: ${total}
-    Weekly surplus or deficit: ${surplus}
-    Living arrangement: {living}
-    Locality: {locality}
+The user has entered weekly spending across different categories.
 
-    Expense breakdown:
-    {item_text}
+User details:
+- Locality: {locality}
+- Living arrangement: {living}
+- Weekly income: ${income:.2f}
+- Weekly rent: ${rent:.2f}
+- Essential spending total: ${essential:.2f}
+- Non-essential spending total: ${nonessential:.2f}
+- Total weekly spending: ${total:.2f}
+- Weekly surplus or deficit: ${surplus:.2f}
 
-    Write a personalised financial insight in 4-6 short sentences.
+Spending categories:
+{category_text}
 
-    Requirements:
-    - Use a warm, supportive, non-judgmental tone.
-    - Explain what her weekly position means.
-    - Mention whether her spending pattern looks manageable, tight, or risky.
-    - Suggest one realistic next step.
-    - Do not use markdown.
-    - Do not mention AI.
-    - Do not give formal financial advice.
-    """
+Write a personalised spending summary.
+
+Output format:
+Start with a short paragraph of 3-4 sentences explaining:
+- what the user's weekly spending position means
+- whether the situation looks manageable, tight, or risky
+- which type of spending appears to be creating the most pressure
+- how the user should think about their surplus or deficit
+
+Then add this heading exactly:
+Suggested next steps:
+
+Then provide 3-4 bullet points.
+
+Rules:
+- Use clear, simple language.
+- Be warm, supportive, and non-judgmental.
+- Refer to the user's actual spending categories where useful.
+- Keep the whole response concise.
+- Use bullet points starting with this character: •
+- Do not use markdown headings.
+- Do not mention AI.
+- Do not give formal financial advice.
+- Do not say the user is wrong or irresponsible.
+"""
 
     try:
         client = genai.Client(api_key=api_key)
@@ -311,7 +347,12 @@ def generate_spending_insight(spending_data):
             contents=prompt,
         )
 
-        return response.text.strip()
+        generated_text = response.text.strip()
+
+        if not generated_text:
+            return fallback_spending_message()
+
+        return generated_text
 
     except Exception:
         return fallback_spending_message()

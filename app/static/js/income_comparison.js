@@ -450,7 +450,7 @@ function updateIncomeComparison(sa3AnnualIncome) {
   const insight = document.getElementById("incomeInsight");
   const userAnnualIncome = getUserAnnualIncome();
 
-  if (!badge || !insight) return;
+  if (!badge) return;
 
   badge.className = "income-badge";
 
@@ -458,38 +458,50 @@ function updateIncomeComparison(sa3AnnualIncome) {
     badge.textContent = "Not enough data";
     badge.classList.add("is-neutral");
 
-    insight.textContent =
-      "Enter your income in your profile to compare it with the suburb annual average.";
+    if (insight) {
+      insight.textContent =
+        "Enter your income in your profile to compare it with the suburb annual average.";
+    }
 
     return;
   }
 
   const difference = userAnnualIncome - sa3AnnualIncome;
   const percentage = Math.round((Math.abs(difference) / sa3AnnualIncome) * 100);
+  const dollarDifference = formatAnnualMoney(Math.abs(difference));
 
   if (Math.abs(difference) < userAnnualIncome * 0.1) {
-    badge.textContent = "Similar income level";
+    badge.textContent = `Similar, within ${percentage}%`;
+
     badge.classList.add("is-neutral");
 
-    insight.textContent =
-      "Your estimated annual income is similar to the young female average income in this suburb area.";
+    if (insight) {
+      insight.textContent =
+        "Your estimated annual income is similar to the young female average income in this suburb area.";
+    }
 
     return;
   }
 
   if (difference > 0) {
-    badge.textContent = `${percentage}% above suburb average`;
+    badge.textContent = `${percentage}% above average`;
+
     badge.classList.add("is-positive");
 
-    insight.textContent = `Your estimated annual income is ${percentage}% higher than the young female average income in this suburb area.`;
+    if (insight) {
+      insight.textContent = `Your estimated annual income is ${percentage}% higher than the young female average income in this suburb area. That is around ${dollarDifference} more per year.`;
+    }
 
     return;
   }
 
-  badge.textContent = `${percentage}% below suburb average`;
+  badge.textContent = `${percentage}% below average`;
+
   badge.classList.add("is-negative");
 
-  insight.textContent = `Your estimated annual income is ${percentage}% lower than the young female average income in this suburb area.`;
+  if (insight) {
+    insight.textContent = `Your estimated annual income is ${percentage}% lower than the young female average income in this suburb area. That is around ${dollarDifference} less per year.`;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -801,4 +813,3 @@ function initialiseIncomeModals() {
     }
   });
 }
-

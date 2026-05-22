@@ -29,7 +29,6 @@
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
-
   </head>
 
   <body class="income-page">
@@ -83,13 +82,12 @@
             <div class="filter-card">
               <p class="filter-card-title">Select Suburb Area</p>
 
-              <div class="filter-info-message">
+              <p class="filter-info-message">
                 Search a suburb area to explore young female annual income
-                across Victoria.<br>
-              </div>
+                across Victoria.<br />
+              </p>
 
               <div class="input-group">
-
                 <div class="income-profile-location" id="profileLocation">
                   {% if profile_data.get('locality') and
                   profile_data.get('postcode') %} {{
@@ -135,13 +133,13 @@
               <div class="income-detail-header">
                 <h2 class="income-detail-title" id="sa3DetailName">--</h2>
 
-                <button
+                <!-- <button
                   type="button"
                   class="back-home-btn"
                   id="closeSa3DetailBtn"
                 >
                   Close
-                </button>
+                </button> -->
               </div>
 
               <!-- Selected area stats -->
@@ -179,55 +177,24 @@
 
                   <p class="income-badge-row">
                     <span class="income-badge" id="incomeComparisonBadge">
-                      Calculating...
+                      Calculating
                     </span>
                   </p>
                 </div>
               </div>
 
-              <!-- Income insight -->
-              <section class="income-trend-section">
-                <p class="income-trend-title">📊 Income Insight</p>
+<div class="income-insight-box income-living-hero-cta">
+  <h2>
+    Now that you know which suburb has better opportunities that pay well,
+    find out if you can live there as well.
+  </h2>
 
-                <p class="income-muted-copy">
-                  Compare your estimated annual income with young female annual
-                  income in this suburb area.
-                </p>
-
-                <div class="income-insight-box">
-                  <p id="incomeInsight">
-                    Select a suburb area to view income analysis.
-                  </p>
-                </div>
-              </section>
-
-              <!-- Income trend -->
-              <section class="income-trend-section">
-                <p class="income-trend-title">📈 Income Trend</p>
-
-                <p class="income-muted-copy">
-                  Annual young female income trend for the selected suburb area.
-                </p>
-
-                <div class="income-trend-status">
-                  <div class="income-detail-stat-label">Trend Status</div>
-
-                  <span class="income-badge" id="incomeTrendStatusBadge">
-                    --
-                  </span>
-                </div>
-
-                <div class="income-chart-container" id="incomeTrend">
-                  <canvas id="incomeTrendChart"></canvas>
-                </div>
-
-                <div class="income-insight-box">
-                  <p id="incomeTrendInsight">
-                    Select a suburb area to view income trend analysis.
-                  </p>
-                </div>
-              </section>
-            </div>
+  <div class="landing-hero-actions">
+    <a href="{{ url_for('main.rent_comparison') }}" class="landing-btn landing-btn-primary">
+      Show me my living options
+    </a>
+  </div>
+</div>
           </section>
         </section>
       </div>
@@ -355,10 +322,19 @@
     </div>
 
     <!-- Tutorial -->
-    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
       <span class="material-symbols-outlined">help</span>
     </button>
-    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
     <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
     <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
@@ -367,30 +343,38 @@
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
       <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
-        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
       </div>
     </div>
     <script>
       const TUTORIAL_STEPS = [
         {
-          targetId: 'profileLocation',
-          title: 'Your location',
-          desc: 'This shows the suburb from your profile. The map loads your local area automatically so you can compare income around where you live.'
+          targetId: "profileLocation",
+          title: "Your location",
+          desc: "This shows the suburb from your profile. The map loads your local area automatically so you can compare income around where you live.",
         },
         {
-          targetId: 'sa3Input',
-          title: 'Search any area',
-          desc: 'Type any Victorian suburb to explore income data. Select it from the dropdown and the map will highlight that region.'
+          targetId: "sa3Input",
+          title: "Search any area",
+          desc: "Type any Victorian suburb to explore income data. Select it from the dropdown and the map will highlight that region.",
         },
         {
-          targetId: 'incomeMapContainer',
-          title: 'Victorian income map',
-          desc: 'Each shaded region shows the typical annual income for young women there. Tap any region on the map to open a detailed breakdown.'
-        }
+          targetId: "incomeMapContainer",
+          title: "Victorian income map",
+          desc: "Each shaded region shows the typical annual income for young women there. Tap any region on the map to open a detailed breakdown.",
+        },
       ];
     </script>
-    
+
     <!-- Leaflet Map JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 

@@ -92,8 +92,10 @@
           </div>
 
           <div class="summary-card">
-            <div class="summary-label">Weekly surplus / deficit</div>
-            <div class="summary-value" id="summarySurplus">$0</div>
+            <div class="summary-label" id="summarySurplusLabel">
+              Weekly surplus / deficit
+            </div>
+            <div class="summary-value" id="summarySurplus">$0/wk</div>
           </div>
 
           <div class="summary-card">
@@ -102,7 +104,6 @@
           </div>
         </section>
 
-        <!-- Rent Pressure + Verdict Side by Side -->
         <!-- Main Results Grid -->
         <section class="results-main-grid">
           <!-- LEFT COLUMN -->
@@ -216,7 +217,7 @@
             <div class="insight-card chart-side-card">
               <h3>What this means</h3>
 
-              <p id="positionInsight">{{ spending_insight or "" }}</p>
+              <div id="positionInsight">{{ spending_insight or "" }}</div>
             </div>
           </div>
         </section>
@@ -275,7 +276,7 @@
 
     <script src="{{ url_for('static', filename='js/spending_results.js') }}"></script>
 
-    <!-- 1. Tutorial HTML -->
+    <!-- Tutorial HTML -->
     <button
       class="tutorial-fab"
       id="tutorialFab"
@@ -284,22 +285,28 @@
     >
       <span class="material-symbols-outlined">help</span>
     </button>
+
     <div
       class="tutorial-spotlight-overlay"
       id="tutorialOverlay"
       style="display: none"
     ></div>
+
     <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+
     <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
-        <span id="tutorialStepLabel">Step 1 of 6</span>
+        <span id="tutorialStepLabel">Step 1 of 5</span>
       </div>
+
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
+
       <div class="tutorial-actions">
         <button class="tutorial-skip-btn" onclick="endTutorial()">
           Skip tutorial
         </button>
+
         <button
           class="tutorial-next-btn"
           id="tutorialNextBtn"
@@ -310,18 +317,17 @@
       </div>
     </div>
 
-    <!-- 2. TUTORIAL_STEPS -->
     <script>
       const TUTORIAL_STEPS = [
         {
           targetId: "rentPressure",
           title: "Rent pressure",
-          desc: "This shows what percentage of your income goes to rent. Above 30% is considered vulnerable — above 45% is at risk.",
+          desc: "This shows what percentage of your income goes to rent. Above 30% is considered vulnerable, and above 45% is at risk.",
         },
         {
           targetId: "spendingDonutChart",
           title: "Spending breakdown",
-          desc: "Blue shows your essential costs, purple shows flexible spending. The bigger the slice, the more it's taking from your weekly income.",
+          desc: "Blue shows your essential costs, and purple shows flexible spending. The bigger the slice, the more it takes from your weekly income.",
         },
         {
           targetId: "verdictCard",
@@ -331,7 +337,7 @@
         {
           targetId: "benchmarkInfo",
           title: "Victorian benchmark comparison",
-          desc: "See how your spending pattern compares to the average Victorian household. Categories where you're spending more than average are flagged.",
+          desc: "See how your spending pattern compares to the average Victorian household. Categories where you are spending more than average are flagged.",
         },
         {
           targetId: "actionItems",
@@ -341,7 +347,6 @@
       ];
     </script>
 
-    <!-- 3. Tutorial engine -->
     <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>
