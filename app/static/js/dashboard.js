@@ -57,14 +57,14 @@ function initDashboardTypewriter() {
 
 function initDashboardModals() {
   const modalTriggers = document.querySelectorAll("[data-modal-target]");
-  const modalOverlays = document.querySelectorAll(".dashboard-modal-overlay");
+  const modalOverlays = document.querySelectorAll(".modal-overlay");
 
   if (!modalTriggers.length || !modalOverlays.length) return;
 
   function openModal(modal) {
     if (!modal) return;
 
-    modal.classList.remove("dashboard-hidden", "hidden");
+    modal.classList.remove("hidden", "hidden");
 
     // Prevent the background page from scrolling while a modal is open.
     document.body.style.overflow = "hidden";
@@ -73,7 +73,7 @@ function initDashboardModals() {
   function closeModal(modal) {
     if (!modal) return;
 
-    modal.classList.add("dashboard-hidden", "hidden");
+    modal.classList.add("hidden", "hidden");
 
     // Restore page scrolling after the modal closes.
     document.body.style.overflow = "";
@@ -170,9 +170,9 @@ function initDashboardTutorial() {
     currentStepIndex = 0;
     isTutorialActive = true;
 
-    overlay.classList.remove("dashboard-hidden");
-    highlight.classList.remove("dashboard-hidden");
-    popover.classList.remove("dashboard-hidden");
+    overlay.classList.remove("hidden");
+    highlight.classList.remove("hidden");
+    popover.classList.remove("hidden");
 
     document.body.style.overflow = "hidden";
 
@@ -182,9 +182,9 @@ function initDashboardTutorial() {
   function endTutorial() {
     isTutorialActive = false;
 
-    overlay.classList.add("dashboard-hidden");
-    highlight.classList.add("dashboard-hidden");
-    popover.classList.add("dashboard-hidden");
+    overlay.classList.add("hidden");
+    highlight.classList.add("hidden");
+    popover.classList.add("hidden");
 
     document.body.style.overflow = "";
   }

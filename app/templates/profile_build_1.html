@@ -18,12 +18,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-
-    <!-- Profile builder specific CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/profile_builder.css') }}"
-    />
   </head>
 
   <body class="profile-builder-page">
@@ -152,8 +146,8 @@
             <p class="form-subtitle">Enter your suburb or postcode.</p>
 
             <div class="field-shell">
-              <div id="locationSearchBox" class="location-search-box">
-                <label class="location-label" for="locationInput">
+              <div id="locationSearchBox" class="input-group">
+                <label class="input-label" for="locationInput">
                   Suburb or Postcode
                 </label>
 
@@ -193,8 +187,8 @@
               <span class="field-warning hidden">⚠</span>
 
               <!-- Rent is only required for shared rental or living alone -->
-              <div id="rentBox" class="rent-box hidden">
-                <label class="location-label" for="rentInput">
+              <div id="rentBox" class="input-group hidden">
+                <label class="input-label" for="rentInput">
                   Weekly rent amount
                 </label>
 
@@ -231,8 +225,8 @@
               <span class="field-warning hidden">⚠</span>
 
               <!-- Allowance is shown only when the user selects Not working -->
-              <div id="allowanceBox" class="allowance-box hidden">
-                <label class="location-label" for="allowanceInput">
+              <div id="allowanceBox" class="input-group hidden">
+                <label class="input-label" for="allowanceInput">
                   How much allowance do you get?
                 </label>
 
@@ -276,7 +270,7 @@
 
               <!-- Industry is shown only when the user is working -->
               <div id="industryBox" class="industry-box hidden">
-                <label class="location-label" for="industrySelect">
+                <label class="input-label" for="industrySelect">
                   Select your industry
                 </label>
 
@@ -339,7 +333,7 @@
 
               <!-- Study field options are loaded from the industries API -->
               <div id="studyFieldBox" class="industry-box hidden">
-                <label class="location-label" id="studyFieldLabel">
+                <label class="input-label" id="studyFieldLabel">
                   Select your field of study
                 </label>
 

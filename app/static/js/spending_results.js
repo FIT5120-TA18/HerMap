@@ -170,17 +170,17 @@ function renderVerdict(data) {
     const shortfall = weeklyDeficit * 13;
 
     card.classList.add("deficit");
-    icon.textContent = "🔴";
+    icon.innerHTML = '<span class="material-symbols-outlined">trending_down</span>';
     title.textContent = `You are ${money(weeklyDeficit)}/wk over your income`;
     body.textContent = `At your current deficit of ${money(weeklyDeficit)}/wk, you face a projected shortfall of approximately ${money(shortfall)} over the next 3 months.`;
   } else if (data.surplus <= 50) {
     card.classList.add("tight");
-    icon.textContent = "⚠️";
+    icon.innerHTML = '<span class="material-symbols-outlined">warning</span>';
     title.textContent = "You are close to breaking even";
     body.textContent = `You have ${money(data.surplus)}/wk left over. One unexpected cost could push you into deficit.`;
   } else {
     card.classList.add("surplus");
-    icon.textContent = "✅";
+    icon.innerHTML = '<span class="material-symbols-outlined">check_circle</span>';
     title.textContent = `You have ${money(data.surplus)}/wk left over`;
     body.textContent = `Your spending is currently within your income. This gives you some room to save, plan, or absorb small unexpected costs.`;
   }

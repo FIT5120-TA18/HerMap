@@ -6,7 +6,7 @@ const BASE_PATH = window.location.pathname.startsWith("/underdevelopment")
   : "";
 
 function pageUrl(path) {
-  const routes = window.appRoutes || {};
+  const routes = window.appUrls || {};
 
   if (path === "knowledge_hub" && routes.knowledge_hub) {
     return routes.knowledge_hub;

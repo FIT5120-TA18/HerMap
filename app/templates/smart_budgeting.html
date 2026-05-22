@@ -22,11 +22,6 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
 
-    <!-- Knowledge Hub CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/knowledge_hub.css') }}"
-    />
   </head>
 
   <body>
@@ -113,7 +108,7 @@
 
           <div class="budgeting-abs-layout">
             <!-- Left: ABS graph -->
-            <div class="budgeting-abs-chart-card">
+            <div class="budgeting-abs-content-card">
               <div class="budgeting-chart-header">
                 <div>
                   <h3>ABS household spending benchmark</h3>
@@ -383,10 +378,9 @@
           </a>
         </div>
 
-        <div class="nav-links">
-          <a href="#" class="nav-link">Privacy Policy</a>
-          <a href="#" class="nav-link">ABS Data Sources</a>
-          <a href="#" class="nav-link">Terms of Service</a>
+        <div class="nav-links">          
+          <button class="footer-modal-link" data-modal-target="absModal">ABS Data Sources</button>
+          <button class="footer-modal-link" data-modal-target="tosModal">Terms of Service</button>
         </div>
       </div>
     </footer>

@@ -87,7 +87,7 @@
       setTimeout(() => {
         highlight.classList.add('is-ready');
         document.getElementById('tutorialPopover').classList.add('is-ready');
-      }, 50);
+      }, 70);
     }, 400);
   }
 

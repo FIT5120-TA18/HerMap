@@ -22,37 +22,31 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-
-    <!-- Landing page only styles. Load after global CSS so this file can safely override page-specific styling. -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/landing_page.css') }}"
-    />
   </head>
 
   <body class="landing-page">
     <!-- Top Navigation Bar -->
-    <nav class="landing-navbar" aria-label="Main navigation">
-      <div class="landing-container landing-nav-inner">
+    <nav class="navbar" aria-label="Main navigation">
+      <div class="landing-container nav-inner">
         <div class="landing-nav-brand">
-          <a href="{{ url_for('main.landing') }}" class="landing-logo-link">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
             <img
               src="{{ url_for('static', filename='img/hermap-logo.png') }}"
               alt="Hermap Logo"
-              class="landing-logo"
+              class="logo"
             />
           </a>
         </div>
 
-        <div class="landing-nav-links">
+        <div class="nav-links">
           <a
             href="{{ url_for('main.landing') }}"
-            class="landing-nav-link landing-nav-link-active"
+            class="nav-link nav-link-active"
           >
             Home
           </a>
 
-          <a href="#how-it-works" class="landing-nav-link">How it works</a>
+          <a href="#how-it-works" class="nav-link">How it works</a>
         </div>
       </div>
     </nav>
@@ -173,22 +167,22 @@
     </main>
 
     <!-- Footer -->
-    <footer class="landing-footer">
-      <div class="landing-container landing-footer-inner">
-        <div class="landing-footer-brand">
-          <a href="{{ url_for('main.landing') }}" class="landing-logo-link">
+    <footer class="footer">
+      <div class="landing-container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
             <img
               src="{{ url_for('static', filename='img/hermap-logo.png') }}"
               alt="Hermap Logo"
-              class="landing-logo"
+              class="logo"
             />
           </a>
         </div>
 
-        <div class="landing-footer-links">
+        <div class="footer-links">
           <button
             type="button"
-            class="landing-footer-modal-link"
+            class="footer-modal-link"
             data-modal-target="absModal"
           >
             ABS Data Sources
@@ -196,7 +190,7 @@
 
           <button
             type="button"
-            class="landing-footer-modal-link"
+            class="footer-modal-link"
             data-modal-target="tosModal"
           >
             Terms of Service
@@ -207,23 +201,23 @@
 
     <!-- ABS Data Sources Modal -->
     <div
-      class="landing-modal-overlay hidden"
+      class="modal-overlay hidden"
       id="absModal"
       role="dialog"
       aria-modal="true"
       aria-labelledby="absModalTitle"
     >
-      <div class="landing-modal-box">
+      <div class="modal-box">
         <button
           type="button"
-          class="landing-modal-close"
+          class="modal-close"
           data-modal-close
           aria-label="Close ABS data sources popup"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="landing-modal-icon gradient-bg" aria-hidden="true">
+        <div class="modal-icon gradient-bg" aria-hidden="true">
           <span class="material-symbols-outlined">database</span>
         </div>
 
@@ -253,23 +247,23 @@
 
     <!-- Terms of Service Modal -->
     <div
-      class="landing-modal-overlay hidden"
+      class="modal-overlay hidden"
       id="tosModal"
       role="dialog"
       aria-modal="true"
       aria-labelledby="tosModalTitle"
     >
-      <div class="landing-modal-box">
+      <div class="modal-box">
         <button
           type="button"
-          class="landing-modal-close"
+          class="modal-close"
           data-modal-close
           aria-label="Close Terms of Service"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="landing-modal-icon gradient-bg" aria-hidden="true">
+        <div class="modal-icon gradient-bg" aria-hidden="true">
           <span class="material-symbols-outlined">gavel</span>
         </div>
 

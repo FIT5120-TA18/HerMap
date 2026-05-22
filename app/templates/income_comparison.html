@@ -30,11 +30,6 @@
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     />
 
-    <!-- Income comparison specific CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/income_comparison.css') }}"
-    />
   </head>
 
   <body class="income-page">
@@ -61,8 +56,8 @@
     <main class="income-comparison-container">
       <div class="income-comparison-content">
         <!-- Page Header -->
-        <header class="income-header">
-          <div class="income-header-left">
+        <header class="page-header">
+          <div class="page-header-left">
             <h1>
               See average income<span class="gradient-text"> in my area</span>
             </h1>
@@ -73,7 +68,7 @@
             </p>
           </div>
 
-          <a href="{{ url_for('main.dashboard') }}" class="income-back-btn">
+          <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
             Back to Dashboard
           </a>
         </header>
@@ -85,19 +80,15 @@
         >
           <!-- Left sidebar -->
           <aside class="income-sidebar">
-            <div class="income-filter-card">
-              <p class="income-filter-title">Select Suburb Area</p>
+            <div class="filter-card">
+              <p class="filter-card-title">Select Suburb Area</p>
 
-              <div class="income-info-message">
+              <div class="filter-info-message">
                 Search a suburb area to explore young female annual income
-                across Victoria.
+                across Victoria.<br>
               </div>
 
-              <div class="income-input-group">
-                <!-- User location from Flask session profile -->
-                <label for="profileLocation" class="income-field-label">
-                  Your selected location
-                </label>
+              <div class="input-group">
 
                 <div class="income-profile-location" id="profileLocation">
                   {% if profile_data.get('locality') and
@@ -108,7 +99,7 @@
                 </div>
 
                 <!-- SA3 search input -->
-                <label for="sa3Input" class="income-field-label">Suburb</label>
+                <label for="sa3Input" class="input-label">LGA</label>
 
                 <input
                   type="text"
@@ -131,7 +122,7 @@
           <!-- Main map and detail area -->
           <section class="income-main">
             <!-- Map card -->
-            <div class="income-map-card">
+            <div class="content-card">
               <h2>Victorian Suburb Areas - Young Female Annual Income</h2>
 
               <div id="incomeMapContainer" class="income-map-placeholder">
@@ -146,7 +137,7 @@
 
                 <button
                   type="button"
-                  class="income-close-detail-btn"
+                  class="back-home-btn"
                   id="closeSa3DetailBtn"
                 >
                   Close
@@ -276,18 +267,18 @@
     </footer>
 
     <!-- ABS Data Sources Modal -->
-    <div class="income-modal-overlay hidden" id="absModal">
-      <div class="income-modal-box">
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
         <button
           type="button"
-          class="income-modal-close"
+          class="modal-close"
           data-modal-close
           aria-label="Close ABS data sources popup"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="income-modal-icon gradient-bg">
+        <div class="modal-icon gradient-bg">
           <span class="material-symbols-outlined">database</span>
         </div>
 
@@ -317,23 +308,23 @@
 
     <!-- Terms of Service Modal -->
     <div
-      class="income-modal-overlay hidden"
+      class="modal-overlay hidden"
       id="tosModal"
       role="dialog"
       aria-modal="true"
       aria-labelledby="tosModalTitle"
     >
-      <div class="income-modal-box income-terms-box">
+      <div class="modal-box income-terms-box">
         <button
           type="button"
-          class="income-modal-close"
+          class="modal-close"
           data-modal-close
           aria-label="Close Terms of Service"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
 
-        <div class="income-modal-icon gradient-bg">
+        <div class="modal-icon gradient-bg">
           <span class="material-symbols-outlined">gavel</span>
         </div>
 
@@ -363,53 +354,43 @@
       </div>
     </div>
 
-    <!-- Page tutorial button -->
-    <button
-      type="button"
-      class="income-tutorial-fab"
-      id="incomeTutorialFab"
-      aria-label="Start income comparison tutorial"
-    >
+    <!-- Tutorial -->
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
       <span class="material-symbols-outlined">help</span>
     </button>
-
-    <!-- Tutorial overlay elements -->
-    <div
-      class="income-tutorial-overlay hidden"
-      id="incomeTutorialOverlay"
-    ></div>
-    <div
-      class="income-tutorial-highlight hidden"
-      id="incomeTutorialHighlight"
-    ></div>
-
-    <div class="income-tutorial-popover hidden" id="incomeTutorialPopover">
-      <div class="income-tutorial-step-label">
-        <span id="incomeTutorialStepLabel">Step 1 of 3</span>
+    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 3</span>
       </div>
-
-      <h2 id="incomeTutorialTitle"></h2>
-      <p id="incomeTutorialDesc"></p>
-
-      <div class="income-tutorial-actions">
-        <button
-          type="button"
-          class="income-tutorial-skip-btn"
-          id="incomeTutorialSkipBtn"
-        >
-          Skip tutorial
-        </button>
-
-        <button
-          type="button"
-          class="income-tutorial-next-btn"
-          id="incomeTutorialNextBtn"
-        >
-          Next
-        </button>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
       </div>
     </div>
-
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: 'profileLocation',
+          title: 'Your location',
+          desc: 'This shows the suburb from your profile. The map loads your local area automatically so you can compare income around where you live.'
+        },
+        {
+          targetId: 'sa3Input',
+          title: 'Search any area',
+          desc: 'Type any Victorian suburb to explore income data. Select it from the dropdown and the map will highlight that region.'
+        },
+        {
+          targetId: 'incomeMapContainer',
+          title: 'Victorian income map',
+          desc: 'Each shaded region shows the typical annual income for young women there. Tap any region on the map to open a detailed breakdown.'
+        }
+      ];
+    </script>
+    
     <!-- Leaflet Map JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -433,5 +414,6 @@
 
     <!-- Income comparison specific JavaScript -->
     <script src="{{ url_for('static', filename='js/income_comparison.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

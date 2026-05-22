@@ -22,12 +22,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-
-    <!-- Page CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/credit_bnpl.css') }}"
-    />
   </head>
 
   <body>
@@ -73,7 +67,7 @@
 
           <a
             href="{{ url_for('main.knowledge_hub') }}"
-            class="back-home-btn credit-back-btn"
+            class="back-home-btn"
           >
             Back to Knowledge Hub
           </a>
@@ -234,7 +228,7 @@
       </section>
 
       <!-- Section 3 and 4 -->
-      <section class="two-column-section">
+      <section class="credit-section">
         <article class="question-card">
           <div class="section-heading compact-heading">
             <span class="section-number">03</span>
@@ -304,8 +298,8 @@
         </div>
 
         <div class="nav-links">
-          <a href="#" class="nav-link">Privacy Policy</a>
-          <a href="#" class="nav-link">Terms of Service</a>
+          <button class="footer-modal-link" data-modal-target="absModal">ABS Data Sources</button>
+          <button class="footer-modal-link" data-modal-target="tosModal">Terms of Service</button>
         </div>
       </div>
     </footer>

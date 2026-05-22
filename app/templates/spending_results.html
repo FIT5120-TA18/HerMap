@@ -18,22 +18,6 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/tutorial.css') }}"
-    />
-
-    <!-- Spending CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/spendings.css') }}"
-    />
-
-    <!-- <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/spending_results.css') }}"
-    /> -->
-
     <!-- Material Symbols -->
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
@@ -69,7 +53,7 @@
     <!-- Main -->
     <main class="results-container">
       <!-- Header -->
-      <div class="results-header">
+      <div class="page-header">
         <div>
           <h1>Your <span class="gradient-text">Spending Results</span></h1>
           <p>
@@ -190,7 +174,7 @@
             </div>
 
             <!-- Spending Breakdown -->
-            <div class="chart-card" id="spendingDonutChart">
+            <div class="content-card" id="spendingDonutChart">
               <h3>Spending breakdown</h3>
               <p>
                 Blue shows essential spending. Purple shows flexible spending.

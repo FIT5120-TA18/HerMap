@@ -11,12 +11,6 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
 
-    <!-- Rent comparison specific CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/rent_comparison.css') }}"
-    />
-
     <!-- Material Symbols -->
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
@@ -56,8 +50,8 @@
     <main class="rent-comparison-container">
       <div class="rent-comparison-content">
         <!-- Page header -->
-        <div class="rent-header">
-          <div class="rent-header-left">
+        <div class="page-header">
+          <div class="page-header-left">
             <h1>
               Explore Affordable
               <span class="gradient-text">Living Options</span>
@@ -71,27 +65,27 @@
         </div>
 
         <!-- Main layout -->
-        <div class="rent-comparison-grid">
+        <div class="page-grid">
           <!-- Sidebar filters -->
-          <aside class="rent-sidebar">
+          <aside class="page-sidebar">
             <!-- Location search -->
-            <div class="rent-filter-card">
-              <p class="filter-title">Search Location</p>
+            <div class="filter-card">
+              <p class="filter-card-title">Search Location</p>
 
-              <div class="info-message">
+              <div class="filter-info-message">
                 Enter your suburb or postcode to explore rental prices in your
                 area.
               </div>
 
-              <div class="budget-input-group">
-                <label for="locationSearchInput" class="rent-field-label">
-                  Suburb or Postcode
+              <div class="input-group">
+                <label for="locationSearchInput" class="input-label">
+                  <br>Suburb or Postcode
                 </label>
 
                 <input
                   type="text"
                   id="locationSearchInput"
-                  class="budget-input"
+                  class="form-input"
                   placeholder="e.g. Clayton or 3168"
                   autocomplete="off"
                 />
@@ -109,35 +103,38 @@
                   id="resolvedLgaDisplay"
                   class="profile-location-display hidden"
                 ></div>
+
+                <p class="filter-card-title"><br>Filter by Budget</p>
+                <div class="filter-info-message">
+                  Enter your weekly rent budget to highlight affordable areas.
+                </div>
+
+                <div class="input-group">
+                  <label for="budgetInput" class="input-label">
+                    <br>Weekly Budget ($)
+                  </label>
+
+                  <input
+                    type="number"
+                    id="budgetInput"
+                    class="form-input"
+                    placeholder="e.g., 300"
+                    min="0"
+                    step="10"
+                  />
+
+                  <button type="button" class="budget-button" id="filterButton">
+                    See Suburbs Within Budget
+                  </button>
+                </div>
               </div>
             </div>
 
             <!-- Budget filter -->
-            <div class="rent-filter-card">
-              <p class="filter-title">Filter by Budget</p>
+            <div class="filter-card">
+              
 
-              <div class="info-message">
-                Enter your weekly rent budget to highlight affordable areas.
-              </div>
-
-              <div class="budget-input-group">
-                <label for="budgetInput" class="rent-field-label">
-                  Weekly Budget ($)
-                </label>
-
-                <input
-                  type="number"
-                  id="budgetInput"
-                  class="budget-input"
-                  placeholder="e.g., 300"
-                  min="0"
-                  step="10"
-                />
-
-                <button type="button" class="budget-button" id="filterButton">
-                  See Suburbs Within Budget
-                </button>
-              </div>
+              
 
               <div id="mapModeBox" class="map-mode-box">
                 <strong id="mapModeTitle">Map mode: Rent View</strong>
@@ -162,14 +159,14 @@
           </aside>
 
           <!-- Main content -->
-          <div class="rent-main">
+          <div class="page-main">
             <!-- Map section -->
-            <div class="map-card" id="rentMapSection">
-              <h2 id="mapTitle" class="map-card-title">
+            <div class="content-card" id="rentMapSection">
+              <h2 id="mapTitle" class="content-card-title">
                 Explore Rental Prices by Suburb
               </h2>
 
-              <div id="mapContainer" class="map-placeholder">
+              <div id="mapContainer" class="income-map-placeholder">
                 <div class="map-loading">
                   <div class="map-spinner"></div>
                   <span>Select a suburb to view that and nearby suburbs on the map</span>
@@ -182,8 +179,9 @@
             </button>
 
             <!-- Bubble chart section -->
-            <div class="bubble-chart-card" id="rentBubbleChartSection">
-              <div class="bubble-chart-header">
+            <div class="bubble-content-card" id="rentBubbleChartSection">
+              <div class="bubble-add-suburb">
+                <div class="bubble-chart-header">
                 <div>
                   <h2>Compare suburbs by affordability and access</h2>
                   <p>
@@ -192,7 +190,7 @@
                 </div>
               </div>
 
-              <div class="bubble-choice-panel">
+              <div class="bubble-choice-panel" id="bubbleChoicePanel">
                 <!-- X axis choice -->
                 <div class="bubble-choice-section">
                   <div class="bubble-choice-heading">
@@ -330,7 +328,7 @@
               </div>
 
               <!-- Add suburb comparison -->
-              <div class="bubble-add-suburb">
+              
                 <div class="bubble-add-title">Compare another suburb</div>
 
                 <div class="bubble-add-description">
@@ -342,7 +340,7 @@
                   <input
                     type="text"
                     id="bubbleSuburbSearch"
-                    class="budget-input bubble-suburb-search"
+                    class="form-input bubble-suburb-search"
                     placeholder="Search suburb or postcode"
                     autocomplete="off"
                   />
@@ -362,84 +360,16 @@
                 ></div>
 
                 <div id="addedSuburbTags" class="added-suburb-tags"></div>
-              </div>
-
-              <div class="bubble-chart-wrapper">
-                <canvas id="suburbBubbleChart"></canvas>
-              </div>
-
-              <div class="bubble-chart-insights">
-                <h3>Key insights</h3>
-
-                <ul id="bubbleChartInsights">
-                  <li>Loading insights...</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- LGA detail panel -->
-            <div id="lgaDetailPanel" class="lga-detail-panel hidden">
-              <div class="lga-detail-header">
-                <h2 class="lga-detail-title" id="lgaDetailName">--</h2>
-
-                <button
-                  type="button"
-                  class="close-detail-btn"
-                  id="closeDetailBtn"
-                >
-                  Close
-                </button>
-              </div>
-
-              <div class="lga-detail-content">
-                <div class="detail-stat">
-                  <div class="detail-stat-label">Average 1-Bedroom Rent</div>
-                  <p class="detail-stat-value" id="detailRentPrice">--</p>
-                  <p class="detail-stat-sublabel">per week</p>
+                <div class="bubble-chart-wrapper">
+                  <canvas id="suburbBubbleChart"></canvas>
                 </div>
 
-                <div class="detail-stat">
-                  <div class="detail-stat-label">% of Your Income</div>
-                  <p class="detail-stat-value" id="detailAffordability">--</p>
-                  <p class="detail-stat-sublabel" id="detailAffordabilityLabel">
-                    --
-                  </p>
-                </div>
+                <div class="bubble-chart-insights">
+                  <h3>Key insights</h3>
 
-                <div class="detail-stat">
-                  <div class="detail-stat-label">Affordability</div>
-                  <p class="detail-badge-row">
-                    <span class="affordability-badge" id="affordabilityBadge">
-                      Calculating...
-                    </span>
-                  </p>
-                </div>
-              </div>
-
-              <!-- Rent trend section -->
-              <div class="trend-section">
-                <p class="trend-title">📈 Rental Trends</p>
-
-                <p class="trend-description">
-                  How 1-bedroom rent has changed over the past decade
-                </p>
-
-                <div class="trend-status-wrapper">
-                  <div class="detail-stat-label trend-status-label">
-                    Trend Status
-                  </div>
-
-                  <span class="affordability-badge" id="trendStatusBadge">
-                    --
-                  </span>
-                </div>
-
-                <div class="chart-container trend-chart-container">
-                  <canvas id="trendChart"></canvas>
-                </div>
-
-                <div class="trend-insight-box">
-                  <p id="trendInsight">Loading trend analysis...</p>
+                  <ul id="bubbleChartInsights">
+                    <li>Loading insights...</li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -573,6 +503,35 @@
       </div>
     </div>
 
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: 'locationSearchInput',
+          title: 'Search your area',
+          desc: 'Type your suburb or postcode to load rental prices for your Local Government Area. Your profile location is pre-filled if available.'
+        },
+        {
+          targetId: 'budgetInput',
+          title: 'Filter by budget',
+          desc: 'Enter your weekly rent budget and tap the button. The map will highlight suburbs within your budget in green so you can see exactly where is realistic for you.'
+        },
+        {
+          targetId: 'mapModeBox',
+          title: 'Map legend',
+          desc: 'The map colours suburbs by weekly rent. Green means lower rent, red means higher. Switch to budget mode after entering your weekly budget to see what you can afford.'
+        },
+        {
+          targetId: 'mapContainer',
+          title: 'Suburb rental map',
+          desc: 'Each suburb is shaded based on its median weekly rent. Tap any suburb to zoom in and see exact rental figures and affordability for your income.'
+        },
+        {
+          targetId: 'bubbleChoicePanel',
+          title: 'Compare suburbs',
+          desc: 'This chart plots suburbs by rent, income, and access to services. Use the axis controls to change what you are comparing — great for finding hidden affordable suburbs.'
+        }
+      ];
+    </script>
     <!-- Leaflet JS for the map -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -589,32 +548,23 @@
     <!-- Rent comparison specific JavaScript -->
     <script src="{{ url_for('static', filename='js/rent_comparison.js') }}"></script>
 
-    <!-- Tutorial help button and overlay -->
-    <button class="tutorial-fab" id="tutorialFab" aria-label="Start tutorial">
+    <!-- Tutorial -->
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
       <span class="material-symbols-outlined">help</span>
     </button>
-
-    <div class="tutorial-spotlight-overlay hidden" id="tutorialOverlay"></div>
-
-    <div class="tutorial-highlight-box hidden" id="tutorialHighlight"></div>
-
-    <div class="tutorial-popover hidden" id="tutorialPopover">
+    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
         <span id="tutorialStepLabel">Step 1 of 5</span>
       </div>
-
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
-
       <div class="tutorial-actions">
-        <button type="button" class="tutorial-skip-btn" id="tutorialSkipBtn">
-          Skip tutorial
-        </button>
-
-        <button type="button" class="tutorial-next-btn" id="tutorialNextBtn">
-          Next
-        </button>
+        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
       </div>
     </div>
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

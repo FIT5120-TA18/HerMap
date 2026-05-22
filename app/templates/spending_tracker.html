@@ -25,14 +25,9 @@
       href="{{ url_for('static', filename='css/style.css') }}"
     />
 
-    <!-- Spending tracker specific CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/spendings.css') }}"
-    />
   </head>
 
-  <body class="spending-tracker-page">
+  <body>
     <!-- Top navigation -->
     <nav class="navbar">
       <div class="container nav-inner">
@@ -52,19 +47,18 @@
       </div>
     </nav>
 
-    <main class="tracker-container">
+    <main class="container">
       <!-- Page heading -->
-      <div class="tracker-header">
-        
-        <div class="tracker-header-left">
-        <h1>
-          Track My 
-          <span class="gradient-text">Spending</span>
-          </h1>
-          <p>
-            Enter your weekly expenses to understand your surplus, deficit, rent pressure, and what this means for independent living.
-          </p>
-      </div>
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>
+            Track My 
+            <span class="gradient-text">Spending</span>
+            </h1>
+            <p>
+              Enter your weekly expenses to understand your surplus, deficit, rent pressure, and what this means for independent living.
+            </p>
+        </div>
         <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
           Back to Dashboard
         </a>
@@ -177,7 +171,7 @@
 
       <div class="cta-row">
         <button class="primary-btn" id="checkPositionBtn" type="button">
-          ✦ Check my financial position
+          Check my financial position
         </button>
       </div>
     </main>
@@ -196,48 +190,27 @@
         </div>
 
         <div class="nav-links">
-          <a href="#" class="nav-link">Privacy Policy</a>
-          <a href="#" class="nav-link">ABS Data Sources</a>
-          <a href="#" class="nav-link">Terms of Service</a>
+          <button class="footer-modal-link" data-modal-target="absModal">ABS Data Sources</button>
+          <button class="footer-modal-link" data-modal-target="tosModal">Terms of Service</button>
         </div>
       </div>
     </footer>
 
-    <!-- Tutorial help button and overlay. The behaviour is handled in spending_tracker.js. -->
-    <button
-      class="tutorial-fab"
-      id="tutorialFab"
-      type="button"
-      aria-label="Start spending tracker tutorial"
-    >
+    <!-- Tutorial -->
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
       <span class="material-symbols-outlined">help</span>
     </button>
-
-    <div class="tutorial-spotlight-overlay hidden" id="tutorialOverlay"></div>
-    <div class="tutorial-highlight-box hidden" id="tutorialHighlight"></div>
-
-    <div
-      class="tutorial-popover hidden"
-      id="tutorialPopover"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="tutorialTitle"
-    >
+    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
-        <span id="tutorialStepLabel">Step 1 of 5</span>
+        <span id="tutorialStepLabel">Step 1 of 4</span>
       </div>
-
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
-
       <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" id="tutorialSkipBtn" type="button">
-          Skip tutorial
-        </button>
-
-        <button class="tutorial-next-btn" id="tutorialNextBtn" type="button">
-          Next
-        </button>
+        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
       </div>
     </div>
 
@@ -250,8 +223,33 @@
         locality: "{{ profile_data.get('locality', '') }}",
       };
     </script>
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: 'essentialExpensesSection',
+          title: 'Essential expenses',
+          desc: 'Add things you have to pay for — rent, food, transport. These are your non-negotiable costs.'
+        },
+        {
+          targetId: 'nonEssentialExpensesSection',
+          title: 'Flexible spending',
+          desc: 'Add things like subscriptions, eating out, or shopping. These are easier to adjust if you need to save.'
+        },
+        {
+          targetId: 'totalSurplus',
+          title: 'Your weekly position',
+          desc: 'This updates live as you add expenses. Green means you have money left over. Red means you are spending more than you earn.'
+        },
+        {
+          targetId: 'checkPositionBtn',
+          title: 'See your full results',
+          desc: 'When you are done, tap this to get a detailed breakdown of your spending, rent pressure, and next steps.'
+        }
+      ];
+    </script>
 
     <!-- Spending tracker specific JavaScript -->
     <script src="{{ url_for('static', filename='js/spending_tracker.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

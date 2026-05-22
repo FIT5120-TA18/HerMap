@@ -1,4 +1,4 @@
-// --- US 6.1: Read sessionStorage anf populate sidebar stats ---
+// --- US 6.1: Read sessionStorage and populate sidebar stats ---
 
 const awareness = JSON.parse(sessionStorage.getItem('debtAwareness') || '{}');
 
@@ -227,6 +227,7 @@ function updateSidebar(stepIndex) {
     const total = month.base + month.interest;
     document.getElementById('statCurrentTotal').textContent = `$${total.toLocaleString()}`;
     document.getElementById('statOriginalAmount').textContent = `$${month.base.toLocaleString()}`;
+    document.getElementById('statChargesAccrued').textContent = `$${month.interest.toLocaleString()}`;
 }
 
 // Boot the chart on page load
@@ -368,10 +369,10 @@ function updateBalanceLabel () {
 
 function clearBalanceError() {
     const input = document.getElementById('openingBalanceInput');
-    const errorE1 = document.getElementById('balanceError');
+    const errorEl = document.getElementById('balanceError');
     input.classList.remove('input-error');
-    errorE1.style.display = 'none';
-    errorE1.textContent = '';
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
 }
 
 function applyCustomisation() {
@@ -381,34 +382,34 @@ function applyCustomisation() {
 
     // Read and validate opening balance
     const input = document.getElementById('openingBalanceInput');
-    const errorE1 = document.getElementById('balanceError');
+    const errorEl = document.getElementById('balanceError');
     const raw = input.value.trim();
 
     // Clear previous error
-    errorE1.style.display = 'none';
-    errorE1.textContent = '';
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
     input.classList.remove('input-error');
 
     if (raw !== '') {
         const val = Number(raw);
 
         if (isNaN(val) || val <= 0) {
-            errorE1.textContent = 'Please enter a valid debt amount.';
-            errorE1.style.display = 'block';
+            errorEl.textContent = 'Please enter a valid debt amount.';
+            errorEl.style.display = 'block';
             input.classList.add('input-error');
             return
         }
 
         if (val > 10000) { 
-            errorE1.textContent = 'We can only project up to $10,000. For larger amounts, please speak to a financial consellor.';
-            errorE1.style.display = 'block';
+            errorEl.textContent = 'We can only project up to $10,000. For larger amounts, please speak to a financial counsellor.';
+            errorEl.style.display = 'block';
             input.classList.add('input-error');
             return
         }
 
         state.opening = val;
     } else {
-        // Empty inpur use default
+        // Empty input use default
         state.opening = DEFAULT_OPENING;
     }
 
@@ -460,141 +461,6 @@ const TUTORIAL_STEPS = [
         desc: 'This panel updates as you reveal months so you can always see the real dollar impact.'
     }
 ]
-
-function lockScroll() { document.body.style.overflow = 'hidden'; }
-function unlockScroll() { document.body.style.overflow = ''; }
-
-let tutorialStep = 0;
-
-function startTutorial() {
-    tutorialStep = 0;
-    lockScroll();
-    document.getElementById('tutorialOverlay').style.display = 'block';
-    document.getElementById('tutorialFab').style.display = 'none';
-    renderTutorialStep();
-}
-
-function renderTutorialStep() {
-    const step = TUTORIAL_STEPS[tutorialStep];
-    const total = TUTORIAL_STEPS.length;
-
-    // Update popover content
-    document.getElementById('tutorialStepLabel').textContent = `Step ${tutorialStep + 1} of ${total}`;
-    document.getElementById('tutorialTitle').textContent = step.title;
-    document.getElementById('tutorialDesc').textContent = step.desc;
-    document.getElementById('tutorialNextBtn').textContent = tutorialStep === total - 1 ? 'Done' : 'Next';
-
-    // Remove active class from previous target
-    document.querySelectorAll('.tutorial-active-target').forEach(e1 => {
-        e1.classList.remove('tutorial-active-target');
-    });
-
-    // Highlight new target 
-    const target = document.getElementById(step.targetId);
-    if (!target) return;
-    target.classList.add('tutorial-active-target');
-
-    // Scroll target into view first, then position on next frame
-    target.scrollIntoView({ behavior: 'smooth', block:'center' });
-
-    setTimeout(() => {
-        const rect = target.getBoundingClientRect();
-        const PAD = 10;
-
-        // Position highlight box
-        const highlight = document.getElementById('tutorialHighlight');
-
-        highlight.style.top = `${rect.top - PAD}px`;
-        highlight.style.left = `${rect.left - PAD}px`;
-        highlight.style.width = `${rect.width + PAD * 2}px`;
-        highlight.style.height = `${rect.height + PAD * 2}px`;
-        highlight.style.boxShadow = '0 0 0 9999px rgba(28,23,20,0.55)';
-        highlight.style.borderRadius = '18px';
-
-        // Position popover below or above the highlight
-        positionPopover(rect, PAD);
-
-        // Animate in
-        setTimeout(() => {
-            highlight.classList.add('is-ready');
-            document.getElementById('tutorialPopover').classList.add('is-ready');
-        }, 50);
-    }, 400);
-}
-
-function positionPopover(rect, pad) {
-    const popover = document.getElementById('tutorialPopover');
-    popover.classList.remove('is-ready');
-
-    const POPOVER_HEIGHT = 220;
-    const POPOVER_WIDTH = 360;
-    const MARGIN = 16;
-
-    const spaceRight = window.innerWidth - rect.right;
-    const spaceLeft = rect.left;
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const spaceAbove = rect.top;
-
-    let top, left; 
-
-    if (spaceRight >= POPOVER_WIDTH + MARGIN) {
-        // Place to the right
-        left = rect.right + pad + MARGIN;
-        top = rect.top + (rect.height / 2) - (POPOVER_HEIGHT / 2);
-    } else if (spaceLeft >= POPOVER_WIDTH + MARGIN) {
-        // Place to the left
-        left = rect.left - POPOVER_WIDTH - pad - MARGIN;
-        top = rect.top + (rect.height / 2) - (POPOVER_HEIGHT / 2);
-    } else if (spaceBelow >= POPOVER_HEIGHT + MARGIN) {
-        // Fall back below
-        top = rect.bottom + pad + MARGIN;
-        left = rect.left;
-    } else if (spaceAbove >= POPOVER_HEIGHT + MARGIN) {
-        // Fall back below
-        top = rect.top - POPOVER_HEIGHT - pad - MARGIN;
-        left = rect.left;
-    } else {
-        // Centre of screen
-        top = window.innerHeight / 2 - POPOVER_HEIGHT / 2;
-        left = window.innerWidth / 2 - POPOVER_WIDTH / 2;
-    }
-
-    top = Math.min(Math.max(top, MARGIN), window.innerHeight - POPOVER_HEIGHT - MARGIN);
-    left = Math.min(Math.max(left, MARGIN), window.innerWidth - POPOVER_WIDTH - MARGIN);
-
-    popover.style.top = `${top}px`;
-    popover.style.left = `${left}px`;
-    popover.style.width = `${POPOVER_WIDTH}px`;
-}
-
-function tutorialNext() {
-    if (tutorialStep < TUTORIAL_STEPS.length - 1) {
-        tutorialStep++;
-        document.getElementById('tutorialHighlight').classList.remove('is-ready');
-        document.getElementById('tutorialPopover').classList.remove('is-ready');
-        setTimeout(renderTutorialStep, 200);
-    } else {
-        endTutorial();
-    }
-}
-
-function endTutorial() {
-    document.querySelectorAll('.tutorial-active-target').forEach(e1 => {e1.classList.remove('tutorial-active-target');
-    });
-    unlockScroll();
-    document.getElementById('tutorialOverlay').style.display = 'none';
-    document.getElementById('tutorialHighlight').classList.remove('is-ready');
-    document.getElementById('tutorialPopover').classList.remove('is-ready');
-    document.getElementById('tutorialFab').style.display = 'flex';
-
-    // Mark as seen so auto-lauch doesn't repeat
-    sessionStorage.setItem('tutorialSeen', 'true');
-}
-
-// Auto-launch on first visit
-if (!sessionStorage.getItem('tutorialSeen')) {
-    setTimeout(startTutorial, 800);
-}
 
 document.getElementById('absDataBtn').addEventListener('click', () => {
     document.getElementById('absModal').classList.remove('hidden');
