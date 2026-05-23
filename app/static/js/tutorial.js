@@ -18,7 +18,6 @@
       return;
     }
     tutorialStep = 0;
-    lockScroll();
     document.getElementById('tutorialOverlay').style.display = 'block';
     document.getElementById('tutorialFab').style.display = 'none';
     renderTutorialStep();
@@ -68,8 +67,13 @@
     if (!target) return;
     target.classList.add('tutorial-active-target');
 
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Unlock scroll so scrollIntoView can actually move the page,
+    // then immediately re-lock so the user can't scroll during the tutorial.
+    unlockScroll();
+    target.scrollIntoView({ block: 'center' });
+    lockScroll();
 
+    // Short delay for layout to settle after the instant scroll, then measure.
     setTimeout(() => {
       const rect = target.getBoundingClientRect();
       const PAD  = 10;
@@ -88,7 +92,7 @@
         highlight.classList.add('is-ready');
         document.getElementById('tutorialPopover').classList.add('is-ready');
       }, 70);
-    }, 400);
+    }, 80);
   }
 
   function positionPopover(rect, pad) {
