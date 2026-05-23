@@ -157,194 +157,195 @@
             </button>
 
             <!-- Bubble chart section -->
-            <div class="bubble-content-card" id="rentBubbleChartSection">
-              <div class="bubble-add-suburb">
-                <div class="bubble-chart-header">
-                  <div>
-                    <h2>Compare suburbs by affordability and access</h2>
-                    <p>
-                      Choose what to compare. The chart starts your selected
-                      suburb.
-                    </p>
-                  </div>
-                </div>
-
-                <div class="bubble-choice-panel" id="bubbleChoicePanel">
-                  <!-- X axis choice -->
-                  <div class="bubble-choice-section">
-                    <div class="bubble-choice-heading">
-                      <h3>🏠 Housing Cost</h3>
-                      <p>Choose how affordability is shown on the chart.</p>
+            <div class="bubble-content-card">
+              <div class="bubble-add-suburb" id="rentBubbleChartSection">
+                <div id="bubbleChartCustom">
+                  <div class="bubble-chart-header">
+                    <div>
+                      <h2>Compare suburbs by affordability and access</h2>
+                      <p>
+                        Choose what to compare. The chart starts your selected
+                        suburb.
+                      </p>
                     </div>
-
-                    <div
-                      class="bubble-choice-buttons"
-                      data-target="bubbleXAxis"
-                    >
-                      <button
-                        type="button"
-                        class="bubble-choice-btn active"
-                        data-value="rent"
-                      >
-                        Weekly rent
-                      </button>
-
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="rent_income_pct"
-                      >
-                        % income on rent
-                      </button>
-
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="rent_growth_pct"
-                      >
-                        Rent growth
-                      </button>
-                    </div>
-
-                    <input type="hidden" id="bubbleXAxis" value="rent" />
                   </div>
 
-                  <!-- Y axis choice -->
-                  <div class="bubble-choice-section">
-                    <div class="bubble-choice-heading">
-                      <h3>🚉 Essential Access</h3>
-                      <p>Choose which daily need matters most.</p>
+                  <div class="bubble-choice-panel" id="bubbleChoicePanel">
+                    <!-- X axis choice -->
+                    <div class="bubble-choice-section">
+                      <div class="bubble-choice-heading">
+                        <h3>🏠 Housing Cost</h3>
+                        <p>Choose how affordability is shown on the chart.</p>
+                      </div>
+
+                      <div
+                        class="bubble-choice-buttons"
+                        data-target="bubbleXAxis"
+                      >
+                        <button
+                          type="button"
+                          class="bubble-choice-btn active"
+                          data-value="rent"
+                        >
+                          Weekly rent
+                        </button>
+
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="rent_income_pct"
+                        >
+                          % income on rent
+                        </button>
+
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="rent_growth_pct"
+                        >
+                          Rent growth
+                        </button>
+                      </div>
+
+                      <input type="hidden" id="bubbleXAxis" value="rent" />
                     </div>
 
-                    <div
-                      class="bubble-choice-buttons"
-                      data-target="bubbleYAxis"
-                    >
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="supermarket_count"
-                      >
-                        Supermarkets
-                      </button>
+                    <!-- Y axis choice -->
+                    <div class="bubble-choice-section">
+                      <div class="bubble-choice-heading">
+                        <h3>🚉 Essential Access</h3>
+                        <p>Choose which daily need matters most.</p>
+                      </div>
 
-                      <button
-                        type="button"
-                        class="bubble-choice-btn active"
-                        data-value="train_station_count"
+                      <div
+                        class="bubble-choice-buttons"
+                        data-target="bubbleYAxis"
                       >
-                        Train stations
-                      </button>
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="supermarket_count"
+                        >
+                          Supermarkets
+                        </button>
 
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="hospital_count"
-                      >
-                        Hospitals
-                      </button>
+                        <button
+                          type="button"
+                          class="bubble-choice-btn active"
+                          data-value="train_station_count"
+                        >
+                          Train stations
+                        </button>
 
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="pharmacy_count"
-                      >
-                        Pharmacies
-                      </button>
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="hospital_count"
+                        >
+                          Hospitals
+                        </button>
+
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="pharmacy_count"
+                        >
+                          Pharmacies
+                        </button>
+                      </div>
+
+                      <input
+                        type="hidden"
+                        id="bubbleYAxis"
+                        value="train_station_count"
+                      />
                     </div>
 
+                    <!-- Bubble size choice -->
+                    <div class="bubble-choice-section">
+                      <div class="bubble-choice-heading">
+                        <h3>🌿 Lifestyle Focus</h3>
+                        <p>Choose what controls the bubble size.</p>
+                      </div>
+
+                      <div
+                        class="bubble-choice-buttons"
+                        data-target="bubbleSizeMetric"
+                      >
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="cafes_count"
+                        >
+                          Cafes
+                        </button>
+
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="gyms_count"
+                        >
+                          Gyms
+                        </button>
+
+                        <button
+                          type="button"
+                          class="bubble-choice-btn"
+                          data-value="libraries_count"
+                        >
+                          Libraries
+                        </button>
+
+                        <button
+                          type="button"
+                          class="bubble-choice-btn active"
+                          data-value="parks_count"
+                        >
+                          Parks
+                        </button>
+                      </div>
+
+                      <input
+                        type="hidden"
+                        id="bubbleSizeMetric"
+                        value="parks_count"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Add suburb comparison -->
+                  <div class="bubble-add-title">Compare another suburb</div>
+
+                  <div class="bubble-add-description">
+                    Search and add any other suburb you want to look at. Added
+                    suburbs appear in blue on the chart.
+                  </div>
+
+                  <div class="bubble-add-row">
                     <input
-                      type="hidden"
-                      id="bubbleYAxis"
-                      value="train_station_count"
+                      type="text"
+                      id="bubbleSuburbSearch"
+                      class="form-input bubble-suburb-search"
+                      placeholder="Search suburb or postcode"
+                      autocomplete="off"
                     />
-                  </div>
 
-                  <!-- Bubble size choice -->
-                  <div class="bubble-choice-section">
-                    <div class="bubble-choice-heading">
-                      <h3>🌿 Lifestyle Focus</h3>
-                      <p>Choose what controls the bubble size.</p>
-                    </div>
-
-                    <div
-                      class="bubble-choice-buttons"
-                      data-target="bubbleSizeMetric"
+                    <button
+                      type="button"
+                      id="clearAddedSuburbsBtn"
+                      class="reset-map-btn"
                     >
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="cafes_count"
-                      >
-                        Cafes
-                      </button>
-
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="gyms_count"
-                      >
-                        Gyms
-                      </button>
-
-                      <button
-                        type="button"
-                        class="bubble-choice-btn"
-                        data-value="libraries_count"
-                      >
-                        Libraries
-                      </button>
-
-                      <button
-                        type="button"
-                        class="bubble-choice-btn active"
-                        data-value="parks_count"
-                      >
-                        Parks
-                      </button>
-                    </div>
-
-                    <input
-                      type="hidden"
-                      id="bubbleSizeMetric"
-                      value="parks_count"
-                    />
+                      Clear added suburbs
+                    </button>
                   </div>
+
+                  <div
+                    id="bubbleSuburbSuggestions"
+                    class="location-suggestions"
+                  ></div>
+
+                  <div id="addedSuburbTags" class="added-suburb-tags"></div>
                 </div>
-
-                <!-- Add suburb comparison -->
-                <div class="bubble-add-title">Compare another suburb</div>
-
-                <div class="bubble-add-description">
-                  Search and add any other suburb you want to look at. Added
-                  suburbs appear in blue on the chart.
-                </div>
-
-                <div class="bubble-add-row">
-                  <input
-                    type="text"
-                    id="bubbleSuburbSearch"
-                    class="form-input bubble-suburb-search"
-                    placeholder="Search suburb or postcode"
-                    autocomplete="off"
-                  />
-
-                  <button
-                    type="button"
-                    id="clearAddedSuburbsBtn"
-                    class="reset-map-btn"
-                  >
-                    Clear added suburbs
-                  </button>
-                </div>
-
-                <div
-                  id="bubbleSuburbSuggestions"
-                  class="location-suggestions"
-                ></div>
-
-                <div id="addedSuburbTags" class="added-suburb-tags"></div>
-
                 <!-- Bubble chart legend moved near bubble chart -->
                 <div class="budget-legend bubble-chart-guide">
                   <strong>How to read this chart</strong>
@@ -549,7 +550,7 @@
           desc: "Each suburb is shaded based on its median weekly rent. Tap any suburb to zoom in and see exact rental figures and affordability for your income.",
         },
         {
-          targetId: "rentBubbleChartSection",
+          targetId: "bubbleChartCustom",
           title: "Compare suburbs",
           desc: "Use this section to compare suburbs by rent, access, and lifestyle options. The controls change what appears on the chart, and the chart helps you spot suburbs with lower cost and better access.",
         },
