@@ -5798,8 +5798,22 @@ a {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  position: sticky;
-  top: 110px;
+  position: static;
+}
+
+/* Bubble controls inside the sidebar — single-column layout */
+.bubble-choice-panel--sidebar {
+  grid-template-columns: 1fr;
+}
+
+.bubble-add-row--sidebar {
+  flex-direction: column;
+  gap: 0;
+}
+
+.bubble-add-row--sidebar .bubble-suburb-search {
+  min-width: 0;
+  width: 100%;
 }
 .rent-main {
   min-width: 0;
