@@ -1581,177 +1581,149 @@ function setupModal(triggerId, modalId, closeId) {
    Rent comparison tutorial
    ========================================================= */
 
-function initializeRentComparisonTutorial() {
-  const tutorialFab = document.getElementById("tutorialFab");
-  const overlay = document.getElementById("tutorialOverlay");
-  const highlight = document.getElementById("tutorialHighlight");
-  const popover = document.getElementById("tutorialPopover");
-  const stepLabel = document.getElementById("tutorialStepLabel");
-  const title = document.getElementById("tutorialTitle");
-  const description = document.getElementById("tutorialDesc");
-  const skipButton = document.getElementById("tutorialSkipBtn");
-  const nextButton = document.getElementById("tutorialNextBtn");
+// function initializeRentComparisonTutorial() {
+//   const tutorialFab = document.getElementById("tutorialFab");
+//   const overlay = document.getElementById("tutorialOverlay");
+//   const highlight = document.getElementById("tutorialHighlight");
+//   const popover = document.getElementById("tutorialPopover");
+//   const stepLabel = document.getElementById("tutorialStepLabel");
+//   const title = document.getElementById("tutorialTitle");
+//   const description = document.getElementById("tutorialDesc");
+//   const skipButton = document.getElementById("tutorialSkipBtn");
+//   const nextButton = document.getElementById("tutorialNextBtn");
 
-  if (
-    !tutorialFab ||
-    !overlay ||
-    !highlight ||
-    !popover ||
-    !stepLabel ||
-    !title ||
-    !description ||
-    !skipButton ||
-    !nextButton
-  ) {
-    return;
-  }
+//   if (
+//     !tutorialFab ||
+//     !overlay ||
+//     !highlight ||
+//     !popover ||
+//     !stepLabel ||
+//     !title ||
+//     !description ||
+//     !skipButton ||
+//     !nextButton
+//   ) {
+//     return;
+//   }
 
-  const tutorialSteps = [
-    {
-      targetId: "locationSearchInput",
-      title: "Search your area",
-      desc: "Type a suburb or postcode to zoom the map to your area and see local rent prices.",
-    },
-    {
-      targetId: "budgetInput",
-      title: "Set your budget",
-      desc: "Enter your weekly rent budget and tap the button to highlight only the suburbs you can afford.",
-    },
-    {
-      targetId: "mapContainer",
-      title: "Explore the map",
-      desc: "Suburbs are coloured by weekly rent. Tap any suburb to see detailed rent data, affordability, and trend information.",
-    },
-    {
-      targetId: "suburbBubbleChart",
-      title: "Bubble chart view",
-      desc: "Use the bubble chart to compare suburbs across rent, transport, and lifestyle access.",
-    },
-    {
-      targetId: "lgaDetailPanel",
-      title: "Suburb detail panel",
-      desc: "When you tap a suburb on the map, the full breakdown appears here including rent, affordability rating, and trend information.",
-    },
-  ];
+//   let currentTutorialStep = 0;
+//   let tutorialActive = false;
 
-  let currentTutorialStep = 0;
-  let tutorialActive = false;
+//   function startTutorial() {
+//     currentTutorialStep = 0;
+//     tutorialActive = true;
 
-  function startTutorial() {
-    currentTutorialStep = 0;
-    tutorialActive = true;
+//     overlay.classList.remove("hidden");
+//     highlight.classList.remove("hidden");
+//     popover.classList.remove("hidden");
 
-    overlay.classList.remove("hidden");
-    highlight.classList.remove("hidden");
-    popover.classList.remove("hidden");
+//     document.body.style.overflow = "hidden";
 
-    document.body.style.overflow = "hidden";
+//     renderTutorialStep();
+//   }
 
-    renderTutorialStep();
-  }
+//   function endTutorial() {
+//     tutorialActive = false;
 
-  function endTutorial() {
-    tutorialActive = false;
+//     overlay.classList.add("hidden");
+//     highlight.classList.add("hidden");
+//     popover.classList.add("hidden");
 
-    overlay.classList.add("hidden");
-    highlight.classList.add("hidden");
-    popover.classList.add("hidden");
+//     document.body.style.overflow = "";
+//   }
 
-    document.body.style.overflow = "";
-  }
+//   function nextTutorialStep() {
+//     if (currentTutorialStep >= tutorialSteps.length - 1) {
+//       endTutorial();
+//       return;
+//     }
 
-  function nextTutorialStep() {
-    if (currentTutorialStep >= tutorialSteps.length - 1) {
-      endTutorial();
-      return;
-    }
+//     currentTutorialStep += 1;
+//     renderTutorialStep();
+//   }
 
-    currentTutorialStep += 1;
-    renderTutorialStep();
-  }
+//   function renderTutorialStep() {
+//     const step = tutorialSteps[currentTutorialStep];
+//     const target = document.getElementById(step.targetId);
 
-  function renderTutorialStep() {
-    const step = tutorialSteps[currentTutorialStep];
-    const target = document.getElementById(step.targetId);
+//     if (!target) {
+//       nextTutorialStep();
+//       return;
+//     }
 
-    if (!target) {
-      nextTutorialStep();
-      return;
-    }
+//     target.scrollIntoView({
+//       behavior: "smooth",
+//       block: "center",
+//     });
 
-    target.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
-    });
+//     // Wait for scroll movement before measuring the target position.
+//     window.setTimeout(function () {
+//       positionTutorialHighlight(target);
+//       positionTutorialPopover(target);
 
-    // Wait for scroll movement before measuring the target position.
-    window.setTimeout(function () {
-      positionTutorialHighlight(target);
-      positionTutorialPopover(target);
+//       stepLabel.textContent = `Step ${currentTutorialStep + 1} of ${tutorialSteps.length}`;
+//       title.textContent = step.title;
+//       description.textContent = step.desc;
+//       nextButton.textContent =
+//         currentTutorialStep === tutorialSteps.length - 1 ? "Finish" : "Next";
+//     }, 250);
+//   }
 
-      stepLabel.textContent = `Step ${currentTutorialStep + 1} of ${tutorialSteps.length}`;
-      title.textContent = step.title;
-      description.textContent = step.desc;
-      nextButton.textContent =
-        currentTutorialStep === tutorialSteps.length - 1 ? "Finish" : "Next";
-    }, 250);
-  }
+//   function positionTutorialHighlight(target) {
+//     const rect = target.getBoundingClientRect();
+//     const padding = 12;
 
-  function positionTutorialHighlight(target) {
-    const rect = target.getBoundingClientRect();
-    const padding = 12;
+//     highlight.style.top = `${Math.max(rect.top - padding, 16)}px`;
+//     highlight.style.left = `${Math.max(rect.left - padding, 16)}px`;
+//     highlight.style.width = `${Math.min(
+//       rect.width + padding * 2,
+//       window.innerWidth - 32,
+//     )}px`;
+//     highlight.style.height = `${rect.height + padding * 2}px`;
+//   }
 
-    highlight.style.top = `${Math.max(rect.top - padding, 16)}px`;
-    highlight.style.left = `${Math.max(rect.left - padding, 16)}px`;
-    highlight.style.width = `${Math.min(
-      rect.width + padding * 2,
-      window.innerWidth - 32,
-    )}px`;
-    highlight.style.height = `${rect.height + padding * 2}px`;
-  }
+//   function positionTutorialPopover(target) {
+//     const rect = target.getBoundingClientRect();
+//     const popoverWidth = Math.min(360, window.innerWidth - 32);
+//     const gap = 18;
 
-  function positionTutorialPopover(target) {
-    const rect = target.getBoundingClientRect();
-    const popoverWidth = Math.min(360, window.innerWidth - 32);
-    const gap = 18;
+//     let top = rect.bottom + gap;
+//     let left = rect.left;
 
-    let top = rect.bottom + gap;
-    let left = rect.left;
+//     if (top + 260 > window.innerHeight) {
+//       top = rect.top - 260 - gap;
+//     }
 
-    if (top + 260 > window.innerHeight) {
-      top = rect.top - 260 - gap;
-    }
+//     if (left + popoverWidth > window.innerWidth - 16) {
+//       left = window.innerWidth - popoverWidth - 16;
+//     }
 
-    if (left + popoverWidth > window.innerWidth - 16) {
-      left = window.innerWidth - popoverWidth - 16;
-    }
+//     if (left < 16) {
+//       left = 16;
+//     }
 
-    if (left < 16) {
-      left = 16;
-    }
+//     if (top < 16) {
+//       top = 16;
+//     }
 
-    if (top < 16) {
-      top = 16;
-    }
+//     popover.style.top = `${top}px`;
+//     popover.style.left = `${left}px`;
+//   }
 
-    popover.style.top = `${top}px`;
-    popover.style.left = `${left}px`;
-  }
+//   tutorialFab.addEventListener("click", startTutorial);
+//   skipButton.addEventListener("click", endTutorial);
+//   nextButton.addEventListener("click", nextTutorialStep);
 
-  tutorialFab.addEventListener("click", startTutorial);
-  skipButton.addEventListener("click", endTutorial);
-  nextButton.addEventListener("click", nextTutorialStep);
+//   window.addEventListener("resize", function () {
+//     if (!tutorialActive) return;
+//     renderTutorialStep();
+//   });
 
-  window.addEventListener("resize", function () {
-    if (!tutorialActive) return;
-    renderTutorialStep();
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (tutorialActive && event.key === "Escape") {
-      endTutorial();
-    }
-  });
+//   document.addEventListener("keydown", function (event) {
+//     if (tutorialActive && event.key === "Escape") {
+//       endTutorial();
+//     }
+//   });
 }
 
 /* =========================================================
