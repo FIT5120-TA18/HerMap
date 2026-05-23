@@ -2,8 +2,7 @@
    landing_page.js
 
    Page-specific JavaScript for landing_page.html only.
-   This file replaces the old global script.js usage on the landing page.
-   It currently handles:
+   Handles:
    1. ABS data modal
    2. Terms of Service modal
 -------------------------------------------------------------------------- */
@@ -13,17 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function initLandingModals() {
-  /*
-    One reusable modal system is cleaner than writing separate functions for
-    ABS Data Sources and Terms of Service.
-
-    HTML requirements:
-    - Open buttons use: data-modal-target="modalId"
-    - Close buttons use: data-modal-close
-    - Modal overlays use the class: landing-modal-overlay
-  */
   const modalTriggers = document.querySelectorAll("[data-modal-target]");
-  const modalOverlays = document.querySelectorAll(".landing-modal-overlay");
+  const modalOverlays = document.querySelectorAll(
+    ".modal-overlay, .landing-modal-overlay",
+  );
 
   if (!modalTriggers.length || !modalOverlays.length) return;
 
@@ -31,8 +23,6 @@ function initLandingModals() {
     if (!modal) return;
 
     modal.classList.remove("hidden");
-
-    // Prevent the page behind the modal from scrolling while the modal is open.
     document.body.style.overflow = "hidden";
   }
 
@@ -40,8 +30,6 @@ function initLandingModals() {
     if (!modal) return;
 
     modal.classList.add("hidden");
-
-    // Restore normal page scrolling after the modal closes.
     document.body.style.overflow = "";
   }
 
@@ -53,7 +41,7 @@ function initLandingModals() {
 
   modalTriggers.forEach(function (trigger) {
     trigger.addEventListener("click", function () {
-      const modalId = trigger.dataset.modalTarget;
+      const modalId = trigger.getAttribute("data-modal-target");
       const modal = document.getElementById(modalId);
 
       openModal(modal);
@@ -69,7 +57,6 @@ function initLandingModals() {
       });
     });
 
-    // Close only when the user clicks the dark overlay, not the modal content.
     modal.addEventListener("click", function (event) {
       if (event.target === modal) {
         closeModal(modal);
@@ -77,7 +64,6 @@ function initLandingModals() {
     });
   });
 
-  // Escape key closes whichever modal is currently open.
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
       closeAllModals();

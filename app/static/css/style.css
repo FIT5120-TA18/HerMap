@@ -307,11 +307,13 @@ a {
   border: none;
   cursor: pointer;
   font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
+  text-decoration: none;
   color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  padding: 0;
+  letter-spacing: 0.22em;
+  padding-bottom: 4px;
   transition: color 0.3s ease;
   white-space: nowrap;
 }
