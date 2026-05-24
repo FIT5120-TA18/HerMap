@@ -507,8 +507,7 @@ a {
   margin: 0 0 22px;
   color: var(--text-main);
   font-family: var(--font-body);
-  font-size: 18px;
-  font-weight: 700;
+  font-weight: 525;
   line-height: 1.6;
   letter-spacing: normal;
   text-align: center;

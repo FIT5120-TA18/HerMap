@@ -337,6 +337,8 @@ Rules:
 - Do not mention AI.
 - Do not give formal financial advice.
 - Do not say the user is wrong or irresponsible.
+- Do not use Bold symbols or em dashes
+- Keep it humanized
 """
 
     try:

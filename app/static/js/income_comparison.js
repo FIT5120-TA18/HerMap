@@ -758,7 +758,7 @@ function formatAnnualMoney(value) {
 
 function initialiseIncomeModals() {
   const modalTriggers = document.querySelectorAll("[data-modal-target]");
-  const modalOverlays = document.querySelectorAll(".income-modal-overlay");
+  const modalOverlays = document.querySelectorAll(".modal-overlay");
 
   if (!modalTriggers.length || !modalOverlays.length) return;
 
