@@ -38,7 +38,7 @@
         </div>
 
         <div class="nav-links">
-          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
           <a href="{{ url_for('main.dashboard') }}" class="nav-link">
             Dashboard
           </a>
@@ -71,9 +71,10 @@
 
           <div class="super-answer-grid single">
             <div class="super-check-item">
-              <span class="material-symbols-outlined"
-                >account_balance_wallet</span
-              >
+              <span class="material-symbols-outlined">
+                account_balance_wallet
+              </span>
+
               <div>
                 <h3>Budgeting helps you see where your money is going</h3>
                 <p>
@@ -86,6 +87,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">favorite</span>
+
               <div>
                 <h3>It is not about stopping yourself from enjoying life</h3>
                 <p>
@@ -119,6 +121,7 @@
                     <i class="legend-swatch essential"></i>
                     Essential
                   </span>
+
                   <span>
                     <i class="legend-swatch non-essential"></i>
                     Non-essential
@@ -147,6 +150,7 @@
             <div class="budgeting-abs-copy">
               <div class="super-check-item">
                 <span class="material-symbols-outlined">home</span>
+
                 <div>
                   <h3>Essentials are the things you usually must pay for</h3>
                   <p>
@@ -159,6 +163,7 @@
 
               <div class="super-check-item">
                 <span class="material-symbols-outlined">local_mall</span>
+
                 <div>
                   <h3>Non-essential does not mean “bad”</h3>
                   <p>
@@ -172,6 +177,7 @@
 
               <div class="super-check-item">
                 <span class="material-symbols-outlined">psychology</span>
+
                 <div>
                   <h3>The goal is awareness</h3>
                   <p>
@@ -192,6 +198,7 @@
           <div class="super-answer-grid">
             <div class="super-check-item">
               <span class="material-symbols-outlined">check_circle</span>
+
               <div>
                 <h3>Needs keep your life running</h3>
                 <p>
@@ -204,6 +211,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">local_mall</span>
+
               <div>
                 <h3>Wants make life enjoyable</h3>
                 <p>
@@ -216,6 +224,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">help</span>
+
               <div>
                 <h3>Ask yourself simple questions</h3>
                 <p>
@@ -228,6 +237,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">balance</span>
+
               <div>
                 <h3>You do not need to cut everything</h3>
                 <p>
@@ -247,6 +257,7 @@
           <div class="super-answer-grid">
             <div class="super-check-item">
               <span class="material-symbols-outlined">content_cut</span>
+
               <div>
                 <h3>Review subscriptions</h3>
                 <p>
@@ -259,6 +270,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">restaurant</span>
+
               <div>
                 <h3>Plan food spending</h3>
                 <p>
@@ -271,6 +283,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">directions_bus</span>
+
               <div>
                 <h3>Check transport options</h3>
                 <p>
@@ -283,6 +296,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">savings</span>
+
               <div>
                 <h3>Set a weekly spending limit</h3>
                 <p>
@@ -302,6 +316,7 @@
           <div class="super-answer-grid">
             <div class="super-check-item">
               <span class="material-symbols-outlined">pie_chart</span>
+
               <div>
                 <h3>The 50/30/20 rule</h3>
                 <p>
@@ -314,6 +329,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">tune</span>
+
               <div>
                 <h3>Adjust it to your reality</h3>
                 <p>
@@ -326,6 +342,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">calendar_month</span>
+
               <div>
                 <h3>Budget weekly, not just monthly</h3>
                 <p>
@@ -338,6 +355,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">repeat</span>
+
               <div>
                 <h3>Keep updating it</h3>
                 <p>
@@ -353,9 +371,8 @@
         <!-- CTA -->
         <div class="knowledge-detail-cta-row">
           <a
-            href="spending_tracker"
+            href="{{ url_for('main.spending_tracker') }}"
             target="_self"
-            rel="noopener noreferrer"
             class="knowledge-cta-btn"
           >
             Help me Budget Better
@@ -363,130 +380,6 @@
         </div>
       </div>
     </main>
-
-    <footer class="footer">
-      <div class="container footer-inner">
-        <div class="footer-brand">
-          <a href="{{ url_for('main.landing') }}" class="logo-link">
-            <img
-              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
-              alt="Hermap Logo"
-              class="logo"
-            />
-          </a>
-        </div>
-
-        <div class="nav-links">
-          <button
-            type="button"
-            class="nav-link footer-modal-link"
-            id="absDataBtn"
-          >
-            ABS Data Sources
-          </button>
-
-          <button
-            type="button"
-            class="nav-link footer-modal-link"
-            id="tosModalTrigger"
-          >
-            Terms of Service
-          </button>
-        </div>
-      </div>
-    </footer>
-
-    <!-- ABS Data Sources Popup -->
-    <div class="modal-overlay hidden" id="absModal">
-      <div class="modal-box">
-        <button
-          type="button"
-          class="modal-close"
-          id="absModalClose"
-          aria-label="Close popup"
-        >
-          <span class="material-symbols-outlined">close</span>
-        </button>
-
-        <div class="modal-icon gradient-bg">
-          <span class="material-symbols-outlined">database</span>
-        </div>
-
-        <h2>ABS Data Sources</h2>
-
-        <p>
-          The numbers and benchmarks used across this website are based on
-          datasets from the Australian Bureau of Statistics, commonly known as
-          the ABS.
-        </p>
-
-        <p>
-          The ABS is Australia's national statistical agency. It collects and
-          publishes official data about population, housing, work, income, cost
-          of living, and other areas that help explain how people live across
-          Australia.
-        </p>
-
-        <p>
-          In Hermap, ABS data is used in context to support comparisons around
-          living costs, income, location, and financial readiness. These figures
-          are intended to help users better understand possible trade-offs, not
-          to provide personal financial advice.
-        </p>
-      </div>
-    </div>
-
-    <!-- Terms of Service Modal -->
-    <div
-      class="modal-overlay hidden"
-      id="tosModal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="tosModalTitle"
-    >
-      <div class="modal-box income-terms-box">
-        <button
-          type="button"
-          class="modal-close"
-          id="tosModalClose"
-          aria-label="Close Terms of Service"
-        >
-          <span class="material-symbols-outlined">close</span>
-        </button>
-
-        <div class="modal-icon gradient-bg">
-          <span class="material-symbols-outlined">gavel</span>
-        </div>
-
-        <h2 id="tosModalTitle">Terms of Service</h2>
-
-        <div class="income-terms-scroll">
-          <p>
-            <strong>Privacy &amp; Data Collection</strong><br />
-            This platform does not collect, store, or retain any personal
-            information you provide. All inputs including your age, location,
-            income, and living situation are used solely within your current
-            browser session to generate personalised insights. No data is
-            transmitted to or held on our servers at any point. Your privacy is
-            fully preserved.
-          </p>
-
-          <p>
-            <strong>Nature of Information &amp; Advice</strong><br />
-            All insights, comparisons, and recommendations presented on this
-            platform are derived entirely from publicly available data published
-            by the Australian Bureau of Statistics (ABS) and other reputable
-            data sources. The information provided is intended for general
-            educational and informational purposes only. It does not constitute
-            financial, legal, or professional advice. Users are encouraged to
-            exercise their own judgement and, where appropriate, seek guidance
-            from a qualified professional before making any financial decisions.
-            This platform serves as a tool to inform, not to prescribe or direct
-            any course of action.
-          </p>
-        </div>
-      </div>
-    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -505,7 +398,7 @@
           <button
             type="button"
             class="nav-link footer-modal-link"
-            id="absDataBtn"
+            data-modal-target="absModal"
           >
             ABS Data Sources
           </button>
@@ -513,7 +406,7 @@
           <button
             type="button"
             class="nav-link footer-modal-link"
-            id="tosModalTrigger"
+            data-modal-target="tosModal"
           >
             Terms of Service
           </button>
@@ -521,14 +414,20 @@
       </div>
     </footer>
 
-    <!-- ABS Data Sources Popup -->
-    <div class="modal-overlay hidden" id="absModal">
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
       <div class="modal-box">
         <button
           type="button"
           class="modal-close"
-          id="absModalClose"
-          aria-label="Close popup"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -537,7 +436,7 @@
           <span class="material-symbols-outlined">database</span>
         </div>
 
-        <h2>ABS Data Sources</h2>
+        <h2 id="absModalTitle">ABS Data Sources</h2>
 
         <p>
           The numbers and benchmarks used across this website are based on
@@ -573,7 +472,7 @@
         <button
           type="button"
           class="modal-close"
-          id="tosModalClose"
+          data-modal-close
           aria-label="Close Terms of Service"
         >
           <span class="material-symbols-outlined">close</span>
@@ -613,7 +512,79 @@
       </div>
     </div>
 
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Existing shared JS for budgeting chart -->
     <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+
+    <!-- Shared footer modal JS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFooterModals();
+      });
+
+      function initializeFooterModals() {
+        const modalTriggers = document.querySelectorAll("[data-modal-target]");
+        const modalOverlays = document.querySelectorAll(".modal-overlay");
+
+        if (!modalTriggers.length || !modalOverlays.length) return;
+
+        function openModal(modal) {
+          if (!modal) return;
+
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modal) {
+          if (!modal) return;
+
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function closeAllModals() {
+          modalOverlays.forEach(function (modal) {
+            closeModal(modal);
+          });
+        }
+
+        modalTriggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const modalId = trigger.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            openModal(modal);
+          });
+        });
+
+        modalOverlays.forEach(function (modal) {
+          const closeButtons = modal.querySelectorAll(
+            "[data-modal-close], .modal-close",
+          );
+
+          closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+              closeModal(modal);
+            });
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      }
+    </script>
   </body>
 </html>

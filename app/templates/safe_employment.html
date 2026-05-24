@@ -170,7 +170,7 @@
           <button
             type="button"
             class="nav-link footer-modal-link"
-            id="absDataBtn"
+            data-modal-target="absModal"
           >
             ABS Data Sources
           </button>
@@ -178,7 +178,7 @@
           <button
             type="button"
             class="nav-link footer-modal-link"
-            id="tosModalTrigger"
+            data-modal-target="tosModal"
           >
             Terms of Service
           </button>
@@ -186,13 +186,19 @@
       </div>
     </footer>
 
-    <!-- ABS Data Sources Popup -->
-    <div class="modal-overlay hidden" id="absModal">
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
       <div class="modal-box">
         <button
           type="button"
           class="modal-close"
-          id="absModalClose"
+          data-modal-close
           aria-label="Close popup"
         >
           <span class="material-symbols-outlined">close</span>
@@ -202,7 +208,7 @@
           <span class="material-symbols-outlined">database</span>
         </div>
 
-        <h2>ABS Data Sources</h2>
+        <h2 id="absModalTitle">ABS Data Sources</h2>
 
         <p>
           The numbers and benchmarks used across this website are based on
@@ -238,7 +244,7 @@
         <button
           type="button"
           class="modal-close"
-          id="tosModalClose"
+          data-modal-close
           aria-label="Close Terms of Service"
         >
           <span class="material-symbols-outlined">close</span>
@@ -279,5 +285,73 @@
     </div>
 
     <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFooterModals();
+      });
+
+      function initializeFooterModals() {
+        const modalTriggers = document.querySelectorAll("[data-modal-target]");
+        const modalOverlays = document.querySelectorAll(".modal-overlay");
+
+        if (!modalTriggers.length || !modalOverlays.length) return;
+
+        function openModal(modal) {
+          if (!modal) return;
+
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modal) {
+          if (!modal) return;
+
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function closeAllModals() {
+          modalOverlays.forEach(function (modal) {
+            closeModal(modal);
+          });
+        }
+
+        modalTriggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const modalId = trigger.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            openModal(modal);
+          });
+        });
+
+        modalOverlays.forEach(function (modal) {
+          const closeButtons = modal.querySelectorAll(
+            "[data-modal-close], .modal-close",
+          );
+
+          closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+              closeModal(modal);
+            });
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      }
+    </script>
   </body>
 </html>

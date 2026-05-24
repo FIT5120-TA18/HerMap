@@ -38,7 +38,7 @@
         </div>
 
         <div class="nav-links">
-          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
           <a href="{{ url_for('main.dashboard') }}" class="nav-link">
             Dashboard
           </a>
@@ -72,6 +72,7 @@
           <div class="super-answer-grid single">
             <div class="super-check-item">
               <span class="material-symbols-outlined">savings</span>
+
               <div>
                 <h3>Super is money for future you</h3>
                 <p>
@@ -85,6 +86,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">trending_up</span>
+
               <div>
                 <h3>It grows over time</h3>
                 <p>
@@ -105,6 +107,7 @@
           <div class="super-answer-grid single">
             <div class="super-check-item">
               <span class="material-symbols-outlined">percent</span>
+
               <div>
                 <h3>The contribution rate is 12%</h3>
                 <p>
@@ -118,6 +121,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">payments</span>
+
               <div>
                 <h3>Example: $500 earned means about $60 to super</h3>
                 <p>
@@ -138,6 +142,7 @@
           <div class="super-answer-grid">
             <div class="super-check-item">
               <span class="material-symbols-outlined">account_balance</span>
+
               <div>
                 <h3>Choose a super fund</h3>
                 <p>
@@ -151,6 +156,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">monitoring</span>
+
               <div>
                 <h3>Check how your super is invested</h3>
                 <p>
@@ -163,6 +169,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">manage_search</span>
+
               <div>
                 <h3>Keep track of your super</h3>
                 <p>
@@ -175,6 +182,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">add_card</span>
+
               <div>
                 <h3>Add extra money if it suits you</h3>
                 <p>
@@ -194,6 +202,7 @@
           <div class="super-check-grid">
             <div class="super-check-item">
               <span class="material-symbols-outlined">fact_check</span>
+
               <div>
                 <h3>Check your fund details</h3>
                 <p>
@@ -204,6 +213,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">payments</span>
+
               <div>
                 <h3>Review fees</h3>
                 <p>
@@ -215,6 +225,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">trending_up</span>
+
               <div>
                 <h3>Review performance</h3>
                 <p>
@@ -225,6 +236,7 @@
 
             <div class="super-check-item">
               <span class="material-symbols-outlined">account_balance</span>
+
               <div>
                 <h3>Combine accounts</h3>
                 <p>
@@ -267,7 +279,7 @@
           <button
             type="button"
             class="nav-link footer-modal-link"
-            id="absDataBtn"
+            data-modal-target="absModal"
           >
             ABS Data Sources
           </button>
@@ -275,7 +287,7 @@
           <button
             type="button"
             class="nav-link footer-modal-link"
-            id="tosModalTrigger"
+            data-modal-target="tosModal"
           >
             Terms of Service
           </button>
@@ -283,14 +295,20 @@
       </div>
     </footer>
 
-    <!-- ABS Data Sources Popup -->
-    <div class="modal-overlay hidden" id="absModal">
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
       <div class="modal-box">
         <button
           type="button"
           class="modal-close"
-          id="absModalClose"
-          aria-label="Close popup"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
         >
           <span class="material-symbols-outlined">close</span>
         </button>
@@ -299,7 +317,7 @@
           <span class="material-symbols-outlined">database</span>
         </div>
 
-        <h2>ABS Data Sources</h2>
+        <h2 id="absModalTitle">ABS Data Sources</h2>
 
         <p>
           The numbers and benchmarks used across this website are based on
@@ -335,7 +353,7 @@
         <button
           type="button"
           class="modal-close"
-          id="tosModalClose"
+          data-modal-close
           aria-label="Close Terms of Service"
         >
           <span class="material-symbols-outlined">close</span>
@@ -375,6 +393,76 @@
       </div>
     </div>
 
+    <!-- Existing shared JS if used by other knowledge pages -->
     <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+
+    <!-- Shared footer modal JS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFooterModals();
+      });
+
+      function initializeFooterModals() {
+        const modalTriggers = document.querySelectorAll("[data-modal-target]");
+        const modalOverlays = document.querySelectorAll(".modal-overlay");
+
+        if (!modalTriggers.length || !modalOverlays.length) return;
+
+        function openModal(modal) {
+          if (!modal) return;
+
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modal) {
+          if (!modal) return;
+
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function closeAllModals() {
+          modalOverlays.forEach(function (modal) {
+            closeModal(modal);
+          });
+        }
+
+        modalTriggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const modalId = trigger.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            openModal(modal);
+          });
+        });
+
+        modalOverlays.forEach(function (modal) {
+          const closeButtons = modal.querySelectorAll(
+            "[data-modal-close], .modal-close",
+          );
+
+          closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+              closeModal(modal);
+            });
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      }
+    </script>
   </body>
 </html>
