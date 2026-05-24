@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tax & Payslip Explained – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="knowledge-detail-page">
+      <div class="container">
+        <!-- Top Row -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Understand My Payslip</h1>
+            <p class="knowledge-detail-subtitle">
+              Learn how to read your payslip, understand tax withheld, and
+              prepare for your tax return with confidence.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- Hero Section -->
+        <section
+          class="payslip-hero-grid payslip-arrow-section"
+          id="payslipArrowSection"
+        >
+          <!-- Arrow SVG layer -->
+          <svg
+            class="payslip-arrow-svg"
+            id="payslipArrowSvg"
+            aria-hidden="true"
+          >
+            <defs>
+              <marker
+                id="arrowHead"
+                markerWidth="10"
+                markerHeight="10"
+                refX="8"
+                refY="3"
+                orient="auto"
+                markerUnits="strokeWidth"
+              >
+                <path d="M0,0 L0,6 L9,3 z" fill="currentColor"></path>
+              </marker>
+            </defs>
+          </svg>
+
+          <!-- Payslip Image -->
+          <div class="payslip-image-card">
+            <div class="payslip-image-wrap">
+              <img
+                src="{{ url_for('static', filename='img/Group 3.png') }}"
+                alt="Example payslip showing gross income, PAYG tax, superannuation and net pay"
+                class="payslip-image"
+              />
+
+              <span
+                class="payslip-hotspot hotspot-gross"
+                data-arrow-from="gross"
+                title="Gross income"
+              ></span>
+
+              <span
+                class="payslip-hotspot hotspot-tax"
+                data-arrow-from="tax"
+                title="Tax withheld"
+              ></span>
+
+              <span
+                class="payslip-hotspot hotspot-super"
+                data-arrow-from="super"
+                title="Superannuation"
+              ></span>
+
+              <span
+                class="payslip-hotspot hotspot-net"
+                data-arrow-from="net"
+                title="Net pay"
+              ></span>
+            </div>
+          </div>
+
+          <!-- Explanation List -->
+          <aside class="payslip-explainer-card">
+            <div class="payslip-explainer-item" data-arrow-to="gross">
+              <span class="legend-dot green"></span>
+              <div>
+                <h3>Gross income</h3>
+                <p>
+                  The amount earned before taxes and deductions are applied.
+                  This may include base pay, overtime, tips, bonuses, or
+                  allowances.
+                </p>
+              </div>
+            </div>
+
+            <div class="payslip-explainer-item" data-arrow-to="tax">
+              <span class="legend-dot orange"></span>
+              <div>
+                <h3>Tax withheld (PAYG)</h3>
+                <p>
+                  The amount of tax your employer deducts from your pay and
+                  sends to the Australian Taxation Office on your behalf.
+                </p>
+              </div>
+            </div>
+
+            <div class="payslip-explainer-item" data-arrow-to="super">
+              <span class="legend-dot blue"></span>
+              <div>
+                <h3>Superannuation contribution</h3>
+                <p>
+                  Money paid into your super fund for retirement. This is
+                  generally paid by your employer in addition to your regular
+                  wages.
+                </p>
+              </div>
+            </div>
+
+            <div class="payslip-explainer-item" data-arrow-to="net">
+              <span class="legend-dot yellow"></span>
+              <div>
+                <h3>Net take-home pay</h3>
+                <p>
+                  The amount that reaches your bank account after tax and
+                  deductions have been taken out.
+                </p>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <!-- Main Learning Sections -->
+        <section class="knowledge-detail-grid">
+          <!-- Left Column -->
+          <div class="knowledge-detail-column tax-left-column">
+            <section class="knowledge-info-section">
+              <h2>Tax Return Tips</h2>
+
+              <div class="knowledge-white-card">
+                <p>
+                  A tax refund happens when you have paid more tax during the
+                  financial year than you needed to. After lodging your tax
+                  return, the government may return some of that money to you.
+                </p>
+
+                <p>
+                  If you earned income during the financial year, you may need
+                  to lodge a tax return.
+                </p>
+              </div>
+            </section>
+
+            <section class="knowledge-info-section">
+              <h2>Checklist to Prepare</h2>
+
+              <div class="knowledge-white-card">
+                <ul class="knowledge-checklist">
+                  <li>TFN: Tax File Number</li>
+                  <li>Bank details</li>
+                  <li>Income statement</li>
+                  <li>Receipts for deductions</li>
+                  <li>Super details</li>
+                </ul>
+              </div>
+            </section>
+
+            <a
+              href="https://www.ato.gov.au/individuals-and-families/your-tax-return"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="knowledge-cta-btn"
+            >
+              Visit ATO official guide for tax return help
+            </a>
+          </div>
+
+          <!-- Right Column -->
+          <div class="knowledge-detail-column deductibles-right-column">
+            <section class="knowledge-info-section">
+              <h2>Common Deductibles</h2>
+
+              <div class="deductibles-card">
+                <div class="deductible-group">
+                  <h3>Work Clothing &amp; Uniforms</h3>
+                  <ul>
+                    <li>Protective clothing, such as steel-cap boots</li>
+                    <li>Occupation-specific uniforms</li>
+                    <li>Laundry costs for eligible uniforms</li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Travel &amp; Transport</h3>
+                  <ul>
+                    <li>Work-related car or public transport travel</li>
+                    <li>Parking fees and tolls for work trips</li>
+                    <li>
+                      Regular travel between home and work is usually not
+                      deductible.
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Tools &amp; Equipment</h3>
+                  <ul>
+                    <li>Laptops, tablets, and phones used for work</li>
+                    <li>Work-related software</li>
+                    <li>Tools and equipment needed for your job</li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Working From Home Expenses</h3>
+                  <ul>
+                    <li>Internet usage</li>
+                    <li>Electricity</li>
+                    <li>Home office equipment</li>
+                    <li>Phone expenses</li>
+                  </ul>
+                </div>
+
+                <div class="deductible-group">
+                  <h3>Self-Education &amp; Study</h3>
+                  <ul>
+                    <li>Courses related to your current work</li>
+                    <li>Textbooks and study materials</li>
+                    <li>Student union or course fees, where eligible</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="absModal"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="tosModal"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2 id="absModalTitle">ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia's national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Existing JS for payslip arrows -->
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+
+    <!-- Shared footer modal JS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFooterModals();
+      });
+
+      function initializeFooterModals() {
+        const modalTriggers = document.querySelectorAll("[data-modal-target]");
+        const modalOverlays = document.querySelectorAll(".modal-overlay");
+
+        if (!modalTriggers.length || !modalOverlays.length) return;
+
+        function openModal(modal) {
+          if (!modal) return;
+
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modal) {
+          if (!modal) return;
+
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function closeAllModals() {
+          modalOverlays.forEach(function (modal) {
+            closeModal(modal);
+          });
+        }
+
+        modalTriggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const modalId = trigger.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            openModal(modal);
+          });
+        });
+
+        modalOverlays.forEach(function (modal) {
+          const closeButtons = modal.querySelectorAll(
+            "[data-modal-close], .modal-close",
+          );
+
+          closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+              closeModal(modal);
+            });
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

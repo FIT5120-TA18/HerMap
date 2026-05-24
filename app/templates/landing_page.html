@@ -1,135 +1,315 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Hermap</title>
+    <title>Hermap</title>
 
-  <!-- Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
-    rel="stylesheet"
-  />
+    <!-- Fonts used across the site. Keep these in the page or move them to a shared base layout later. -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet"
-  />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
-</head>
+    <!-- Global styles contain shared variables, resets, fonts, and reusable helpers. -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
 
-<body>
-  <!-- Top Navigation Bar -->
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <div class="nav-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img
-            src="{{ url_for('static', filename='img/hermap-logo.png') }}"
-            alt="Hermap Logo"
-            class="logo"
-          />
-        </a>
-      </div>
-
-      <div class="nav-links">
-        <a href="{{ url_for('main.landing') }}" class="nav-link nav-link-active">Home</a>
-        <a href="#how-it-works" class="nav-link">How it works</a>
-      </div>
-    </div>
-  </nav>
-
-  <main>
-    <!-- Hero Section -->
-    <section class="main">
-      <div class="main-blob main-blob-top"></div>
-      <div class="main-blob main-blob-bottom"></div>
-
-      <div class="container main-content">
-        <h1 class="main-title">
-          Find out if you are ready to <span class="gradient-text">move out</span>
-        </h1>
-
-        <p class="main-subtitle">
-          No login. No bank details. Just your situation and ABS benchmarks.
-        </p>
-
-        <div class="main-actions">
-          <a href="{{ url_for('main.quick_profile') }}" class="btn btn-primary">
-            Build Your Quick Profile
+  <body class="landing-page">
+    <!-- Top Navigation Bar -->
+    <nav class="navbar" aria-label="Main navigation">
+      <div class="landing-container nav-inner">
+        <div class="landing-nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
           </a>
         </div>
-      </div>
-    </section>
 
-    <!-- How It Works Section -->
-    <section class="steps-section" id="how-it-works">
-      <div class="container">
-        <div class="section-heading">
-          <h2>How it works</h2>
-          <p>Three simple steps. No signup required.</p>
-        </div>
+        <div class="nav-links">
+          <a
+            href="{{ url_for('main.landing') }}"
+            class="nav-link nav-link-active"
+          >
+            Home
+          </a>
 
-        <div class="steps-grid">
-          <div class="step-card">
-            <div class="step-icon gradient-bg">
-              <span class="material-symbols-outlined">chat_bubble</span>
-            </div>
-            <h3>1. Tell us your situation</h3>
-            <p>
-              Share your current living costs, location, and career goals. No identifying data required.
-            </p>
-          </div>
-
-          <div class="step-card">
-            <div class="step-icon gradient-bg">
-              <span class="material-symbols-outlined">account_tree</span>
-            </div>
-            <h3>2. Build your dashboard</h3>
-            <p>
-              Explore your current situation through personalised financial insights and data-backed comparisons.
-            </p>
-          </div>
-
-          <div class="step-card">
-            <div class="step-icon gradient-bg">
-              <span class="material-symbols-outlined">auto_stories</span>
-            </div>
-            <h3>3. Understand your options</h3>
-            <p>
-              Use the dashboard to make more informed decisions about study, work, living costs, and independence.
-            </p>
-          </div>
+          <a href="#how-it-works" class="nav-link">How it works</a>
         </div>
       </div>
-    </section>
-  </main>
+    </nav>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img
-            src="{{ url_for('static', filename='img/hermap-logo.png') }}"
-            alt="Hermap Logo"
-            class="logo"
-          />
-        </a>
+    <main class="landing-main">
+      <!-- Hero Section -->
+      <section class="landing-hero">
+        <!-- Decorative background blobs. They are hidden from screen readers because they do not add content meaning. -->
+        <div
+          class="landing-hero-blob landing-hero-blob-top"
+          aria-hidden="true"
+        ></div>
+        <div
+          class="landing-hero-blob landing-hero-blob-bottom"
+          aria-hidden="true"
+        ></div>
+
+        <div class="landing-container landing-hero-content">
+          <h1 class="landing-hero-title">
+            Find out if you are ready to
+            <span class="gradient-text">move out</span>
+          </h1>
+
+          <p class="landing-hero-subtitle">
+            No login. No bank details. Just your situation and ABS benchmarks.
+          </p>
+
+          <div class="landing-hero-actions">
+            <a
+              href="{{ url_for('main.quick_profile') }}"
+              class="landing-btn landing-btn-primary"
+            >
+              Build Your Quick Profile
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="landing-steps-section" id="how-it-works">
+        <div class="landing-container">
+          <div class="landing-section-heading">
+            <h2>How it works</h2>
+            <p>Three simple steps. No signup required.</p>
+          </div>
+
+          <div class="landing-steps-grid">
+            <article class="landing-step-card">
+              <div class="landing-step-icon gradient-bg" aria-hidden="true">
+                <span class="material-symbols-outlined">chat_bubble</span>
+              </div>
+
+              <h3>1. Tell us your situation</h3>
+
+              <p>
+                Share your current living costs, location, and career goals. No
+                identifying data required.
+              </p>
+            </article>
+
+            <article class="landing-step-card">
+              <div class="landing-step-icon gradient-bg" aria-hidden="true">
+                <span class="material-symbols-outlined">account_tree</span>
+              </div>
+
+              <h3>2. Build your dashboard</h3>
+
+              <p>
+                Explore your current situation through personalised financial
+                insights and data-backed comparisons.
+              </p>
+            </article>
+
+            <article class="landing-step-card">
+              <div class="landing-step-icon gradient-bg" aria-hidden="true">
+                <span class="material-symbols-outlined">auto_stories</span>
+              </div>
+
+              <h3>3. Understand your options</h3>
+
+              <p>
+                Use the dashboard to make more informed decisions about study,
+                work, living costs, and independence.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Things You Should Know Section -->
+      <section class="landing-things-section">
+        <div class="landing-container">
+          <div class="landing-things-card">
+            <div class="landing-things-left">
+              <h2>Things you should know</h2>
+            </div>
+
+            <div class="landing-things-right">
+              <div class="landing-things-info-box">
+                <span class="material-symbols-outlined" aria-hidden="true"
+                  >info</span
+                >
+
+                <div>
+                  <p>
+                    The information provided on this website is for general
+                    educational and informational purposes only. It is not
+                    intended to constitute financial, legal, or professional
+                    advice. All financial decisions should be made based on your
+                    individual circumstances.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="landing-container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="footer-links">
+          <button
+            type="button"
+            class="footer-modal-link"
+            data-modal-target="absModal"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="footer-modal-link"
+            data-modal-target="tosModal"
+          >
+            Terms of Service
+          </button>
+        </div>
       </div>
+    </footer>
 
-      <div class="nav-links">
-        <a href="#" class="nav-link">Privacy Policy</a>
-        <a href="#" class="nav-link">ABS Data Sources</a>
-        <a href="#" class="nav-link">Terms of Service</a>
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg" aria-hidden="true">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2 id="absModalTitle">ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia’s national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
       </div>
     </div>
-  </footer>
 
-  <!-- Scripts -->
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg" aria-hidden="true">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <p>
+          <strong>Privacy &amp; Data Collection</strong><br />
+          This platform does not collect, store, or retain any personal
+          information you provide. All inputs including your age, location,
+          income, and living situation are used solely within your current
+          browser session to generate personalised insights. No data is
+          transmitted to or held on our servers at any point. Your privacy is
+          fully preserved.
+        </p>
+
+        <p>
+          <strong>Nature of Information &amp; Advice</strong><br />
+          All insights, comparisons, and recommendations presented on this
+          platform are derived entirely from publicly available data published
+          by the Australian Bureau of Statistics (ABS) and other reputable data
+          sources. The information provided is intended for general educational
+          and informational purposes only. It does not constitute financial,
+          legal, or professional advice. Users are encouraged to exercise their
+          own judgment and seek qualified professional advice before making
+          significant financial or life decisions.
+        </p>
+
+        <p>
+          <strong>Accuracy &amp; Limitations</strong><br />
+          While reasonable efforts are made to use reliable and current public
+          datasets, we do not guarantee the completeness, accuracy, or
+          timeliness of the information presented. Benchmarks and estimates may
+          not reflect your exact personal circumstances.
+        </p>
+
+        <p>
+          <strong>Use of the Platform</strong><br />
+          By using this website, you acknowledge that the information is
+          provided as a guide only and that Hermap is not responsible for any
+          decisions, actions, or outcomes resulting from your use of the
+          platform.
+        </p>
+      </div>
+    </div>
+
+    <!-- Landing page only JavaScript. -->
+    <script src="{{ url_for('static', filename='js/landing_page.js') }}"></script>
+  </body>
 </html>

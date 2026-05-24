@@ -2,3 +2,5 @@ pymysql
 dotenv
 flask
 google-genai
+Flask-SQLAlchemy
+sqlalchemy

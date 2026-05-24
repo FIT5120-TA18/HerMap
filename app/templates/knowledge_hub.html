@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knowledge Hub – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container hub-page">
+      <div class="hub-header">
+        <div class="hub-heading">
+          <h1 class="hub-title">Build My Financial Literacy</h1>
+
+          <p class="hub-subtitle">
+            Explore financial education topics at your own pace. Each topic is
+            plain English, practical, and linked to trusted Australian sources.
+          </p>
+        </div>
+
+                <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          Back to Dashboard
+        </a>
+      </div>
+      </div>
+
+      <!-- Cards Grid -->
+      <section class="hub-grid">
+        <!-- Card 1 -->
+        <a
+          href="credit_bnpl"
+          class="hub-topic-card"
+          id="tile-credit"
+          style="
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/bnpl-credit.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Credit &amp; BNPL</h3>
+              <p class="hub-tile-preview">
+                Understand repayments, fees, and the real cost behind “easy”
+                credit.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 2 -->
+        <a
+          href="tax_payslip_module"
+          class="hub-topic-card"
+          id="tile-tax"
+          style="
+    --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/payslip.png') }}');
+    --hub-bg-opacity: 0.6;
+    --hub-overlay: rgba(255, 255, 255, 0.58);
+  "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Tax &amp; Payslip Explained</h3>
+              <p class="hub-tile-preview">
+                Learn what your payslip means, from tax withheld to take-home
+                pay.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 3 -->
+        <a
+          href="superannuation_explaination"
+          class="hub-topic-card"
+          id="tile-budgeting"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/super.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Superannuation</h3>
+              <p class="hub-tile-preview">
+                Understand how super works now so your future money grows with
+                you.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 4 -->
+        <a
+          href="smart_budgeting"
+          class="hub-topic-card"
+          id="tile-tenant"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/smart-budgeting.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Smart Budgeting</h3>
+              <p class="hub-tile-preview">
+                Separate needs from wants and make your weekly money easier to
+                manage.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 5 -->
+        <a
+          href="tenancy_guide"
+          class="hub-topic-card"
+          id="tile-saving"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/rental-guide.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Victorian Tenancy Guide</h3>
+              <p class="hub-tile-preview">
+                Know your rights, bond, rent, and moving-in costs before signing
+                a lease.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+
+        <!-- Card 6 -->
+        <a
+          href="safe_employment"
+          class="hub-topic-card"
+          id="tile-goals"
+          style="
+            --hub-bg: url('{{ url_for('static', filename='img/knowledge-hub/safe-work.png') }}');
+            --hub-bg-opacity: 0.6;
+            --hub-overlay: rgba(255, 255, 255, 0.58);
+          "
+        >
+          <div class="hub-card-content">
+            <div class="hub-card-copy">
+              <h3 class="hub-tile-title">Safe Employment</h3>
+              <p class="hub-tile-preview">
+                Spot job scams and protect your money before accepting work
+                offers.
+              </p>
+            </div>
+
+            <span class="hub-tile-toggle">Explore</span>
+          </div>
+        </a>
+      </section>
+
+      <div class="hub-disclaimer">
+        This content is for educational purposes only and is not financial or
+        legal advice. Always consult a qualified professional for personal
+        guidance.
+      </div>
+    </main>
+
+    <!-- Footer -->
+<footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+<div class="nav-links">
+  <button
+    type="button"
+    class="nav-link footer-modal-link"
+    data-modal-target="absModal"
+  >
+    ABS Data Sources
+  </button>
+
+  <button
+    type="button"
+    class="nav-link footer-modal-link"
+    data-modal-target="tosModal"
+  >
+    Terms of Service
+  </button>
+</div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Popup -->
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="absModalClose"
+          aria-label="Close popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2>ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia's national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="tosModalClose"
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+
+    <!-- Profile data from Flask -->
+    <script>
+      window.serverProfileData = {{ profile_data | tojson }};
+    </script>
+
+    <!-- Knowledge Hub JS -->
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+  </body>
+</html>

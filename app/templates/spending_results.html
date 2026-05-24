@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Spending Results - Hermap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+
+    <!-- Material Symbols -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="results-container">
+      <!-- Header -->
+      <div class="page-header">
+        <div>
+          <h1>Your <span class="gradient-text">Spending Results</span></h1>
+          <p>
+            Understand your weekly position, rent pressure, spending drivers,
+            and what this means for independent living.
+          </p>
+        </div>
+
+        <a href="{{ url_for('main.spending_tracker') }}" class="back-home-btn">
+          Edit spending
+        </a>
+      </div>
+
+      <!-- Empty State -->
+      <section id="emptyState" class="empty-state">
+        <h2>No spending data found</h2>
+        <p>Please enter your expenses first.</p>
+
+        <a href="{{ url_for('main.spending_tracker') }}" class="primary-btn">
+          Go to spending tracker
+        </a>
+      </section>
+
+      <!-- Results Content -->
+      <section id="resultsContent" class="results-content">
+        <!-- Summary Cards -->
+        <section class="summary-grid">
+          <div class="summary-card">
+            <div class="summary-label">Weekly income</div>
+            <div class="summary-value" id="summaryIncome">$0</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Total spending</div>
+            <div class="summary-value" id="summaryTotal">$0</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label" id="summarySurplusLabel">
+              Weekly surplus / deficit
+            </div>
+            <div class="summary-value" id="summarySurplus">$0/wk</div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Rent pressure</div>
+            <div class="summary-value" id="summaryRentPressure">--</div>
+          </div>
+        </section>
+
+        <!-- Main Results Grid -->
+        <section class="results-main-grid">
+          <!-- LEFT COLUMN -->
+          <div class="results-left-column">
+            <!-- Rent Pressure Meter -->
+            <div class="pressure-card" id="rentPressure">
+              <h3>Rent pressure meter</h3>
+              <p>See how much of your weekly income is going toward rent.</p>
+
+              <div class="rent-gauge">
+                <div class="gauge-wrap">
+                  <svg viewBox="0 0 300 170" class="gauge-svg">
+                    <path
+                      class="gauge-segment gauge-stable"
+                      d="M 40 140 A 110 110 0 0 1 113 36"
+                    />
+                    <path
+                      class="gauge-segment gauge-vulnerable"
+                      d="M 113 36 A 110 110 0 0 1 177 36"
+                    />
+                    <path
+                      class="gauge-segment gauge-risk"
+                      d="M 177 36 A 110 110 0 0 1 260 140"
+                    />
+                  </svg>
+
+                  <div class="gauge-tick gauge-tick-30"></div>
+                  <div class="gauge-tick gauge-tick-45"></div>
+
+                  <div class="gauge-needle" id="pressureMarker"></div>
+                  <div class="gauge-center"></div>
+
+                  <span class="gauge-label gauge-label-0">0%</span>
+                  <span class="gauge-label gauge-label-30">30%</span>
+                  <span class="gauge-label gauge-label-45">45%</span>
+                  <span class="gauge-label gauge-label-75">75%+</span>
+                </div>
+
+                <div class="gauge-value" id="pressureValue">
+                  No rent entered
+                </div>
+
+                <div class="gauge-legend">
+                  <div class="gauge-legend-item">
+                    <span class="legend-dot stable"></span>
+                    <div>
+                      <strong>Stable</strong>
+                      <small>&lt;30%</small>
+                    </div>
+                  </div>
+
+                  <div class="gauge-legend-item">
+                    <span class="legend-dot vulnerable"></span>
+                    <div>
+                      <strong>Vulnerable</strong>
+                      <small>30–45%</small>
+                    </div>
+                  </div>
+
+                  <div class="gauge-legend-item">
+                    <span class="legend-dot risk"></span>
+                    <div>
+                      <strong>At Risk</strong>
+                      <small>&gt;45%</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spending Breakdown -->
+            <div class="content-card" id="spendingDonutChart">
+              <h3>Spending breakdown</h3>
+              <p>
+                Blue shows essential spending. Purple shows flexible spending.
+              </p>
+
+              <div class="chart-wrap">
+                <canvas id="spendingDonut"></canvas>
+              </div>
+
+              <div id="spendingLegend" class="chart-legend"></div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN -->
+          <div class="results-right-column">
+            <!-- Verdict + Top Drivers -->
+            <div class="verdict-card" id="verdictCard">
+              <div class="verdict-left">
+                <div class="verdict-icon" id="verdictIcon">⏳</div>
+
+                <div class="verdict-copy">
+                  <p id="verdictTitle">Calculating…</p>
+                  <p id="verdictBody"></p>
+                </div>
+              </div>
+
+              <aside class="drivers-card">
+                <p class="drivers-kicker">Spending snapshot</p>
+
+                <h3>Top spending drivers</h3>
+
+                <p>Your largest weekly costs, ranked by impact.</p>
+
+                <div id="topDrivers" class="top-drivers"></div>
+              </aside>
+            </div>
+
+            <!-- What This Means -->
+            <div class="insight-card chart-side-card">
+              <h3>What this means</h3>
+
+              <div id="positionInsight">{{ spending_insight or "" }}</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Benchmark Comparison -->
+        <section class="benchmark-card">
+          <h3>Your spending pattern compared with Victoria</h3>
+
+          <p>
+            This comparison only uses the categories you entered and compares
+            them with the same Victorian benchmark categories. It uses spending
+            shares, not raw dollars.
+          </p>
+
+          <div id="benchmarkWarning" class="benchmark-warning"></div>
+
+          <div class="benchmark-layout" id="benchmarkInfo">
+            <div class="benchmark-chart-wrap">
+              <canvas id="benchmarkChart"></canvas>
+            </div>
+
+            <div id="benchmarkInsights" class="benchmark-insights"></div>
+          </div>
+
+          <table class="benchmark-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Your share</th>
+                <th>Victoria</th>
+                <th>Spending pattern</th>
+              </tr>
+            </thead>
+
+            <tbody id="benchmarkTableBody"></tbody>
+          </table>
+        </section>
+
+        <!-- Next Step -->
+        <section class="action-card" id="actionItems">
+          <h3>Next step</h3>
+
+          <p id="nextStepText"></p>
+
+          <div class="action-chip-row" id="actionChips"></div>
+
+          <div class="action-links" id="actionLinks"></div>
+        </section>
+
+        <p class="data-note">
+          This is an automated spending summary and is not financial advice.
+          Your data is stored only in this browser session.
+        </p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="absModal"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="tosModal"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Popup -->
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="absModalClose"
+          aria-label="Close popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2>ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia's national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="tosModalClose"
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/spending_results.js') }}"></script>
+
+    <!-- Tutorial HTML -->
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
+      <span class="material-symbols-outlined">help</span>
+    </button>
+
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
+
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 5</span>
+      </div>
+
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: "rentPressure",
+          title: "Rent pressure",
+          desc: "This shows what percentage of your income goes to rent. Above 30% is considered vulnerable, and above 45% is at risk.",
+        },
+        {
+          targetId: "spendingDonutChart",
+          title: "Spending breakdown",
+          desc: "Blue shows your essential costs, and purple shows flexible spending. The bigger the slice, the more it takes from your weekly income.",
+        },
+        {
+          targetId: "verdictCard",
+          title: "Your verdict",
+          desc: "This card gives you a plain-language summary of your financial position and highlights your biggest spending drivers.",
+        },
+        {
+          targetId: "benchmarkInfo",
+          title: "Victorian benchmark comparison",
+          desc: "See how your spending pattern compares to the average Victorian household. Categories where you are spending more than average are flagged.",
+        },
+        {
+          targetId: "actionItems",
+          title: "Next steps",
+          desc: "Based on your results, these are the most relevant next steps and tools to help you improve your position.",
+        },
+      ];
+    </script>
+
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
+  </body>
+</html>

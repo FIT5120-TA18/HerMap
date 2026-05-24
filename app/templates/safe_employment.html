@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Safe Employment – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="knowledge-detail-page safe-employment-page">
+      <div class="container">
+        <!-- Header -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Safe Employment</h1>
+            <p class="knowledge-detail-subtitle">
+              Learn how to spot job scams before they affect your money,
+              identity, or confidence.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- One Main Container -->
+        <section
+          class="super-question-card super-card-highlight safe-employment-card"
+        >
+          <h2>Employment scams to watch out for</h2>
+
+          <div class="safe-employment-content">
+            <div class="safe-employment-intro">
+              <span class="material-symbols-outlined">work_alert</span>
+
+              <div>
+                <h3>A job should help your finances, not put them at risk</h3>
+                <p>
+                  When you are 18–22, studying, working casually, or looking for
+                  flexible work, a “quick money” job can look tempting. But some
+                  fake jobs are designed to steal your money, your personal
+                  information, or access to your bank account.
+                </p>
+              </div>
+            </div>
+
+            <div class="safe-scam-grid">
+              <div class="safe-scam-item">
+                <h3>1. “Pay first to get the job”</h3>
+                <p>
+                  Be careful if someone asks you to pay for training,
+                  registration, equipment, starter kits, background checks, or
+                  software before you can begin. A real job should not require
+                  you to pay money just to earn money.
+                </p>
+              </div>
+
+              <div class="safe-scam-item">
+                <h3>2. “High pay, low effort” jobs</h3>
+                <p>
+                  Scams often promise easy money for simple tasks like liking
+                  posts, reviewing products, receiving parcels, or doing “remote
+                  admin” with no proper interview. If it sounds too easy for the
+                  pay offered, pause and check.
+                </p>
+              </div>
+
+              <div class="safe-scam-item">
+                <h3>3. Requests for personal documents too early</h3>
+                <p>
+                  Be cautious if a stranger asks for your passport, licence, Tax
+                  File Number, bank details, or Medicare details before you have
+                  verified the employer and the role. These details can be used
+                  for identity theft.
+                </p>
+              </div>
+
+              <div class="safe-scam-item">
+                <h3>4. Using your bank account for transfers</h3>
+                <p>
+                  Never agree to receive money and send it somewhere else for a
+                  “job”. This could involve stolen money or money laundering,
+                  even if the person makes it sound normal.
+                </p>
+              </div>
+            </div>
+
+            <div class="safe-employment-reminder">
+              <span class="material-symbols-outlined">shield</span>
+              <p>
+                Before accepting a job, check the company website, search the
+                recruiter’s name, avoid WhatsApp-only hiring, do not pay
+                upfront, and never share sensitive documents unless you are sure
+                the job is real.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="knowledge-detail-cta-row">
+          <a
+            href="https://checkmateau.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="knowledge-cta-btn"
+          >
+            Learn more from CheckMateAU
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="absModal"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="tosModal"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2 id="absModalTitle">ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia's national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFooterModals();
+      });
+
+      function initializeFooterModals() {
+        const modalTriggers = document.querySelectorAll("[data-modal-target]");
+        const modalOverlays = document.querySelectorAll(".modal-overlay");
+
+        if (!modalTriggers.length || !modalOverlays.length) return;
+
+        function openModal(modal) {
+          if (!modal) return;
+
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modal) {
+          if (!modal) return;
+
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function closeAllModals() {
+          modalOverlays.forEach(function (modal) {
+            closeModal(modal);
+          });
+        }
+
+        modalTriggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const modalId = trigger.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            openModal(modal);
+          });
+        });
+
+        modalOverlays.forEach(function (modal) {
+          const closeButtons = modal.querySelectorAll(
+            "[data-modal-close], .modal-close",
+          );
+
+          closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+              closeModal(modal);
+            });
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

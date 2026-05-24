@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Debt Projection - HerMap</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <div class="nav-brand">
+        <a href="{{ url_for('main.landing') }}" class="logo-link">
+          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
+        </a>
+      </div>
+      <div class="nav-links">
+        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+        <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container proj-page">
+    <div style="margin-bottom:32px;">
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>
+            How Debt 
+            <span class="gradient-text">Could Grow</span>
+          </h1>
+          <p>See how a weekly shortfall grows over time when funded by credit or BNPL.</p>
+        </div>
+        <div>
+          <a href="{{ url_for('main.debt_awareness') }}" class="back-home-btn">
+            Back to questions
+          </a>
+        </div>
+      </div>
+      <section id="resultsContent" class="results-content">
+        <!-- Summary Cards -->
+        <section class="summary-grid" id="yourNumbersCard">
+          <div class="summary-card">
+            <div class="summary-label">Credit Type</div>
+            <div class="summary-value" id="statCreditType"></div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Original Amount</div>
+            <div class="summary-value" id="statOriginalAmount"></div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">Interest/Fees Accrued</div>
+            <div class="summary-value" id="statChargesAccrued"></div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-label">New Total</div>
+            <div class="summary-value" id="statCurrentTotal"></div>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <div class="proj-grid">
+      <!-- Left: Chart -->
+      <div>
+        <div class="proj-card">
+          <h3 class="proj-card-title" id="chartMainTitle">Debt Projection</h3>
+          <p class="proj-card-sub" id="chartSubtitle">Based on your weekly deficit and selected credit type.</p>
+
+          <div class="proj-chart-wrap">
+            <!-- Legend -->
+            <div class="chart-legend-custom" id="chartLegend"></div>
+            <canvas id="debtChart"></canvas>
+          </div>
+
+          <div class="reveal-controls">
+            <button class="reveal-btn-primary" id="revealNextBtn" onclick="revealNext()">Reveal Month 2</button>
+            <button class="reveal-btn-ghost" id="skipToEndBtn" onclick="skipToEnd()">Reveal All Months</button>
+          </div>
+
+          <p id="sourceNoteCC" class="source-note">
+            Credit card rate: 20% p.a. compound interest. <br> Source: 
+            <a href="https://moneysmart.gov.au/credit-cards" target="_blank" rel="noopener"
+              style="color:var(--primary);font-weight:700;">ASIC MoneySmart</a>
+          </p>
+          <p id="sourceNoteBNPL" class="source-note" style="display:none;">
+            Missing a BNPL payment costs upto $17/month in late fees. <b>No interest, but fees add up fast.</b>
+            ASIC found 1 in 5 BNPL users miss a payment, and most of them use more than one BNPL provider. 
+            This chart shows how those fees stack up over time. Fees vary by provider. <br> Source: 
+            <a href="https://download.asic.gov.au/media/5852803/rep672-published-16-november-2020-2.pdf" target="_blank" rel="noopener"
+            style="color:var(--primary);font-weight:700;">Australian Government (ASIC, 2020)</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Right: Stats -->
+      <div>
+        <div class="side-card" id="customCard">
+          <h4 class="side-card-title"> Customise Your Projection</h4>
+
+          <div class="scenario-toggle" id="scenarioToggle">
+            <button class="scenario-btn active" id="btnCredit" onclick="setScenario('credit')">
+              <span class="material-symbols-outlined" style="font-size:16px;">credit_card</span>
+              Credit Card
+            </button>
+            <button class="scenario-btn" id="btnBNPL" onclick="setScenario('bnpl')">
+              <span class="material-symbols-outlined" style="font-size:16px;">shopping_bag</span>
+              BNPL
+            </button>
+          </div>
+
+          <div style="margin-bottom:20px;">
+            <p style="font-size:13px;font-weight:700;color:var(--text-muted);margin:0 0 10px;"> 
+              Projection Length <span id="durationDisplay" style="color:var(--primary);"> 12 months </span>
+            </p>
+            <input
+              type="range"
+              id="durationSlider"
+              min="0"
+              max="2"
+              step="1"
+              value="0"
+              class="duration-slider"
+              oninput="onSliderChange(this.value)"
+            />
+            <div class="slider-labels">
+              <span>12 months</span>
+              <span>18 months</span>
+              <span>24 months</span>
+            </div>
+          </div>
+          <div style="margin-bottom:20px;">
+            <label id="balanceLabel" for="openingBalanceInput" style="font-size:13px;font-weight:700;color:var(--text-muted);display:block;margin:8px;"> 
+              Current debt balance ($)
+            </label>
+            <input
+              type="number"
+              id="openingBalanceInput"
+              class="form-input"
+              placeholder="e.g. 150"
+              min="1"
+              max="10000"
+              style="font-size:15px;"
+              oninput="clearBalanceError()"
+              />
+            <p id="balanceError" style="display:none;color:#c0392b;font-size:13px;font-weight:700;margin-top:8px;"></p>
+          </div>
+          <button class="reveal-btn-primary" style="width:100%" onclick="applyCustomisation()"> Update Chart </button>
+        </div>
+<div class="key-message debt-warning-card" id="keyMessage">
+  <p>If not paid on time, fees and interest grow faster than you expect.</p>
+</div>
+
+<div class="debt-next-step-card" id="ctaBox">
+  <div class="debt-next-step-copy">
+    <h3>Want to understand credit products better?</h3>
+
+    <p>
+      Now that you can see how debt grows, learn how credit cards and BNPL work,
+      what fees to watch for, and how to avoid falling into a repayment trap.
+    </p>
+  </div>
+
+  <a href="{{ url_for('main.knowledge_hub') }}#credit" class="debt-next-step-btn">
+    Learn about credit products
+  </a>
+</div>
+</div>
+    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+      <span class="material-symbols-outlined">help</span>
+    </button>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="{{ url_for('main.landing') }}" class="logo-link">
+          <img
+            src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+            alt="Hermap Logo"
+            class="logo"
+          />
+        </a>
+      </div>
+
+      <div class="footer-links">
+        <button
+          type="button"
+          class="nav-link footer-modal-link"
+          id="absDataBtn"
+        >
+          ABS Data Sources
+        </button>
+
+        <button
+          type="button"
+          class="nav-link footer-modal-link"
+          id="tosModalTrigger"
+        >
+          Terms of Service
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ABS Data Sources Popup -->
+  <div class="modal-overlay hidden" id="absModal">
+    <div class="modal-box">
+      <button
+        type="button"
+        class="modal-close"
+        id="absModalClose"
+        aria-label="Close popup"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="modal-icon gradient-bg">
+        <span class="material-symbols-outlined">database</span>
+      </div>
+
+      <h2>ABS Data Sources</h2>
+
+      <p>
+        The numbers and benchmarks used across this website are based on
+        datasets from the Australian Bureau of Statistics, commonly known as
+        the ABS.
+      </p>
+
+      <p>
+        The ABS is Australia's national statistical agency. It collects and
+        publishes official data about population, housing, work, income, cost
+        of living, and other areas that help explain how people live across
+        Australia.
+      </p>
+
+      <p>
+        In Hermap, ABS data is used in context to support comparisons around
+        living costs, income, location, and financial readiness. These figures
+        are intended to help users better understand possible trade-offs, not
+        to provide personal financial advice.
+      </p>
+    </div>
+  </div>
+
+  <!-- Terms of Service Modal -->
+  <div
+    class="modal-overlay hidden"
+    id="tosModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tosModalTitle"
+  >
+    <div class="modal-box">
+      <button
+        class="modal-close"
+        id="tosModalClose"
+        aria-label="Close Terms of Service"
+      >
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="modal-icon gradient-bg">
+        <span class="material-symbols-outlined">gavel</span>
+      </div>
+
+      <h2 id="tosModalTitle">Terms of Service</h2>
+
+      <p>
+        <strong>Privacy &amp; Data Collection</strong><br />
+        This platform does not collect, store, or retain any personal
+        information you provide. All inputs including your age, location,
+        income, and living situation are used solely within your current
+        browser session to generate personalised insights. No data is
+        transmitted to or held on our servers at any point. Your privacy is
+        fully preserved.
+      </p>
+
+      <p>
+        <strong>Nature of Information &amp; Advice</strong><br />
+        All insights, comparisons, and recommendations presented on this
+        platform are derived entirely from publicly available data published
+        by the Australian Bureau of Statistics (ABS) and other reputable data
+        sources. The information provided is intended for general educational
+        and informational purposes only. It does not constitute financial,
+        legal, or professional advice. Users are encouraged to exercise their
+        own judgement and, where appropriate, seek guidance from a qualified
+        professional before making any financial decisions. This platform
+        serves as a tool to inform, not to prescribe or direct any course of
+        action.
+      </p>
+    </div>
+  </div>
+
+  <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+  <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+  <div class="tutorial-popover" id="tutorialPopover">
+    <div class="tutorial-step-indicator">
+      <span id="tutorialStepLabel">Step 1 of 5</span>
+    </div>
+    <h2 id="tutorialTitle"></h2>
+    <p id="tutorialDesc"></p>
+    <div class="tutorial-actions">
+      <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
+      <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{{ url_for('static', filename='js/debt_projection.js')}}"></script>
+  <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
+  
+</body>
+
+</html>

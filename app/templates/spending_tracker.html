@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Page configuration -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Track My Spending - Hermap</title>
+
+    <!-- Fonts used across the site -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Material Symbols used by the tutorial help button -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS for shared variables, navbar, footer, fonts, and helpers -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Top navigation -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <!-- Page heading -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1>
+            Track My
+            <span class="gradient-text">Spending</span>
+          </h1>
+          <p>
+            Enter your weekly expenses to understand your surplus, deficit, rent
+            pressure, and what this means for independent living.
+          </p>
+        </div>
+
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          Back to Dashboard
+        </a>
+      </div>
+
+      <div class="intro-note">
+        <strong>How this works:</strong>
+        enter the weekly costs you know. Categories left at $0 are ignored. Your
+        results will show your weekly position, rent pressure, and practical
+        next steps.
+      </div>
+
+      <!-- Income and rent values are prefilled from the profile session when available. -->
+      <section
+        class="income-banner split-banner"
+        aria-label="Income and rent inputs"
+      >
+        <div class="banner-half">
+          <div class="income-banner-label">Weekly take-home income</div>
+          <div class="income-banner-value" id="incomeBannerValue">$--</div>
+
+          <div class="income-edit">
+            <label for="incomeInput">Adjust income</label>
+            <input type="number" id="incomeInput" min="0" step="1" />
+          </div>
+        </div>
+
+        <div class="banner-half">
+          <div class="income-banner-label">Weekly rent</div>
+          <div class="income-banner-value" id="rentBannerValue">$--</div>
+
+          <div class="income-edit">
+            <label for="rentBannerInput">Adjust rent</label>
+            <input type="number" id="rentBannerInput" min="0" step="1" />
+          </div>
+        </div>
+      </section>
+
+      <!-- Essential expense categories -->
+      <section class="expenses-section" id="essentialExpensesSection">
+        <div class="expenses-section-title">
+          <span class="section-badge badge-essential">Essential</span>
+          Things you need to pay to live
+        </div>
+
+        <p class="expenses-section-subtitle">
+          These are costs that are harder to avoid, such as groceries,
+          transport, medical needs, and utilities.
+        </p>
+
+        <!-- Cards are inserted by spending_tracker.js -->
+        <div class="expense-cards" id="essentialCards"></div>
+
+        <div class="add-expense-row" id="addEssentialRow">
+          <select id="essentialDropdown" aria-label="Add an essential expense">
+            <option value="">+ Add an essential expense…</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Non-essential expense categories -->
+      <section class="expenses-section" id="nonEssentialExpensesSection">
+        <div class="expenses-section-title">
+          <span class="section-badge badge-nonessential">Non-essential</span>
+          Things you enjoy but could reduce
+        </div>
+
+        <p class="expenses-section-subtitle">
+          These are flexible costs, such as eating out, subscriptions, clothing,
+          BNPL repayments, and hobbies.
+        </p>
+
+        <!-- Cards are inserted by spending_tracker.js -->
+        <div class="expense-cards" id="nonessentialCards"></div>
+
+        <div class="add-expense-row" id="addNonEssentialRow">
+          <select
+            id="nonessentialDropdown"
+            aria-label="Add a non-essential expense"
+          >
+            <option value="">+ Add a non-essential expense…</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Live totals calculated from entered values -->
+      <section class="totals-bar" aria-label="Spending totals">
+        <div class="total-item">
+          <div class="total-label">Essentials</div>
+          <div class="total-value essential-color" id="totalEssential">$0</div>
+        </div>
+
+        <div class="total-item">
+          <div class="total-label">Non-essentials</div>
+          <div class="total-value nonessential-color" id="totalNonessential">
+            $0
+          </div>
+        </div>
+
+        <div class="total-item">
+          <div class="total-label">Total spending</div>
+          <div class="total-value total-color" id="totalAll">$0</div>
+        </div>
+
+        <div class="total-item">
+          <div class="total-label">Left over</div>
+          <div class="total-value" id="totalSurplus">$0</div>
+        </div>
+      </section>
+
+      <div class="cta-row">
+        <button class="primary-btn" id="checkPositionBtn" type="button">
+          Check my financial position
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer uses the global footer styling from style.css -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="absModal"
+            aria-label="Close popup"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="tosModal"
+            aria-label="Close popup"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Popup -->
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="absModalClose"
+          aria-label="Close popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2>ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia's national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          id="tosModalClose"
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tutorial -->
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
+      <span class="material-symbols-outlined">help</span>
+    </button>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 4</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- User profile data passed from Flask to spending_tracker.js -->
+    <script>
+      window.userProfileData = {
+        income: parseFloat("{{ profile_data.get('income', '0') }}") || 0,
+        rent: parseFloat("{{ profile_data.get('rent', '0') }}") || 0,
+        living: "{{ profile_data.get('living', '') }}",
+        locality: "{{ profile_data.get('locality', '') }}",
+      };
+    </script>
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: "essentialExpensesSection",
+          title: "Essential expenses",
+          desc: "Add things you have to pay for — rent, food, transport. These are your non-negotiable costs.",
+        },
+        {
+          targetId: "nonEssentialExpensesSection",
+          title: "Flexible spending",
+          desc: "Add things like subscriptions, eating out, or shopping. These are easier to adjust if you need to save.",
+        },
+        {
+          targetId: "totalSurplus",
+          title: "Your weekly position",
+          desc: "This updates live as you add expenses. Green means you have money left over. Red means you are spending more than you earn.",
+        },
+        {
+          targetId: "checkPositionBtn",
+          title: "See your full results",
+          desc: "When you are done, tap this to get a detailed breakdown of your spending, rent pressure, and next steps.",
+        },
+      ];
+    </script>
+
+    <!-- Spending tracker specific JavaScript -->
+    <script src="{{ url_for('static', filename='js/spending_tracker.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
+  </body>
+</html>

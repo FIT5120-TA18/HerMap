@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Budgeting – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="knowledge-detail-page budgeting-detail-page">
+      <div class="container">
+        <!-- Header -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Smart Budgeting</h1>
+            <p class="knowledge-detail-subtitle">
+              Learn how to understand your spending, separate needs from wants,
+              and create a budget that gives you more control over your money.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- Q1 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q1: Why does budgeting matter?</h2>
+
+          <div class="super-answer-grid single">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">
+                account_balance_wallet
+              </span>
+
+              <div>
+                <h3>Budgeting helps you see where your money is going</h3>
+                <p>
+                  When you are studying, working casually, or just starting to
+                  manage your own money, it can be easy to spend without
+                  realising how quickly small costs add up.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">favorite</span>
+
+              <div>
+                <h3>It is not about stopping yourself from enjoying life</h3>
+                <p>
+                  A good budget is not there to make you feel guilty. It helps
+                  you make room for what matters: rent, food, transport,
+                  savings, emergencies, and also fun things like going out,
+                  shopping, or travel.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q2 -->
+        <section
+          class="super-question-card super-card-highlight budgeting-abs-section"
+        >
+          <h2>Q2: What are essential expenses?</h2>
+
+          <div class="budgeting-abs-layout">
+            <!-- Left: ABS graph -->
+            <div class="budgeting-abs-content-card">
+              <div class="budgeting-chart-header">
+                <div>
+                  <h3>ABS household spending benchmark</h3>
+                  <p id="budgetingAbsMonth">Loading latest ABS benchmark...</p>
+                </div>
+
+                <div class="budgeting-chart-legend">
+                  <span>
+                    <i class="legend-swatch essential"></i>
+                    Essential
+                  </span>
+
+                  <span>
+                    <i class="legend-swatch non-essential"></i>
+                    Non-essential
+                  </span>
+                </div>
+              </div>
+
+              <div class="budgeting-chart-wrap">
+                <canvas id="essentialExpensesChart"></canvas>
+              </div>
+
+              <p class="budgeting-chart-caption">
+                Data obtained from ABS benchmark of household spending.
+                <a
+                  id="budgetingAbsSource"
+                  href="https://www.abs.gov.au/statistics/economy/finance/monthly-household-spending-indicator"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Source
+                </a>
+              </p>
+            </div>
+
+            <!-- Right: explanation blocks -->
+            <div class="budgeting-abs-copy">
+              <div class="super-check-item">
+                <span class="material-symbols-outlined">home</span>
+
+                <div>
+                  <h3>Essentials are the things you usually must pay for</h3>
+                  <p>
+                    Essential expenses are the costs that keep your everyday
+                    life running. These usually include food, health, transport,
+                    basic services, and other costs you rely on.
+                  </p>
+                </div>
+              </div>
+
+              <div class="super-check-item">
+                <span class="material-symbols-outlined">local_mall</span>
+
+                <div>
+                  <h3>Non-essential does not mean “bad”</h3>
+                  <p>
+                    Non-essential spending includes things that make life
+                    enjoyable, such as eating out, recreation, clothing,
+                    entertainment, and lifestyle purchases. These are not wrong
+                    — they are just more flexible.
+                  </p>
+                </div>
+              </div>
+
+              <div class="super-check-item">
+                <span class="material-symbols-outlined">psychology</span>
+
+                <div>
+                  <h3>The goal is awareness</h3>
+                  <p>
+                    Seeing the split helps you understand which costs are harder
+                    to avoid, and which ones you may be able to adjust when
+                    money feels tight.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q3 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q3: How do I separate needs from wants?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">check_circle</span>
+
+              <div>
+                <h3>Needs keep your life running</h3>
+                <p>
+                  Needs are expenses you cannot easily avoid, such as rent,
+                  groceries, transport to work or uni, medication, and basic
+                  bills.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">local_mall</span>
+
+              <div>
+                <h3>Wants make life enjoyable</h3>
+                <p>
+                  Wants are not bad. They include things like takeaway coffee,
+                  subscriptions, shopping, concerts, beauty appointments,
+                  holidays, and nights out.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">help</span>
+
+              <div>
+                <h3>Ask yourself simple questions</h3>
+                <p>
+                  Before spending, ask: Do I need this now? Will I still care
+                  about it next week? Is there a cheaper option? Am I buying
+                  this because I want it or because I feel pressured?
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">balance</span>
+
+              <div>
+                <h3>You do not need to cut everything</h3>
+                <p>
+                  The point is not to remove every fun purchase. The point is to
+                  choose what is worth it, so your money goes toward things that
+                  actually matter to you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q4 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q4: Ways to reduce your expenses</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">content_cut</span>
+
+              <div>
+                <h3>Review subscriptions</h3>
+                <p>
+                  Check streaming apps, music apps, cloud storage, gym
+                  memberships, and beauty or shopping subscriptions. Cancel the
+                  ones you do not use often.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">restaurant</span>
+
+              <div>
+                <h3>Plan food spending</h3>
+                <p>
+                  Food is essential, but takeaway and unplanned grocery shops
+                  can get expensive. Planning a few meals can help reduce waste
+                  and save money.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">directions_bus</span>
+
+              <div>
+                <h3>Check transport options</h3>
+                <p>
+                  Compare public transport, student concessions, car costs,
+                  parking, fuel, and rideshare use. Transport is often one area
+                  where small changes can save a lot.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">savings</span>
+
+              <div>
+                <h3>Set a weekly spending limit</h3>
+                <p>
+                  Give yourself a realistic weekly amount for flexible spending.
+                  This helps you enjoy your money without accidentally using
+                  rent, bills, or savings money.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q5 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q5: A simple budgeting method to start with</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">pie_chart</span>
+
+              <div>
+                <h3>The 50/30/20 rule</h3>
+                <p>
+                  A simple starting point is to divide your income into three
+                  groups: 50% for needs, 30% for wants, and 20% for savings or
+                  debt repayment.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">tune</span>
+
+              <div>
+                <h3>Adjust it to your reality</h3>
+                <p>
+                  If rent or living costs are high, your needs may take more
+                  than 50%. That does not mean you failed. It means your budget
+                  needs to match your actual situation.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">calendar_month</span>
+
+              <div>
+                <h3>Budget weekly, not just monthly</h3>
+                <p>
+                  If you are paid weekly, fortnightly, casually, or irregularly,
+                  a weekly budget may feel easier. It helps you avoid running
+                  out of money before the next pay.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">repeat</span>
+
+              <div>
+                <h3>Keep updating it</h3>
+                <p>
+                  A budget is not something you set once and forget. Update it
+                  when your rent, work hours, income, study costs, or goals
+                  change.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="knowledge-detail-cta-row">
+          <a
+            href="{{ url_for('main.spending_tracker') }}"
+            target="_self"
+            class="knowledge-cta-btn"
+          >
+            Help me Budget Better
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="absModal"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="tosModal"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2 id="absModalTitle">ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia's national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Existing shared JS for budgeting chart -->
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+
+    <!-- Shared footer modal JS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFooterModals();
+      });
+
+      function initializeFooterModals() {
+        const modalTriggers = document.querySelectorAll("[data-modal-target]");
+        const modalOverlays = document.querySelectorAll(".modal-overlay");
+
+        if (!modalTriggers.length || !modalOverlays.length) return;
+
+        function openModal(modal) {
+          if (!modal) return;
+
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modal) {
+          if (!modal) return;
+
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function closeAllModals() {
+          modalOverlays.forEach(function (modal) {
+            closeModal(modal);
+          });
+        }
+
+        modalTriggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const modalId = trigger.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            openModal(modal);
+          });
+        });
+
+        modalOverlays.forEach(function (modal) {
+          const closeButtons = modal.querySelectorAll(
+            "[data-modal-close], .modal-close",
+          );
+
+          closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+              closeModal(modal);
+            });
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

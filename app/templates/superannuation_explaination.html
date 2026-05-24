@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Superannuation Explained – HerMap</title>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Global CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
+          <a href="{{ url_for('main.dashboard') }}" class="nav-link">
+            Dashboard
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="knowledge-detail-page super-detail-page">
+      <div class="container">
+        <!-- Header -->
+        <div class="knowledge-detail-topbar">
+          <div>
+            <p class="knowledge-detail-kicker">Financial Literacy</p>
+            <h1 class="knowledge-detail-title">Superannuation Explained</h1>
+            <p class="knowledge-detail-subtitle">
+              Learn what superannuation is, why it matters, and how small
+              choices can affect your long-term financial future.
+            </p>
+          </div>
+
+          <a href="{{ url_for('main.knowledge_hub') }}" class="back-home-btn">
+            Back to Knowledge Hub
+          </a>
+        </div>
+
+        <!-- Q1 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q1: What super is and why does it matter?</h2>
+
+          <div class="super-answer-grid single">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">savings</span>
+
+              <div>
+                <h3>Super is money for future you</h3>
+                <p>
+                  Right now, your pay helps with everyday life: rent, food,
+                  transport, study, bills, and going out. But when you work,
+                  your employer also puts extra money into a super fund for
+                  later in life.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">trending_up</span>
+
+              <div>
+                <h3>It grows over time</h3>
+                <p>
+                  You usually cannot spend super now, but it is still your
+                  money. It is saved and invested so it can grow over time.
+                  Think of it as a financial safety fund for the older version
+                  of you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q2 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q2: How much is the employer contribution rate?</h2>
+
+          <div class="super-answer-grid single">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">percent</span>
+
+              <div>
+                <h3>The contribution rate is 12%</h3>
+                <p>
+                  If you are working in Australia, your employer usually has to
+                  pay extra money into your super fund. This is called the
+                  Superannuation Guarantee. From 1 July 2025, the employer
+                  contribution rate is 12% of your ordinary time earnings.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">payments</span>
+
+              <div>
+                <h3>Example: $500 earned means about $60 to super</h3>
+                <p>
+                  If you earn $500 in a week, your employer would generally need
+                  to pay about $60 into your super fund. That $60 does not go
+                  into your everyday bank account. It goes into your super
+                  account for future you.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q3 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q3: What can I do with my super?</h2>
+
+          <div class="super-answer-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">account_balance</span>
+
+              <div>
+                <h3>Choose a super fund</h3>
+                <p>
+                  Your super fund is where your super money is kept and
+                  invested. Different funds can have different fees, investment
+                  options, and performance. Choosing a good fund can help your
+                  money grow over time.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">monitoring</span>
+
+              <div>
+                <h3>Check how your super is invested</h3>
+                <p>
+                  Your super is usually invested in things like shares,
+                  property, and other assets. You may see options like
+                  conservative, balanced, or high growth.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">manage_search</span>
+
+              <div>
+                <h3>Keep track of your super</h3>
+                <p>
+                  If you work different casual or part-time jobs, you might end
+                  up with more than one super account. Multiple accounts can
+                  mean multiple sets of fees.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">add_card</span>
+
+              <div>
+                <h3>Add extra money if it suits you</h3>
+                <p>
+                  You can add extra money to your super from your own savings or
+                  through your pay. This is optional, but small contributions
+                  can grow over time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Q4 -->
+        <section class="super-question-card super-card-highlight">
+          <h2>Q4: Things to check regularly</h2>
+
+          <div class="super-check-grid">
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">fact_check</span>
+
+              <div>
+                <h3>Check your fund details</h3>
+                <p>
+                  Make sure your employer is paying into the correct super fund.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">payments</span>
+
+              <div>
+                <h3>Review fees</h3>
+                <p>
+                  High fees can reduce your balance over time, especially when
+                  you are young.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">trending_up</span>
+
+              <div>
+                <h3>Review performance</h3>
+                <p>
+                  Compare your fund’s long-term performance with similar funds.
+                </p>
+              </div>
+            </div>
+
+            <div class="super-check-item">
+              <span class="material-symbols-outlined">account_balance</span>
+
+              <div>
+                <h3>Combine accounts</h3>
+                <p>
+                  If you have multiple super accounts, you may be paying
+                  multiple sets of fees.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <div class="knowledge-detail-cta-row">
+          <a
+            href="https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families/super"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="knowledge-cta-btn"
+          >
+            Visit ATO official super guide
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="absModal"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="tosModal"
+          >
+            Terms of Service
+          </button>
+        </div>
+      </div>
+    </footer>
+
+    <!-- ABS Data Sources Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="absModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="absModalTitle"
+    >
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
+
+        <h2 id="absModalTitle">ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia's national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
+      </div>
+    </div>
+
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
+
+        <h2 id="tosModalTitle">Terms of Service</h2>
+
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
+
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics (ABS) and other reputable
+            data sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice. Users are encouraged to
+            exercise their own judgement and, where appropriate, seek guidance
+            from a qualified professional before making any financial decisions.
+            This platform serves as a tool to inform, not to prescribe or direct
+            any course of action.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Existing shared JS if used by other knowledge pages -->
+    <script src="{{ url_for('static', filename='js/knowledge_hub.js') }}"></script>
+
+    <!-- Shared footer modal JS -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeFooterModals();
+      });
+
+      function initializeFooterModals() {
+        const modalTriggers = document.querySelectorAll("[data-modal-target]");
+        const modalOverlays = document.querySelectorAll(".modal-overlay");
+
+        if (!modalTriggers.length || !modalOverlays.length) return;
+
+        function openModal(modal) {
+          if (!modal) return;
+
+          modal.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeModal(modal) {
+          if (!modal) return;
+
+          modal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+
+        function closeAllModals() {
+          modalOverlays.forEach(function (modal) {
+            closeModal(modal);
+          });
+        }
+
+        modalTriggers.forEach(function (trigger) {
+          trigger.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            const modalId = trigger.dataset.modalTarget;
+            const modal = document.getElementById(modalId);
+
+            openModal(modal);
+          });
+        });
+
+        modalOverlays.forEach(function (modal) {
+          const closeButtons = modal.querySelectorAll(
+            "[data-modal-close], .modal-close",
+          );
+
+          closeButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+              closeModal(modal);
+            });
+          });
+
+          modal.addEventListener("click", function (event) {
+            if (event.target === modal) {
+              closeModal(modal);
+            }
+          });
+        });
+
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape") {
+            closeAllModals();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

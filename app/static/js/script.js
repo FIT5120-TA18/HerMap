@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", function () {
   initProfileBuilder();
   initTypewriter();
   initIndustryInsightChart();
+  initAbsDataModal();
+  initTosModal();
 });
-
 
 /* Profile Builder */
 function initProfileBuilder() {
@@ -78,7 +79,11 @@ function initProfileBuilder() {
     if (hash && hash.startsWith("#step-")) {
       const stepNumber = parseInt(hash.replace("#step-", ""), 10);
 
-      if (!Number.isNaN(stepNumber) && stepNumber >= 1 && stepNumber <= steps.length) {
+      if (
+        !Number.isNaN(stepNumber) &&
+        stepNumber >= 1 &&
+        stepNumber <= steps.length
+      ) {
         return stepNumber - 1;
       }
     }
@@ -107,13 +112,15 @@ function initProfileBuilder() {
     if (errorText) errorText.textContent = "";
     if (warning) warning.classList.add("hidden");
 
-    step.querySelectorAll(".tile").forEach(tile => {
+    step.querySelectorAll(".tile").forEach((tile) => {
       tile.classList.remove("input-error");
     });
 
-    [ageInput, locationInput, rentInput, allowanceInput, incomeInput].forEach(input => {
-      if (input) input.classList.remove("input-error");
-    });
+    [ageInput, locationInput, rentInput, allowanceInput, incomeInput].forEach(
+      (input) => {
+        if (input) input.classList.remove("input-error");
+      },
+    );
 
     if (rentError) rentError.textContent = "";
     if (allowanceError) allowanceError.textContent = "";
@@ -147,9 +154,10 @@ function initProfileBuilder() {
 
     if (!hiddenInput || !hiddenInput.value.trim()) {
       if (warning) warning.classList.remove("hidden");
-      if (errorText) errorText.textContent = "Please complete this field to continue.";
+      if (errorText)
+        errorText.textContent = "Please complete this field to continue.";
 
-      tileGroup.querySelectorAll(".tile").forEach(tile => {
+      tileGroup.querySelectorAll(".tile").forEach((tile) => {
         tile.classList.add("input-error");
       });
 
@@ -180,7 +188,9 @@ function initProfileBuilder() {
     if (ageNumber < 18 || ageNumber > 22) {
       if (ageWarning) ageWarning.classList.remove("hidden");
       ageInput.classList.add("input-error");
-      showGlobalError("Sorry! Currently, we only cater to audience from the age 18-22.");
+      showGlobalError(
+        "Sorry! Currently, we only cater to audience from the age 18-22.",
+      );
       return false;
     }
 
@@ -191,7 +201,9 @@ function initProfileBuilder() {
   function validateLocation() {
     if (!localityInput.value.trim() || !postcodeInput.value.trim()) {
       locationInput.classList.add("input-error");
-      showGlobalError("Please select a locality or postcode from the suggestions.");
+      showGlobalError(
+        "Please select a locality or postcode from the suggestions.",
+      );
       return false;
     }
 
@@ -216,7 +228,8 @@ function initProfileBuilder() {
 
     if (!/^\d+$/.test(rawRent)) {
       rentInput.classList.add("input-error");
-      if (rentError) rentError.textContent = "Please enter a valid weekly rent amount.";
+      if (rentError)
+        rentError.textContent = "Please enter a valid weekly rent amount.";
       showGlobalError("Please enter a valid weekly rent amount.");
       return false;
     }
@@ -245,14 +258,16 @@ function initProfileBuilder() {
 
     if (!rawAllowance) {
       allowanceInput.classList.add("input-error");
-      if (allowanceError) allowanceError.textContent = "Please enter your allowance amount.";
+      if (allowanceError)
+        allowanceError.textContent = "Please enter your allowance amount.";
       showGlobalError("Please enter your allowance amount.");
       return false;
     }
 
     if (!/^\d+$/.test(rawAllowance)) {
       allowanceInput.classList.add("input-error");
-      if (allowanceError) allowanceError.textContent = "Please enter numbers only.";
+      if (allowanceError)
+        allowanceError.textContent = "Please enter numbers only.";
       showGlobalError("Please enter a valid allowance amount.");
       return false;
     }
@@ -266,7 +281,8 @@ function initProfileBuilder() {
 
     if (!rawIncome) {
       if (incomeWarning) incomeWarning.classList.remove("hidden");
-      if (incomeError) incomeError.textContent = "Please enter your weekly income.";
+      if (incomeError)
+        incomeError.textContent = "Please enter your weekly income.";
 
       incomeInput.classList.add("input-error");
       showGlobalError("Please complete this field to continue.");
@@ -275,7 +291,9 @@ function initProfileBuilder() {
 
     if (!/^\d+$/.test(rawIncome)) {
       if (incomeWarning) incomeWarning.classList.remove("hidden");
-      if (incomeError) incomeError.textContent = "Please enter a valid weekly income amount in dollars.";
+      if (incomeError)
+        incomeError.textContent =
+          "Please enter a valid weekly income amount in dollars.";
 
       incomeInput.classList.add("input-error");
       showGlobalError("Please enter a valid weekly income amount in dollars.");
@@ -334,14 +352,14 @@ function initProfileBuilder() {
       // const basePath = window.location.pathname.startsWith("/underdevelopment")
       //   ? "/underdevelopment"
       //   : "";
-      
+
       // const response = await fetch(`${basePath}/api/industries`);
       const response = await fetch(`/api/industries`);
       const industries = await response.json();
 
       industrySelect.innerHTML = `<option value="">Select an industry</option>`;
 
-      industries.forEach(industry => {
+      industries.forEach((industry) => {
         const option = document.createElement("option");
 
         option.value = industry;
@@ -362,16 +380,16 @@ function initProfileBuilder() {
     if (!studyFieldList) return;
 
     try {
-    //   const basePath = window.location.pathname.startsWith("/underdevelopment")
-    //     ? "/underdevelopment"
-    //     : "";
-      
+      //   const basePath = window.location.pathname.startsWith("/underdevelopment")
+      //     ? "/underdevelopment"
+      //     : "";
+
       const response = await fetch(`/api/industries`);
       const fields = await response.json();
 
       studyFieldList.innerHTML = "";
 
-      fields.forEach(field => {
+      fields.forEach((field) => {
         const button = document.createElement("button");
 
         button.type = "button";
@@ -383,9 +401,11 @@ function initProfileBuilder() {
         }
 
         button.addEventListener("click", function () {
-          studyFieldList.querySelectorAll(".industry-option").forEach(option => {
-            option.classList.remove("selected");
-          });
+          studyFieldList
+            .querySelectorAll(".industry-option")
+            .forEach((option) => {
+              option.classList.remove("selected");
+            });
 
           button.classList.add("selected");
           studyFieldInput.value = field;
@@ -417,7 +437,10 @@ function initProfileBuilder() {
       incomeInput.value = incomeHidden.value;
     }
 
-    if (livingInput.value === "Shared rental" || livingInput.value === "Living alone") {
+    if (
+      livingInput.value === "Shared rental" ||
+      livingInput.value === "Living alone"
+    ) {
       rentBox.classList.remove("hidden");
     }
 
@@ -426,7 +449,10 @@ function initProfileBuilder() {
       industryBox.classList.add("hidden");
     }
 
-    if (workInput.value === "Casual or part-time" || workInput.value === "Full-time") {
+    if (
+      workInput.value === "Casual or part-time" ||
+      workInput.value === "Full-time"
+    ) {
       allowanceBox.classList.add("hidden");
       industryBox.classList.remove("hidden");
       loadIndustries();
@@ -438,18 +464,18 @@ function initProfileBuilder() {
     }
   }
 
-  document.querySelectorAll(".tile-group").forEach(group => {
+  document.querySelectorAll(".tile-group").forEach((group) => {
     const fieldName = group.dataset.name;
     const hiddenInput = document.getElementById(fieldName + "Input");
     const tiles = group.querySelectorAll(".tile");
 
-    tiles.forEach(tile => {
+    tiles.forEach((tile) => {
       if (hiddenInput && tile.textContent.trim() === hiddenInput.value.trim()) {
         tile.classList.add("selected");
       }
 
       tile.addEventListener("click", function () {
-        tiles.forEach(item => {
+        tiles.forEach((item) => {
           item.classList.remove("selected", "input-error");
         });
 
@@ -477,7 +503,10 @@ function initProfileBuilder() {
     // }
 
     if (fieldName === "living") {
-      if (selectedValue === "Shared rental" || selectedValue === "Living alone") {
+      if (
+        selectedValue === "Shared rental" ||
+        selectedValue === "Living alone"
+      ) {
         rentBox.classList.remove("hidden");
       } else {
         rentBox.classList.add("hidden");
@@ -575,7 +604,7 @@ function initProfileBuilder() {
       try {
         const response = await fetch(
           // `/api/locations?state=${encodeURIComponent(selectedState)}&q=${encodeURIComponent(query)}`
-          `/api/locations?q=${encodeURIComponent(query)}`
+          `/api/locations?q=${encodeURIComponent(query)}`,
           // `${window.location.pathname.startsWith("/underdevelopment") ? "/underdevelopment" : ""}/api/locations?q=${encodeURIComponent(query)}`
         );
 
@@ -590,7 +619,9 @@ function initProfileBuilder() {
           return;
         }
 
-        locationSuggestions.innerHTML = locations.map(item => `
+        locationSuggestions.innerHTML = locations
+          .map(
+            (item) => `
           <button
             type="button"
             class="location-suggestion-item"
@@ -599,7 +630,9 @@ function initProfileBuilder() {
           >
             ${item.locality} (${item.postcode})
           </button>
-        `).join("");
+        `,
+          )
+          .join("");
       } catch (error) {
         locationSuggestions.innerHTML = "";
         console.error("Location fetch error:", error);
@@ -659,7 +692,6 @@ function initProfileBuilder() {
   updateStep();
 }
 
-
 /* Typing effect */
 function initTypewriter() {
   const textElement = document.getElementById("typewriter-text");
@@ -681,7 +713,6 @@ function initTypewriter() {
   typeNextCharacter();
 }
 
-
 /* Dashboard.html - chart */
 function initIndustryInsightChart() {
   const canvas = document.getElementById("industryInsightChart");
@@ -694,12 +725,12 @@ function initIndustryInsightChart() {
 
   // fetch(`${BASE_PATH}/api/industry-chart`) for dev only
   fetch(`/api/industry-chart`)
-  .then(response => response.json())
-    .then(response => response.json())
-    .then(data => {
-      const labels = data.map(item => item.industry);
-      const data2021 = data.map(item => item.year_2021_22);
-      const data2022 = data.map(item => item.year_2022_23);
+    .then((response) => response.json())
+    .then((response) => response.json())
+    .then((data) => {
+      const labels = data.map((item) => item.industry);
+      const data2021 = data.map((item) => item.year_2021_22);
+      const data2022 = data.map((item) => item.year_2022_23);
 
       new Chart(canvas.getContext("2d"), {
         type: "bar",
@@ -710,15 +741,15 @@ function initIndustryInsightChart() {
               data: data2021,
               backgroundColor: "rgba(232, 84, 106, 0.7)",
               borderRadius: 10,
-              barThickness: 18
+              barThickness: 18,
             },
             {
               data: data2022,
               backgroundColor: "rgba(155, 114, 207, 0.7)",
               borderRadius: 10,
-              barThickness: 18
-            }
-          ]
+              barThickness: 18,
+            },
+          ],
         },
         options: {
           responsive: true,
@@ -726,49 +757,116 @@ function initIndustryInsightChart() {
 
           animation: {
             duration: 2000,
-            easing: "easeOutQuart"
+            easing: "easeOutQuart",
           },
 
           animations: {
             y: {
               from: 0,
               duration: 2000,
-              easing: "easeOutQuart"
-            }
+              easing: "easeOutQuart",
+            },
           },
 
           plugins: {
             legend: {
-              display: false
+              display: false,
             },
             tooltip: {
-              enabled: false
-            }
+              enabled: false,
+            },
           },
 
           scales: {
             x: {
               ticks: {
-                display: false
+                display: false,
               },
               grid: {
-                display: false
-              }
+                display: false,
+              },
             },
             y: {
               ticks: {
-                display: false
+                display: false,
               },
               grid: {
-                display: false
+                display: false,
               },
-              beginAtZero: true
-            }
-          }
-        }
+              beginAtZero: true,
+            },
+          },
+        },
       });
     })
-    .catch(error => {
+    .catch((error) => {
       console.error("Chart fetch error:", error);
     });
+}
+
+/* ABS Data Sources Popup */
+function initAbsDataModal() {
+  const absDataBtn = document.getElementById("absDataBtn");
+  const absModal = document.getElementById("absModal");
+  const absModalClose = document.getElementById("absModalClose");
+
+  if (!absDataBtn || !absModal || !absModalClose) return;
+
+  function openModal() {
+    absModal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    absModal.classList.add("hidden");
+    document.body.style.overflow = "";
+  }
+
+  absDataBtn.addEventListener("click", openModal);
+
+  absModalClose.addEventListener("click", closeModal);
+
+  absModal.addEventListener("click", function (event) {
+    if (event.target === absModal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !absModal.classList.contains("hidden")) {
+      closeModal();
+    }
+  });
+}
+
+function initTosModal() {
+  const trigger = document.getElementById("tosModalTrigger");
+  const modal = document.getElementById("tosModal");
+  const close = document.getElementById("tosModalClose");
+
+  if (!trigger || !modal || !close) return;
+
+  trigger.addEventListener("click", function () {
+    modal.classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+  });
+
+  close.addEventListener("click", function () {
+    modal.classList.add("hidden");
+    document.body.style.overflow = "";
+  });
+
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+  });
 }

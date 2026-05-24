@@ -1,167 +1,219 @@
-<!DOCTYPE html>
-
-<!-- Font -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<!doctype html>
 <html lang="en">
+  <head>
+    <!-- Page config -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- Config for page -->
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Profile Builder</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+    <title>Profile Builder</title>
 
-<body>
-  <main class="page-shell">
-    <section class="wizard-card fade-in-up">
-      <div class="card-top-bar">
-        <a href="{{ url_for('main.landing') }}" class="back-home-btn">Back to Homepage</a>
-      </div>
-      <div class="progress-header">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <p class="question-counter" id="questionCounter">Question 1 of 6</p>
-      </div>
+    <!-- Fonts used across the website -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
 
-      <!-- Form init, POST method to store data in session state -->
-      <form id="profileForm" method="POST" novalidate>
-        <input type="hidden" name="age" id="ageInput" value="{{ profile_data.get('age', '') }}">
-        <!-- <input type="hidden" name="state" id="stateInput" value="{{ profile_data.get('state', '') }}"> -->
-        <input type="hidden" name="locality" id="localityInput" value="{{ profile_data.get('locality', '') }}">
-        <input type="hidden" name="postcode" id="postcodeInput" value="{{ profile_data.get('postcode', '') }}">
-        <input type="hidden" name="living" id="livingInput" value="{{ profile_data.get('living', '') }}">
-        <input type="hidden" name="rent" id="rentHidden" value="{{ profile_data.get('rent', '') }}">
-        <input type="hidden" name="work" id="workInput" value="{{ profile_data.get('work', '') }}">
-        <input type="hidden" name="industry" id="industryInput" value="{{ profile_data.get('industry', '') }}">
-        <input type="hidden" name="income" id="incomeHidden" value="{{ profile_data.get('income', '') }}">
+    <!-- Global CSS contains shared variables, fonts, colours, and helper classes -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
 
-        <input type="hidden" name="study" id="studyInput" value="{{ profile_data.get('study', '') }}">
-        <input type="hidden" name="study_field" id="studyFieldInput" value="{{ profile_data.get('study_field', '') }}">
-
-        <div class="question-step active" data-step="1">
-          <h1 class="form-title">First, let's start with <span class="gradient-text">your <br>age</span>.</h1>
-
-          <!-- Age Input -->
-          <div class="field-shell">
-            <input
-              type="text"
-              id="age"
-              class="form-input"
-              placeholder="Enter your age here"
-              inputmode="numeric"
-              autocomplete="off"
-              value="{{ profile_data.get('age', '') }}"
-            />
-          </div>
-          <p class="field-error"></p>
+  <body class="profile-builder-page">
+    <main class="page-shell">
+      <section class="wizard-card fade-in-up">
+        <!-- Top navigation inside the card -->
+        <div class="card-top-bar">
+          <a href="{{ url_for('main.landing') }}" class="back-home-btn">
+            Back to Homepage
+          </a>
         </div>
 
-        <!-- State Input
-        <div class="question-step" data-step="2">
-          <h1 class="form-title">Which state do you currently reside in?</h1>
-          <p class="form-subtitle">Select your location.</p>
-
-          <div class="field-shell">
-            <div class="tile-group" data-name="state">
-              <button type="button" class="tile">NSW</button>
-              <button type="button" class="tile">VIC</button>
-              <button type="button" class="tile">QLD</button>
-              <button type="button" class="tile">WA</button>
-              <button type="button" class="tile">SA</button>
-              <button type="button" class="tile">TAS</button>
-              <button type="button" class="tile">ACT</button>
-              <button type="button" class="tile">NT</button>
-            </div>
-            <span class="field-warning hidden">⚠</span>
-
-            <div id="locationSearchBox" class="location-search-box hidden">
-              <label class="location-label" for="locationInput">
-                Search your locality or postcode
-              </label>
-
-              <input
-                type="text"
-                id="locationInput"
-                class="form-input"
-                placeholder="Start typing locality or postcode"
-                autocomplete="off"
-                value="{% if profile_data.get('locality') and profile_data.get('postcode') %}{{ profile_data.get('locality') }} ({{ profile_data.get('postcode') }}){% endif %}"
-              />
-
-              <div id="locationSuggestions" class="location-suggestions"></div>
-            </div>
+        <!-- Progress tracker -->
+        <div class="progress-header">
+          <div class="progress-bar" aria-hidden="true">
+            <div class="progress-fill" id="progressFill"></div>
           </div>
-          <p class="field-error"></p>
-        </div> -->
 
+          <p class="question-counter" id="questionCounter">Question 1 of 6</p>
+        </div>
 
-        <!-- Location Input -->
-<div class="question-step" data-step="2">
-  <h1 class="form-title">Where do you currently live?</h1>
-  <p class="form-subtitle">Enter your suburb or postcode.</p>
+        <!--
+          Profile form:
+          The visible fields are handled step-by-step using JavaScript.
+          Hidden inputs are submitted to Flask and stored in the session.
+        -->
+        <form id="profileForm" method="POST" novalidate>
+          <input
+            type="hidden"
+            name="age"
+            id="ageInput"
+            value="{{ profile_data.get('age', '') }}"
+          />
 
-  <div class="field-shell">
-    <div id="locationSearchBox" class="location-search-box">
-      <label class="location-label" for="locationInput">
-        Suburb or Postcode
-      </label>
+          <input
+            type="hidden"
+            name="locality"
+            id="localityInput"
+            value="{{ profile_data.get('locality', '') }}"
+          />
 
-      <input
-        type="text"
-        id="locationInput"
-        class="form-input"
-        placeholder="Start typing locality or postcode"
-        autocomplete="off"
-        value="{% if profile_data.get('locality') and profile_data.get('postcode') %}{{ profile_data.get('locality') }} ({{ profile_data.get('postcode') }}){% endif %}"
-      />
+          <input
+            type="hidden"
+            name="postcode"
+            id="postcodeInput"
+            value="{{ profile_data.get('postcode', '') }}"
+          />
 
-      <div id="locationSuggestions" class="location-suggestions"></div>
-    </div>
-  </div>
-  <p class="field-error"></p>
-</div>
+          <input
+            type="hidden"
+            name="living"
+            id="livingInput"
+            value="{{ profile_data.get('living', '') }}"
+          />
 
-        <!-- Living Situation Input -->
-        <div class="question-step" data-step="3">
-          <h1 class="form-title">Living arrangement</h1>
-          <p class="form-subtitle">Select your current situation.</p>
+          <input
+            type="hidden"
+            name="rent"
+            id="rentHidden"
+            value="{{ profile_data.get('rent', '') }}"
+          />
 
-          <div class="field-shell">
-            <div class="tile-group" data-name="living">
-              <button type="button" class="tile">At home with family</button>
-              <button type="button" class="tile">Shared rental</button>
-              <button type="button" class="tile">Living alone</button>
-            </div>
-            <span class="field-warning hidden">⚠</span>
+          <input
+            type="hidden"
+            name="work"
+            id="workInput"
+            value="{{ profile_data.get('work', '') }}"
+          />
 
-            <div id="rentBox" class="rent-box hidden">
-              <label class="location-label" for="rentInput">
-                Weekly rent amount
-              </label>
+          <input
+            type="hidden"
+            name="industry"
+            id="industryInput"
+            value="{{ profile_data.get('industry', '') }}"
+          />
 
+          <input
+            type="hidden"
+            name="income"
+            id="incomeHidden"
+            value="{{ profile_data.get('income', '') }}"
+          />
+
+          <input
+            type="hidden"
+            name="study"
+            id="studyInput"
+            value="{{ profile_data.get('study', '') }}"
+          />
+
+          <input
+            type="hidden"
+            name="study_field"
+            id="studyFieldInput"
+            value="{{ profile_data.get('study_field', '') }}"
+          />
+
+          <!-- Step 1: Age -->
+          <div class="question-step active" data-step="1">
+            <h1 class="form-title">
+              First, let's start with
+              <span class="gradient-text">your <br />age</span>.
+            </h1>
+
+            <div class="field-shell">
               <input
                 type="text"
-                id="rentInput"
+                id="age"
                 class="form-input"
-                placeholder="Enter weekly rent in AUD"
+                placeholder="Enter your age here"
                 inputmode="numeric"
                 autocomplete="off"
-                value="{{ profile_data.get('rent', '') }}"
+                value="{{ profile_data.get('age', '') }}"
               />
 
-              <p id="rentError" class="field-error"></p>
+              <span class="field-warning hidden" id="ageWarning">⚠</span>
             </div>
-          </div>
-          <p class="field-error"></p>
-          
-        </div>
 
-        <!-- Work Input -->
-        <div class="question-step" data-step="4">
-          <h1 class="form-title">What is your current work status?</h1>
-          <p class="form-subtitle">Select your work situation.</p>
+            <p class="field-error"></p>
+          </div>
+
+          <!-- Step 2: Location -->
+          <div class="question-step" data-step="2">
+            <h1 class="form-title">Where do you currently live?</h1>
+
+            <p class="form-subtitle">Enter your suburb or postcode.</p>
+
+            <div class="field-shell">
+              <div id="locationSearchBox" class="input-group">
+                <label class="input-label" for="locationInput">
+                  Suburb or Postcode
+                </label>
+
+                <input
+                  type="text"
+                  id="locationInput"
+                  class="form-input"
+                  placeholder="Start typing locality or postcode"
+                  autocomplete="off"
+                  value="{% if profile_data.get('locality') and profile_data.get('postcode') %}{{ profile_data.get('locality') }} ({{ profile_data.get('postcode') }}){% endif %}"
+                />
+
+                <!-- Suggestions are loaded from /api/locations by profile_builder.js -->
+                <div
+                  id="locationSuggestions"
+                  class="location-suggestions"
+                ></div>
+              </div>
+            </div>
+
+            <p class="field-error"></p>
+          </div>
+
+          <!-- Step 3: Living arrangement -->
+          <div class="question-step" data-step="3">
+            <h1 class="form-title">Living arrangement</h1>
+
+            <p class="form-subtitle">Select your current situation.</p>
+
+            <div class="field-shell">
+              <div class="tile-group" data-name="living">
+                <button type="button" class="tile">At home with family</button>
+                <button type="button" class="tile">Shared rental</button>
+                <button type="button" class="tile">Living alone</button>
+              </div>
+
+              <span class="field-warning hidden">⚠</span>
+
+              <!-- Rent is only required for shared rental or living alone -->
+              <div id="rentBox" class="input-group hidden">
+                <label class="input-label" for="rentInput">
+                  Weekly rent amount
+                </label>
+
+                <input
+                  type="text"
+                  id="rentInput"
+                  class="form-input"
+                  placeholder="Enter weekly rent in AUD"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  value="{{ profile_data.get('rent', '') }}"
+                />
+
+                <p id="rentError" class="field-error"></p>
+              </div>
+            </div>
+
+            <p class="field-error"></p>
+          </div>
+
+          <!-- Step 4: Work status -->
+          <div class="question-step" data-step="4">
+            <h1 class="form-title">What is your current work status?</h1>
+
+            <p class="form-subtitle">Select your work situation.</p>
 
             <div class="field-shell">
               <div class="tile-group" data-name="work">
@@ -169,10 +221,12 @@
                 <button type="button" class="tile">Casual or part-time</button>
                 <button type="button" class="tile">Full-time</button>
               </div>
+
               <span class="field-warning hidden">⚠</span>
 
-              <div id="allowanceBox" class="allowance-box hidden">
-                <label class="location-label" for="allowanceInput">
+              <!-- Allowance is shown only when the user selects Not working -->
+              <div id="allowanceBox" class="input-group hidden">
+                <label class="input-label" for="allowanceInput">
                   How much allowance do you get?
                 </label>
 
@@ -192,96 +246,143 @@
                   </select>
                 </div>
 
+                <p id="allowanceError" class="field-error"></p>
+
                 <p id="weeklyEstimate" class="weekly-estimate hidden">
                   Est. <span id="weeklyEstimateValue">0</span> AUD weekly
                   <span
                     class="info-icon"
                     title="Weekly Income = Monthly Income times 12, divided by 52"
-                  >ⓘ</span>
-                  <a href="https://www.omnicalculator.com/finance/weekly-pay" class="calc-source-link" target="_blank">Source</a>
+                  >
+                    ⓘ
+                  </span>
+
+                  <a
+                    href="https://www.omnicalculator.com/finance/weekly-pay"
+                    class="calc-source-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source
+                  </a>
                 </p>
               </div>
 
-                              <div id="industryBox" class="industry-box hidden">
+              <!-- Industry is shown only when the user is working -->
+              <div id="industryBox" class="industry-box hidden">
+                <label class="input-label" for="industrySelect">
+                  Select your industry
+                </label>
 
-                    <select id="industrySelect" class="industry-select">
-                      <option value="">Select an industry</option>
-                    </select>
+                <select id="industrySelect" class="industry-select">
+                  <option value="">Select an industry</option>
+                </select>
 
-                  <p class="industry-source">
-                    These industries are obtained from ABS.
-                    <a href="#" target="_blank">Source</a>
-                  </p>
-                </div>
-
+                <p class="industry-source">
+                  These industries are obtained from ABS.
+                  <a
+                    href="https://www.abs.gov.au/statistics/labour/earnings-and-working-conditions/average-weekly-earnings-australia/nov-2025#data-downloads"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source
+                  </a>
+                </p>
+              </div>
             </div>
+
             <p class="field-error"></p>
           </div>
 
-        <!-- Income Input -->
-        <div class="question-step" data-step="5">
-          <h1 class="form-title">Weekly income (in AUD)</h1>
-          <p class="form-subtitle">Enter amount after tax</p>
+          <!-- Step 5: Weekly income -->
+          <div class="question-step" data-step="5">
+            <h1 class="form-title">Weekly income in AUD</h1>
 
-          <div class="field-shell">
-            <input
-              type="text"
-              id="income"
-              class="form-input"
-              placeholder="Enter the amount here, numbers only"
-              inputmode="numeric"
-              autocomplete="off"
-              value="{{ profile_data.get('income', '') }}"
-            />
-            <span class="field-warning hidden" id="incomeWarning">⚠</span>
-          </div>
-          <p id="incomeError" class="field-error"></p>
-        </div>
+            <p class="form-subtitle">Enter amount after tax.</p>
 
-        <!-- Study Situation Input -->
-        <div class="question-step" data-step="6">
-          <h1 class="form-title">Study status</h1>
-          <p class="form-subtitle">Are you currently studying?</p>
+            <div class="field-shell">
+              <input
+                type="text"
+                id="income"
+                class="form-input"
+                placeholder="Enter the amount here, numbers only"
+                inputmode="numeric"
+                autocomplete="off"
+                value="{{ profile_data.get('income', '') }}"
+              />
 
-          <div class="field-shell">
-            <div class="tile-group" data-name="study">
-              <button type="button" class="tile">Yes</button>
-              <button type="button" class="tile">No</button>
+              <span class="field-warning hidden" id="incomeWarning">⚠</span>
             </div>
-            <span class="field-warning hidden">⚠</span>
 
-            <div id="studyFieldBox" class="industry-box hidden">
-              <label class="location-label" id="studyFieldLabel">
-                Select your field of study
-              </label>
+            <p id="incomeError" class="field-error"></p>
+          </div>
 
-              <div id="studyFieldList" class="industry-list">
-                <!-- fields will load here as buttons -->
+          <!-- Step 6: Study status -->
+          <div class="question-step" data-step="6">
+            <h1 class="form-title">Study status</h1>
+
+            <p class="form-subtitle">Are you currently studying?</p>
+
+            <div class="field-shell">
+              <div class="tile-group" data-name="study">
+                <button type="button" class="tile">Yes</button>
+                <button type="button" class="tile">No</button>
               </div>
 
-              <p class="industry-source">
-                These fields are obtained from ABS.
-                <a href="#" target="_blank">Source</a>
-              </p>
+              <span class="field-warning hidden">⚠</span>
+
+              <!-- Study field options are loaded from the industries API -->
+              <div id="studyFieldBox" class="industry-box hidden">
+                <label class="input-label" id="studyFieldLabel">
+                  Select your field of study
+                </label>
+
+                <div id="studyFieldList" class="industry-list">
+                  <!-- Field buttons are inserted here by profile_builder.js -->
+                </div>
+
+                <p class="industry-source">
+                  These fields are obtained from ABS.
+                  <a
+                    href="https://www.abs.gov.au/statistics/labour/earnings-and-working-conditions/average-weekly-earnings-australia/nov-2025#data-downloads"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source
+                  </a>
+                </p>
+              </div>
             </div>
+
+            <p class="field-error"></p>
           </div>
-          <p class="field-error"></p>
 
-        </div>
-
+          <!-- Shared form-level error box -->
           <div id="formErrorBox" class="form-error-box hidden">
-            <span id="formErrorText">Please complete all fields to continue.</span>
+            <span id="formErrorText"
+              >Please complete all fields to continue.</span
+            >
           </div>
 
+          <!-- Step controls -->
           <div class="form-actions">
-            <button type="button" class="secondary-button" id="backBtn">Back</button>
-            <button type="button" class="cta-button primary-button" id="nextBtn">Next</button>
+            <button type="button" class="secondary-button" id="backBtn">
+              Back
+            </button>
+
+            <button
+              type="button"
+              class="cta-button primary-button"
+              id="nextBtn"
+            >
+              Next
+            </button>
           </div>
         </form>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
 
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-</body>
+    <!-- Profile builder specific JavaScript -->
+    <script src="{{ url_for('static', filename='js/profile_builder.js') }}"></script>
+  </body>
 </html>

@@ -1,297 +1,404 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <!-- Page setup -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-  <!-- Basic Page Setup -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Income Comparison - Hermap</title>
+    <title>Income Comparison - Hermap</title>
 
-  <!-- Main CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Fonts used across Hermap -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Leaflet Map CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
 
-<body>
+    <!-- Global styles for shared theme variables and base layout -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <div class="container nav-inner">
-      <div class="nav-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-        </a>
-      </div>
+    <!-- Leaflet map CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+  </head>
 
-      <div class="nav-links">
-        <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Main Page Content -->
-  <main class="income-comparison-container">
-    <div class="income-comparison-content">
-
-      <!-- Page Header -->
-      <div class="income-header">
-        <div class="income-header-left">
-          <h1>See How Your <span class="gradient-text">Peers are Doing</span></h1>
-          <p>Explore young female income patterns across Victorian SA3 areas</p>
+  <body class="income-page">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <div class="container nav-inner">
+        <div class="nav-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
         </div>
 
-        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">Back to Dashboard</a>
-      </div>
-
-      <!-- User Profile Card -->
-      <div class="income-grid">
-        <div class="profile-summary">
-          <p class="profile-summary-title">Your Profile</p>
-
-          <div class="profile-summary-grid">
-            <div class="profile-item">
-              <div class="profile-item-label">Age</div>
-              <p class="profile-item-value" id="profileAge">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Location</div>
-              <p class="profile-item-value" id="profileLocation">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Work Status</div>
-              <p class="profile-item-value" id="profileWorkStatus">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Industry</div>
-              <p class="profile-item-value" id="profileIndustry">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Your Weekly Income</div>
-              <p class="profile-item-value" id="profileIncome">--</p>
-            </div>
-
-            <div class="profile-item">
-              <div class="profile-item-label">Living Arrangement</div>
-              <p class="profile-item-value" id="profileLiving">--</p>
-            </div>
-          </div>
+        <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
         </div>
       </div>
+    </nav>
 
-      <!-- Income Map Layout -->
-      <div class="rent-comparison-grid">
+    <!-- Main Page Content -->
+    <main class="income-comparison-container">
+      <div class="income-comparison-content">
+        <!-- Page Header -->
+        <header class="page-header">
+          <div class="page-header-left">
+            <h1>
+              See average income<span class="gradient-text"> in my area</span>
+            </h1>
 
-        <!-- Left Sidebar -->
-        <aside class="rent-sidebar">
-
-          <!-- SA3 Selection Card -->
-          <div class="rent-filter-card">
-            <p class="filter-title">Select SA3 Area</p>
-
-            <div class="info-message">
-              Search an SA3 area to explore young female annual income across Victoria.
-            </div>
-
-            <div class="budget-input-group">
-
-              <!-- Saved User Location -->
-              <label for="profileLocationInput" style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                Your selected location
-              </label>
-
-              <div class="profile-location-display" id="profileLocationInput">
-                {% if profile_data.get('locality') and profile_data.get('postcode') %}
-                  {{ profile_data.get('locality') }} ({{ profile_data.get('postcode') }})
-                {% else %}
-                  No saved location
-                {% endif %}
-              </div>
-
-              <!-- SA3 Search Input -->
-              <label for="sa3Input" style="font-size: 12px; color: var(--text-muted); font-weight: 600;">
-                Statistical Area Level 3 (SA3)
-              </label>
-
-              <div class="lga-input-row">
-                <input
-                  type="text"
-                  id="sa3Input"
-                  class="budget-input"
-                  placeholder="Search SA3 area..."
-                  autocomplete="off"
-                >
-
-                <button type="button" id="sa3DropdownBtn" class="lga-dropdown-btn">
-                  ▼
-                </button>
-              </div>
-
-              <!-- Hidden Selected SA3 Values -->
-              <input type="hidden" id="selectedSa3Input">
-              <input type="hidden" id="selectedSa3CodeInput">
-
-              <!-- SA3 Suggestions Dropdown -->
-              <div id="sa3Suggestions" class="location-suggestions"></div>
-            </div>
-          </div>
-
-          <!-- How to Use Card -->
-          <div class="rent-filter-card">
-            <p class="filter-title">ℹ️ How to Use</p>
-
-            <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;">
-              1. View Victorian SA3 areas on the map<br>
-              2. Areas are coloured by comparing SA3 income with your estimated annual income<br>
-              3. Hover over an area to see its SA3 name and income<br>
-              4. Click an SA3 area to view its income details and trend
+            <p>
+              Explore young female income patterns across Victorian suburb
+              areas.
             </p>
           </div>
 
-        </aside>
+          <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+            Back to Dashboard
+          </a>
 
-        <!-- Right Main Content -->
-        <div class="rent-main">
+        </header>
 
-          <!-- SA3 Income Map Card -->
-          <div class="map-card">
-            <h2 style="margin: 0 0 16px 0; font-size: 18px; font-weight: 600;">
-              Victorian SA3 Areas - Young Female Annual Income
-            </h2>
+        <!-- Main income comparison layout -->
+        <section
+          class="income-layout"
+          aria-label="Income comparison map and details"
+        >
+          <!-- Left sidebar -->
+          <aside class="income-sidebar">
+            <div class="filter-card">
+              <p class="filter-card-title">Select Suburb Area</p>
 
-            <div id="incomeMapContainer" class="map-placeholder">
-              <span>Loading Victorian SA3 income map...</span>
-            </div>
-          </div>
-
-          <!-- SA3 Detail Panel -->
-          <div id="sa3DetailPanel" class="lga-detail-panel hidden">
-
-            <!-- Detail Panel Header -->
-            <div class="lga-detail-header">
-              <h2 class="lga-detail-title" id="sa3DetailName">--</h2>
-              <button class="close-detail-btn" id="closeSa3DetailBtn">Close</button>
-            </div>
-
-            <!-- Income Detail Stats -->
-            <div class="lga-detail-content">
-
-              <div class="detail-stat">
-                <div class="detail-stat-label">Average Annual Income</div>
-                <p class="detail-stat-value" id="detailAverageIncome">--</p>
-                <p class="detail-stat-sublabel">young females in this SA3</p>
-              </div>
-
-              <div class="detail-stat">
-                <div class="detail-stat-label">Your Estimated Annual Income</div>
-                <p class="detail-stat-value" id="detailUserIncome">--</p>
-                <p class="detail-stat-sublabel">calculated from weekly income</p>
-              </div>
-
-              <div class="detail-stat">
-                <div class="detail-stat-label">Income Comparison</div>
-                <p style="margin: 0; padding: 8px 0;">
-                  <span class="affordability-badge" id="incomeComparisonBadge">Calculating...</span>
-                </p>
-              </div>
-
-            </div>
-
-            <!-- Income Insight Section -->
-            <div class="trend-section">
-              <p class="trend-title">📊 Income Insight</p>
-
-              <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 16px 0;">
-                Compare your estimated annual income with young female annual income in this SA3 area.
+              <p class="filter-info-message">
+                Search a suburb area to explore young female annual income
+                across Victoria.<br />
               </p>
 
-              <div style="background: var(--surface-offset); border-radius: var(--radius-md); padding: 16px; margin-top: 16px;">
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;" id="incomeInsight">
-                  Select an SA3 area to view income analysis.
-                </p>
+              <div class="input-group">
+                <div class="income-profile-location" id="profileLocation">
+                  {% if profile_data.get('locality') and
+                  profile_data.get('postcode') %} {{
+                  profile_data.get('locality') }} ({{
+                  profile_data.get('postcode') }}) {% else %} No saved location
+                  {% endif %}
+                </div>
+
+                <!-- SA3 search input -->
+                <label for="sa3Input" class="input-label">LGA</label>
+
+                <input
+                  type="text"
+                  id="sa3Input"
+                  class="income-input"
+                  placeholder="Search suburb..."
+                  autocomplete="off"
+                />
+
+                <!-- Hidden selected values used by JavaScript -->
+                <input type="hidden" id="selectedSa3Input" />
+                <input type="hidden" id="selectedSa3CodeInput" />
+
+                <!-- Suggestions are inserted here by income_comparison.js -->
+                <div id="sa3Suggestions" class="income-suggestions"></div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Main map and detail area -->
+          <section class="income-main">
+            <!-- Map card -->
+            <div class="content-card">
+              <h2>Victorian Suburb Areas - Young Female Annual Income</h2>
+
+              <div id="incomeMapContainer" class="income-map-placeholder">
+                <span>Loading Victorian suburb income map...</span>
               </div>
             </div>
 
-            <!-- Income Trend Section -->
-            <div class="trend-section">
-              <p class="trend-title">📈 Income Trend</p>
+            <!-- SA3 detail panel -->
+            <div id="sa3DetailPanel" class="income-detail-panel hidden">
+              <div class="income-detail-header">
+                <h2 class="income-detail-title" id="sa3DetailName">--</h2>
 
-              <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 16px 0;">
-                Annual young female income trend for the selected SA3 area.
-              </p>
-
-              <div style="margin-bottom: 16px;">
-                <div class="detail-stat-label" style="text-align: left; margin-bottom: 8px;">Trend Status</div>
-                <span class="affordability-badge" id="incomeTrendStatusBadge">--</span>
+                <!-- <button
+                  type="button"
+                  class="back-home-btn"
+                  id="closeSa3DetailBtn"
+                >
+                  Close
+                </button> -->
               </div>
 
-              <div class="chart-container" style="height: 300px; margin-bottom: 16px;">
-                <canvas id="incomeTrendChart"></canvas>
+              <!-- Selected area stats -->
+              <div class="income-detail-content">
+                <div class="income-detail-stat">
+                  <div class="income-detail-stat-label">
+                    Average Annual Income
+                  </div>
+
+                  <p class="income-detail-stat-value" id="detailAverageIncome">
+                    --
+                  </p>
+
+                  <p class="income-detail-stat-sublabel">
+                    young females in this suburb
+                  </p>
+                </div>
+
+                <div class="income-detail-stat">
+                  <div class="income-detail-stat-label">
+                    Your Estimated Annual Income
+                  </div>
+
+                  <p class="income-detail-stat-value" id="detailUserIncome">
+                    --
+                  </p>
+
+                  <p class="income-detail-stat-sublabel">
+                    calculated from weekly income
+                  </p>
+                </div>
+
+                <div class="income-detail-stat">
+                  <div class="income-detail-stat-label">Income Comparison</div>
+
+                  <p class="income-badge-row">
+                    <span class="income-badge" id="incomeComparisonBadge">
+                      Calculating
+                    </span>
+                  </p>
+                </div>
               </div>
 
-              <div style="background: var(--surface-offset); border-radius: var(--radius-md); padding: 16px; margin-top: 16px;">
-                <p style="margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.6;" id="incomeTrendInsight">
-                  Select an SA3 area to view income trend analysis.
-                </p>
-              </div>
-            </div>
+<div class="income-insight-box income-living-hero-cta">
+  <h2>
+    Now that you know which suburb has better opportunities that pay well, <br>
+    find out if you can live there as well.
+  </h2>
 
-          </div>
+  <div class="landing-hero-actions">
+    <a href="{{ url_for('main.rent_comparison') }}" class="landing-btn landing-btn-primary">
+      See your living options
+    </a>
+  </div>
+</div>
+          </section>
+        </section>
+      </div>
+    </main>
 
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <a href="{{ url_for('main.landing') }}" class="logo-link">
+            <img
+              src="{{ url_for('static', filename='img/hermap-logo.png') }}"
+              alt="Hermap Logo"
+              class="logo"
+            />
+          </a>
+        </div>
+
+        <div class="nav-links">
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="absModal"
+          >
+            ABS Data Sources
+          </button>
+
+          <button
+            type="button"
+            class="nav-link footer-modal-link"
+            data-modal-target="tosModal"
+          >
+            Terms of Service
+          </button>
         </div>
       </div>
+    </footer>
 
-    </div>
-  </main>
+    <!-- ABS Data Sources Modal -->
+    <div class="modal-overlay hidden" id="absModal">
+      <div class="modal-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close ABS data sources popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container footer-inner">
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">database</span>
+        </div>
 
-      <div class="footer-brand">
-        <a href="{{ url_for('main.landing') }}" class="logo-link">
-          <img src="{{ url_for('static', filename='img/hermap-logo.png') }}" alt="Hermap Logo" class="logo" />
-        </a>
+        <h2>ABS Data Sources</h2>
+
+        <p>
+          The numbers and benchmarks used across this website are based on
+          datasets from the Australian Bureau of Statistics, commonly known as
+          the ABS.
+        </p>
+
+        <p>
+          The ABS is Australia’s national statistical agency. It collects and
+          publishes official data about population, housing, work, income, cost
+          of living, and other areas that help explain how people live across
+          Australia.
+        </p>
+
+        <p>
+          In Hermap, ABS data is used in context to support comparisons around
+          living costs, income, location, and financial readiness. These figures
+          are intended to help users better understand possible trade-offs, not
+          to provide personal financial advice.
+        </p>
       </div>
-
-      <div class="nav-links">
-        <a href="#" class="nav-link">Privacy Policy</a>
-        <a href="#" class="nav-link">ABS Data Sources</a>
-        <a href="#" class="nav-link">Terms of Service</a>
-      </div>
-
     </div>
-  </footer>
 
-  <!-- Leaflet Map JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Terms of Service Modal -->
+    <div
+      class="modal-overlay hidden"
+      id="tosModal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="tosModalTitle"
+    >
+      <div class="modal-box income-terms-box">
+        <button
+          type="button"
+          class="modal-close"
+          data-modal-close
+          aria-label="Close Terms of Service"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
 
-  <!-- Chart.js for income trend line -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+        <div class="modal-icon gradient-bg">
+          <span class="material-symbols-outlined">gavel</span>
+        </div>
 
-  <!-- User Profile Data from Flask -->
-  <script>
-    window.userProfileData = {
-      age: "{{ profile_data.get('age', '') }}",
-      locality: "{{ profile_data.get('locality', '') }}",
-      postcode: "{{ profile_data.get('postcode', '') }}",
-      state: "{{ profile_data.get('state', 'VIC') }}",
-      workStatus: "{{ profile_data.get('work', '') }}",
-      industry: "{{ profile_data.get('industry', '') }}",
-      income: parseInt("{{ profile_data.get('income', '') }}") || null,
-      rent: parseInt("{{ profile_data.get('rent', '') }}") || null,
-      living: "{{ profile_data.get('living', '') }}"
-    };
-  </script>
+        <h2 id="tosModalTitle">Terms of Service</h2>
 
-  <!-- Income Comparison JS -->
-  <script src="{{ url_for('static', filename='js/income_comparison.js') }}"></script>
+        <div class="income-terms-scroll">
+          <p>
+            <strong>Privacy &amp; Data Collection</strong><br />
+            This platform does not collect, store, or retain any personal
+            information you provide. All inputs including your age, location,
+            income, and living situation are used solely within your current
+            browser session to generate personalised insights. No data is
+            transmitted to or held on our servers at any point. Your privacy is
+            fully preserved.
+          </p>
 
-</body>
+          <p>
+            <strong>Nature of Information &amp; Advice</strong><br />
+            All insights, comparisons, and recommendations presented on this
+            platform are derived entirely from publicly available data published
+            by the Australian Bureau of Statistics and other reputable data
+            sources. The information provided is intended for general
+            educational and informational purposes only. It does not constitute
+            financial, legal, or professional advice.
+          </p>
+        </div>
+      </div>
+    </div>
 
+    <!-- Tutorial -->
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
+      <span class="material-symbols-outlined">help</span>
+    </button>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
+    <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+    <div class="tutorial-popover" id="tutorialPopover">
+      <div class="tutorial-step-indicator">
+        <span id="tutorialStepLabel">Step 1 of 3</span>
+      </div>
+      <h2 id="tutorialTitle"></h2>
+      <p id="tutorialDesc"></p>
+      <div class="tutorial-actions">
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+    <script>
+      const TUTORIAL_STEPS = [
+        {
+          targetId: "profileLocation",
+          title: "Your location",
+          desc: "This shows the suburb from your profile. The map loads your local area automatically so you can compare income around where you live.",
+        },
+        {
+          targetId: "sa3Input",
+          title: "Search any area",
+          desc: "Type any Victorian suburb to explore income data. Select it from the dropdown and the map will highlight that region.",
+        },
+        {
+          targetId: "incomeMapContainer",
+          title: "Victorian income map",
+          desc: "Each shaded region shows the typical annual income for young women there. Tap any region on the map to open a detailed breakdown.",
+        },
+      ];
+    </script>
+
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Chart.js for income trend line -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+
+    <!-- User profile data from Flask session -->
+    <script>
+      window.userProfileData = {
+        age: "{{ profile_data.get('age', '') }}",
+        locality: "{{ profile_data.get('locality', '') }}",
+        postcode: "{{ profile_data.get('postcode', '') }}",
+        state: "{{ profile_data.get('state', 'VIC') }}",
+        workStatus: "{{ profile_data.get('work', '') }}",
+        industry: "{{ profile_data.get('industry', '') }}",
+        income: parseInt("{{ profile_data.get('income', '') }}") || null,
+        rent: parseInt("{{ profile_data.get('rent', '') }}") || null,
+        living: "{{ profile_data.get('living', '') }}",
+      };
+    </script>
+
+    <!-- Income comparison specific JavaScript -->
+    <script src="{{ url_for('static', filename='js/income_comparison.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
+  </body>
 </html>
