@@ -24,7 +24,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-
   </head>
 
   <body>
@@ -43,7 +42,6 @@
 
         <div class="nav-links">
           <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-          <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
         </div>
       </div>
     </nav>
@@ -53,13 +51,18 @@
       <div class="page-header">
         <div class="page-header-left">
           <h1>
-            Track My 
+            Track My
             <span class="gradient-text">Spending</span>
-            </h1>
-            <p>
-              Enter your weekly expenses to understand your surplus, deficit, rent pressure, and what this means for independent living.
-            </p>
+          </h1>
+          <p>
+            Enter your weekly expenses to understand your surplus, deficit, rent
+            pressure, and what this means for independent living.
+          </p>
         </div>
+
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          Back to Dashboard
+        </a>
       </div>
 
       <div class="intro-note">
@@ -188,17 +191,30 @@
         </div>
 
         <div class="nav-links">
-          <button class="footer-modal-link" data-modal-target="absModal">ABS Data Sources</button>
-          <button class="footer-modal-link" data-modal-target="tosModal">Terms of Service</button>
+          <button class="footer-modal-link" data-modal-target="absModal">
+            ABS Data Sources
+          </button>
+          <button class="footer-modal-link" data-modal-target="tosModal">
+            Terms of Service
+          </button>
         </div>
       </div>
     </footer>
 
     <!-- Tutorial -->
-    <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
+    <button
+      class="tutorial-fab"
+      id="tutorialFab"
+      onclick="startTutorial()"
+      aria-label="Start tutorial"
+    >
       <span class="material-symbols-outlined">help</span>
     </button>
-    <div class="tutorial-spotlight-overlay" id="tutorialOverlay" style="display:none;"></div>
+    <div
+      class="tutorial-spotlight-overlay"
+      id="tutorialOverlay"
+      style="display: none"
+    ></div>
     <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
     <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
@@ -207,8 +223,16 @@
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
       <div class="tutorial-actions">
-        <button class="tutorial-skip-btn" onclick="endTutorial()">Skip tutorial</button>
-        <button class="tutorial-next-btn" id="tutorialNextBtn" onclick="tutorialNext()">Next</button>
+        <button class="tutorial-skip-btn" onclick="endTutorial()">
+          Skip tutorial
+        </button>
+        <button
+          class="tutorial-next-btn"
+          id="tutorialNextBtn"
+          onclick="tutorialNext()"
+        >
+          Next
+        </button>
       </div>
     </div>
 
@@ -224,25 +248,25 @@
     <script>
       const TUTORIAL_STEPS = [
         {
-          targetId: 'essentialExpensesSection',
-          title: 'Essential expenses',
-          desc: 'Add things you have to pay for — rent, food, transport. These are your non-negotiable costs.'
+          targetId: "essentialExpensesSection",
+          title: "Essential expenses",
+          desc: "Add things you have to pay for — rent, food, transport. These are your non-negotiable costs.",
         },
         {
-          targetId: 'nonEssentialExpensesSection',
-          title: 'Flexible spending',
-          desc: 'Add things like subscriptions, eating out, or shopping. These are easier to adjust if you need to save.'
+          targetId: "nonEssentialExpensesSection",
+          title: "Flexible spending",
+          desc: "Add things like subscriptions, eating out, or shopping. These are easier to adjust if you need to save.",
         },
         {
-          targetId: 'totalSurplus',
-          title: 'Your weekly position',
-          desc: 'This updates live as you add expenses. Green means you have money left over. Red means you are spending more than you earn.'
+          targetId: "totalSurplus",
+          title: "Your weekly position",
+          desc: "This updates live as you add expenses. Green means you have money left over. Red means you are spending more than you earn.",
         },
         {
-          targetId: 'checkPositionBtn',
-          title: 'See your full results',
-          desc: 'When you are done, tap this to get a detailed breakdown of your spending, rent pressure, and next steps.'
-        }
+          targetId: "checkPositionBtn",
+          title: "See your full results",
+          desc: "When you are done, tap this to get a detailed breakdown of your spending, rent pressure, and next steps.",
+        },
       ];
     </script>
 

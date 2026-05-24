@@ -306,13 +306,17 @@ a {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 700;
+
+  /* Same as navbar .nav-link */
+  text-decoration: none;
   color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  padding: 0;
+  letter-spacing: 0.22em;
+  padding-bottom: 4px;
   transition: color 0.3s ease;
+
   white-space: nowrap;
 }
 
@@ -484,6 +488,46 @@ a {
   margin-top: 16px;
   align-items: center;
   justify-content: center;
+}
+
+/* ============================================================
+   SHARED NEXT STEP CTA
+   Used in income comparison and rent comparison pages.
+   ============================================================ */
+
+.income-living-hero-cta {
+  text-align: center;
+  padding: 28px 24px;
+  margin-top: 24px;
+  background: var(--surface-offset);
+  border-radius: var(--radius-md);
+}
+
+.income-living-hero-cta h2 {
+  margin: 0 0 22px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: normal;
+  text-align: center;
+}
+
+.income-living-hero-cta .landing-hero-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 0;
+}
+
+.income-living-hero-cta .landing-btn,
+.income-living-hero-cta .landing-btn-primary {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-transform: none;
 }
 
 /* ============================================================
@@ -763,6 +807,12 @@ a {
 
 .tutorial-highlight-box.is-ready {
   opacity: 1;
+}
+
+.tutorial-highlight-box:not(.is-ready),
+.tutorial-popover:not(.is-ready) {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Lift the targeted element above the dim overlay */
@@ -1699,7 +1749,6 @@ a {
 .action-link-card:focus-visible {
   transform: translateY(-4px);
   border-color: rgba(232, 84, 106, 0.3);
-  background: #ffffff;
   box-shadow: var(--shadow-md);
   outline: none;
 }
@@ -1714,8 +1763,6 @@ a {
   align-items: center;
   justify-content: center;
   border-radius: 20px;
-  background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
-  color: #ffffff;
   box-shadow: 0 12px 28px rgba(232, 84, 106, 0.24);
   font-size: 28px;
 }
@@ -5639,6 +5686,17 @@ a {
   margin-bottom: 52px;
 }
 
+/* Credit BNPL: reuse existing two-column-section layout */
+.credit-page .two-column-section {
+  gap: 36px;
+}
+
+.credit-page .two-column-section .question-card {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
 .question-card {
   padding: 34px;
   background: var(--surface);
@@ -6448,4 +6506,179 @@ a {
 .bubble-chart-insights li > div,
 .bubble-chart-insights .sweet-spot-card {
   margin-bottom: 18px;
+}
+
+/* ============================================================
+   DEBT PROJECTION WARNING AND CTA CARDS
+   ============================================================ */
+
+.debt-warning-card {
+  margin-top: 20px;
+  padding: 22px;
+  border-radius: var(--radius-lg);
+  background: rgba(232, 84, 106, 0.07);
+  border: 1px solid rgba(232, 84, 106, 0.22);
+  box-shadow: var(--shadow-sm);
+}
+
+.debt-warning-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.debt-warning-icon {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+  color: #ffffff;
+  box-shadow: var(--shadow-brand);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+}
+
+.debt-warning-card h3 {
+  margin: 0 0 8px;
+  color: var(--text-main);
+  font-family: var(--font-heading);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.debt-warning-card p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.debt-next-step-card {
+  margin-top: 20px;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  box-shadow: var(--shadow-sm);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.debt-next-step-copy h3 {
+  margin: 0 0 8px;
+  color: var(--text-main);
+  font-family: var(--font-heading);
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.debt-next-step-copy p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.debt-next-step-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+  color: #ffffff;
+  box-shadow: var(--shadow-brand);
+
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+  text-align: center;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.debt-next-step-btn:hover,
+.debt-next-step-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(232, 84, 106, 0.32);
+}
+
+/* ============================================================
+   CAREER ASPIRATIONS SIDE PANEL SPACING AND CTA
+   ============================================================ */
+
+.career-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.career-side-panel .industry-info,
+.career-side-panel .source-card {
+  margin-bottom: 0;
+}
+
+.career-next-step-card {
+  padding: 24px;
+  background: linear-gradient(
+    135deg,
+    rgba(232, 84, 106, 0.07),
+    rgba(155, 114, 207, 0.08)
+  );
+  border: 1px solid var(--divider);
+  border-radius: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.career-next-step-copy h3 {
+  margin: 0 0 10px;
+  color: var(--text-main);
+  font-family: var(--font-heading);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.career-next-step-copy p {
+  margin: 0 0 18px;
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.career-next-step-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #e8546a 0%, #c45fa8 50%, #9b72cf 100%);
+  color: #ffffff;
+  box-shadow: var(--shadow-brand);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.career-next-step-btn:hover,
+.career-next-step-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(232, 84, 106, 0.32);
 }

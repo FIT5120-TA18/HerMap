@@ -40,8 +40,7 @@
         </div>
         <div>
           <a href="{{ url_for('main.debt_awareness') }}" class="back-home-btn">
-            <span class="material-symbols-outlined" style="font-size:18px;">arrow_back</span>
-            Back
+            Back to questions
           </a>
         </div>
       </div>
@@ -158,14 +157,25 @@
           </div>
           <button class="reveal-btn-primary" style="width:100%" onclick="applyCustomisation()"> Update Chart </button>
         </div>
-        <div class="key-message" id="keyMessage" style="display:none;">
-        <p>If not paid on time, fees and interest grow faster than you expect.</p>
-      </div>
-    </div>
-    <div class="cta-box" style="display:none;" id="ctaBox">
-      <p>Now that you can see how debt grows, learn about credit products and how to avoid the trap.</p>
-      <a href="{{ url_for('main.knowledge_hub') }}#credit" class="cta-link">Learn about credit products</a>
-    </div>
+<div class="key-message debt-warning-card" id="keyMessage">
+  <p>If not paid on time, fees and interest grow faster than you expect.</p>
+</div>
+
+<div class="debt-next-step-card" id="ctaBox">
+  <div class="debt-next-step-copy">
+    <h3>Want to understand credit products better?</h3>
+
+    <p>
+      Now that you can see how debt grows, learn how credit cards and BNPL work,
+      what fees to watch for, and how to avoid falling into a repayment trap.
+    </p>
+  </div>
+
+  <a href="{{ url_for('main.knowledge_hub') }}#credit" class="debt-next-step-btn">
+    Learn about credit products
+  </a>
+</div>
+</div>
     <button class="tutorial-fab" id="tutorialFab" onclick="startTutorial()" aria-label="Start tutorial">
       <span class="material-symbols-outlined">help</span>
     </button>

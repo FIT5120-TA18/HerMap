@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Page controls, footer modals, and the guided tutorial are initialised first.
   initializeEventListeners();
   initializeFooterModals();
-  initializeRentComparisonTutorial();
+  // initializeRentComparisonTutorial();
 
   // Map and user-specific data are loaded after the static UI is ready.
   await loadLgaRentLayer();
@@ -1724,7 +1724,6 @@ function setupModal(triggerId, modalId, closeId) {
 //       endTutorial();
 //     }
 //   });
-}
 
 /* =========================================================
    Utils

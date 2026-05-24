@@ -43,7 +43,6 @@
 
         <div class="nav-links">
           <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-          <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
         </div>
       </div>
     </nav>
@@ -59,12 +58,16 @@
             </h1>
             <p>Compare rental prices across Suburbs</p>
           </div>
+
+          <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+            Back to Dashboard
+          </a>
         </div>
 
         <!-- Main layout -->
         <div class="page-grid">
           <!-- Sidebar filters -->
-          <aside class="page-sidebar rent-sidebar">
+          <aside class="page-sidebar">
             <div class="filter-card">
               <p class="filter-card-title">Search Location</p>
 
@@ -122,7 +125,7 @@
                 </div>
               </div>
             </div>
-            </aside>
+          </aside>
 
           <!-- Main content -->
           <div class="page-main">
@@ -153,24 +156,25 @@
               Reset to my area
             </button>
 
-            <!-- Bubble chart controls -->
-            <div class="filter-card" id="rentBubbleChartSection">
-              <div id="bubbleChartCustom">
+            <!-- Bubble chart section -->
+            <div class="bubble-content-card" id="rentBubbleChartSection">
+              <div class="bubble-add-suburb">
                 <div class="bubble-chart-header">
                   <div>
-                    <h2 style="font-size:18px;margin:0 0 4px">Compare suburbs</h2>
-                    <p style="font-size:13px;color:var(--text-muted);margin:0 0 16px">
-                      Choose what to compare. The chart starts with your selected suburb.
+                    <h2>Compare suburbs by affordability and access</h2>
+                    <p>
+                      Choose what to compare. The chart starts your selected
+                      suburb.
                     </p>
                   </div>
                 </div>
 
-                <div class="bubble-choice-panel bubble-choice-panel--sidebar" id="bubbleChoicePanel">
+                <div class="bubble-choice-panel" id="bubbleChoicePanel">
                   <!-- X axis choice -->
                   <div class="bubble-choice-section">
                     <div class="bubble-choice-heading">
                       <h3>🏠 Housing Cost</h3>
-                      <p>Choose how affordability is shown.</p>
+                      <p>Choose how affordability is shown on the chart.</p>
                     </div>
 
                     <div
@@ -312,10 +316,11 @@
                 <div class="bubble-add-title">Compare another suburb</div>
 
                 <div class="bubble-add-description">
-                  Search and add another suburb. Added suburbs appear in blue on the chart.
+                  Search and add any other suburb you want to look at. Added
+                  suburbs appear in blue on the chart.
                 </div>
 
-                <div class="bubble-add-row bubble-add-row--sidebar">
+                <div class="bubble-add-row">
                   <input
                     type="text"
                     id="bubbleSuburbSearch"
@@ -328,7 +333,6 @@
                     type="button"
                     id="clearAddedSuburbsBtn"
                     class="reset-map-btn"
-                    style="width:100%;margin-top:8px"
                   >
                     Clear added suburbs
                   </button>
@@ -340,80 +344,74 @@
                 ></div>
 
                 <div id="addedSuburbTags" class="added-suburb-tags"></div>
-              </div>
 
-              <!-- How to read this chart -->
-              <div class="budget-legend bubble-chart-guide" style="margin-top:16px">
-                <strong>How to read this chart</strong>
+                <!-- Bubble chart legend moved near bubble chart -->
+                <div class="budget-legend bubble-chart-guide">
+                  <strong>How to read this chart</strong>
 
-                <p>
-                  Each bubble is a suburb. Further right = lower rent.
-                  Higher up = better access to the service you chose.
-                </p>
+                  <p>
+                    Each bubble represents a suburb. Suburbs further to the
+                    right have lower weekly rent, while suburbs higher up have
+                    better access based on the option you selected, such as
+                    train stations, supermarkets, hospitals, or pharmacies.
+                  </p>
 
-                <p>Larger bubbles = more of your lifestyle pick.</p>
+                  <p>
+                    Larger bubbles show more of the lifestyle option you
+                    selected, such as parks, cafes, gyms, or libraries.
+                  </p>
 
-                <div class="budget-legend-item">
-                  <span class="bubble-guide-dot highlighted"></span>
-                  <span>Blue starred = stronger suburb options.</span>
+                  <div class="budget-legend-item">
+                    <span class="bubble-guide-dot highlighted"></span>
+                    <span
+                      >Blue starred bubbles highlight stronger suburb
+                      options.</span
+                    >
+                  </div>
+
+                  <div class="budget-legend-item">
+                    <span class="bubble-guide-dot standard"></span>
+                    <span
+                      >Grey bubbles show other suburbs included in the
+                      comparison.</span
+                    >
+                  </div>
+
+                  <p>
+                    The top-right area is the sweet spot because it combines
+                    lower rent with better access.
+                  </p>
                 </div>
 
-                <div class="budget-legend-item">
-                  <span class="bubble-guide-dot standard"></span>
-                  <span>Grey = other comparison suburbs.</span>
+                <div class="bubble-chart-wrapper">
+                  <canvas id="suburbBubbleChart"></canvas>
                 </div>
 
-                <p>Top-right is the sweet spot: lower rent + better access.</p>
-              </div>
-            </div>
-          </aside>
+<div class="bubble-chart-insights">
+  <h3>Key insights</h3>
 
-          <!-- Main content -->
-          <div class="page-main">
-            <!-- Map section -->
-            <div class="content-card" id="rentMapSection">
-              <h2 id="mapTitle" class="content-card-title">
-                Explore Rental Prices by Suburb
-              </h2>
+  <ul id="bubbleChartInsights">
+    <li>Loading insights...</li>
+  </ul>
+</div>
 
-              <div id="mapContainer" class="income-map-placeholder">
-                <div class="map-loading">
-                  <div class="map-spinner"></div>
-                  <span>
-                    Select a suburb to view that and nearby suburbs on the map
-                  </span>
-                </div>
-              </div>
+<!-- Next step CTA -->
+<div class="income-living-hero-cta rent-next-step-cta">
+  <h2 class="income-living-hero-cta-title">
+    You have decided where you want to live, but are you aware of how much you
+    spend and if you are ready? <br />
+    Check out the spending tracker to help you make an informed choice.
+  </h2>
 
-              <!-- Map legend moved near map -->
-              <div id="mapModeBox" class="map-mode-box">
-                <strong id="mapModeTitle">Map mode: Rent View</strong>
-                <p id="mapModeText">Suburbs are coloured by weekly rent.</p>
-                <div id="mapModeLegend" class="map-mode-legend"></div>
-              </div>
-            </div>
-
-            <button type="button" id="resetMapBtn" class="reset-map-btn">
-              Reset to my area
-            </button>
-
-            <!-- Bubble chart canvas -->
-            <div class="content-card">
-              <h2 class="content-card-title" style="margin-bottom:16px">
-                Suburb Comparison Chart
-              </h2>
-
-              <div class="bubble-chart-wrapper">
-                <canvas id="suburbBubbleChart"></canvas>
-              </div>
-
-              <div class="bubble-chart-insights">
-                <h3>Key insights</h3>
-
-                <ul id="bubbleChartInsights">
-                  <li>Loading insights...</li>
-                </ul>
-              </div>
+  <div class="income-living-hero-cta-actions">
+    <a
+      href="{{ url_for('main.spending_input') }}"
+      class="landing-btn landing-btn-primary"
+    >
+      Check my spending patterns
+    </a>
+  </div>
+</div>
             </div>
           </div>
         </div>
@@ -568,7 +566,7 @@
           desc: "Each suburb is shaded based on its median weekly rent. Tap any suburb to zoom in and see exact rental figures and affordability for your income.",
         },
         {
-          targetId: "bubbleChartCustom",
+          targetId: "bubbleChoicePanel",
           title: "Compare suburbs",
           desc: "This chart plots suburbs by rent, income, and access to services. Use the axis controls to change what you are comparing, which is great for finding hidden affordable suburbs.",
         },

@@ -4,14 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Career Aspirations – HerMap</title>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap"
       rel="stylesheet"
     />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
@@ -30,9 +33,9 @@
             />
           </a>
         </div>
+
         <div class="nav-links">
           <a href="{{ url_for('main.landing') }}" class="nav-link">Home</a>
-          <a href="{{ url_for('main.dashboard') }}" class="nav-link">Dashboard</a>
         </div>
       </div>
     </nav>
@@ -41,12 +44,16 @@
       <div class="career-page-header">
         <div class="career-page-heading">
           <h1 class="page-inner-title">Career Aspirations</h1>
+
           <p class="page-inner-subtitle">
             Explore what women typically earn in full-time roles across
             different industries in Australia.
           </p>
         </div>
 
+        <a href="{{ url_for('main.dashboard') }}" class="back-home-btn">
+          Back to Dashboard
+        </a>
       </div>
 
       <!-- Your industry indicator -->
@@ -58,8 +65,9 @@
         <span
           class="material-symbols-outlined"
           style="font-size: 18px; color: var(--primary)"
-          >star</span
         >
+          star
+        </span>
         Your industry: <strong id="yourIndustryName"></strong>
       </div>
 
@@ -67,12 +75,15 @@
         <!-- Left: Bar Chart -->
         <div class="career-card">
           <h3 class="career-card-title">Average Weekly Earnings by Industry</h3>
+
           <p class="career-card-sub">Click any bar to see more details.</p>
+
           <div id="chartArea">
             <div class="loading-state" id="loadingState">
               <div class="loading-spinner"></div>
               <p>Loading industry data…</p>
             </div>
+
             <div class="chart-wrap" id="chartWrap" style="display: none">
               <canvas id="industryChart"></canvas>
             </div>
@@ -80,24 +91,29 @@
         </div>
 
         <!-- Right: Detail panel -->
-        <div>
+        <div class="career-side-panel">
           <div class="industry-info" id="industryDetail" style="display: none">
             <h4 class="industry-info-name" id="detailName">—</h4>
+
             <div class="industry-stat">
               <p class="industry-stat-label">
                 Avg. Weekly Earnings (2022–23, ABS)
               </p>
               <p class="industry-stat-value" id="detailWeekly">$—</p>
             </div>
+
             <div class="industry-stat">
               <p class="industry-stat-label">Approx. Annual Income</p>
               <p class="industry-stat-value weekly" id="detailAnnual">$—</p>
             </div>
+
             <div id="gapBadgeWrap"></div>
+
             <p class="disclaimer-note">
               This shows what women working full-time in this industry typically
-              earn — income sourced from ABS Average Weekly Earnings 2022–23;
-              pay gap from WGEA 2024–25. This is not a guarantee of earnings.
+              earn. Income is sourced from ABS Average Weekly Earnings 2022–23,
+              and pay gap information is sourced from WGEA 2024–25. This is not
+              a guarantee of earnings.
             </p>
           </div>
 
@@ -110,8 +126,10 @@
                 margin-bottom: 12px;
                 display: block;
               "
-              >touch_app</span
             >
+              touch_app
+            </span>
+
             <p
               style="
                 margin: 0;
@@ -132,23 +150,48 @@
                 display: block;
                 margin-bottom: 6px;
               "
-              >Data Sources</strong
             >
+              Data Sources
+            </strong>
+
             Data sourced from the
             <a
               href="https://www.wgea.gov.au/publications/employer-gender-pay-gaps-report"
               target="_blank"
               rel="noopener"
-              >WGEA Employer Gender Pay Gaps</a
             >
+              WGEA Employer Gender Pay Gaps
+            </a>
             and
             <a
               href="https://www.abs.gov.au/statistics/labour/earnings-and-working-conditions/average-weekly-earnings-australia"
               target="_blank"
               rel="noopener"
-              >ABS Average Weekly Earnings</a
+            >
+              ABS Average Weekly Earnings </a
             >. Gender pay gap figures indicate how much women earn relative to
             men in each industry.
+          </div>
+
+          <!-- Next step CTA -->
+          <div class="career-next-step-card">
+            <div class="career-next-step-copy">
+              <h3>Want to start your new job?</h3>
+
+              <p>
+                Employment scams are quite large nowadays. It is essential for
+                you to be wise when it comes to choosing your next job. Find out
+                with our safe employment module to be vigilant when it comes to
+                joining your next job.
+              </p>
+            </div>
+
+            <a
+              href="{{ url_for('main.safe_employment') }}"
+              class="career-next-step-btn"
+            >
+              Learn more about safe employment
+            </a>
           </div>
         </div>
       </div>
@@ -165,6 +208,7 @@
             />
           </a>
         </div>
+
         <div class="nav-links">
           <button
             type="button"
@@ -173,6 +217,7 @@
           >
             ABS Data Sources
           </button>
+
           <button
             type="button"
             class="nav-link footer-modal-link"
@@ -209,7 +254,7 @@
         </p>
 
         <p>
-          The ABS is Australia’s national statistical agency. It collects and
+          The ABS is Australia's national statistical agency. It collects and
           publishes official data about population, housing, work, income, cost
           of living, and other areas that help explain how people live across
           Australia.
@@ -286,7 +331,8 @@
       src="{{ url_for('static', filename='js/career_aspirations.js') }}"
       defer
     ></script>
-    <!-- 1. Tutorial HTML -->
+
+    <!-- Tutorial HTML -->
     <button
       class="tutorial-fab"
       id="tutorialFab"
@@ -295,22 +341,28 @@
     >
       <span class="material-symbols-outlined">help</span>
     </button>
+
     <div
       class="tutorial-spotlight-overlay"
       id="tutorialOverlay"
       style="display: none"
     ></div>
+
     <div class="tutorial-highlight-box" id="tutorialHighlight"></div>
+
     <div class="tutorial-popover" id="tutorialPopover">
       <div class="tutorial-step-indicator">
         <span id="tutorialStepLabel">Step 1 of 3</span>
       </div>
+
       <h2 id="tutorialTitle"></h2>
       <p id="tutorialDesc"></p>
+
       <div class="tutorial-actions">
         <button class="tutorial-skip-btn" onclick="endTutorial()">
           Skip tutorial
         </button>
+
         <button
           class="tutorial-next-btn"
           id="tutorialNextBtn"
@@ -321,7 +373,7 @@
       </div>
     </div>
 
-    <!-- 2. TUTORIAL_STEPS -->
+    <!-- Tutorial steps -->
     <script>
       const TUTORIAL_STEPS = [
         {
@@ -334,10 +386,14 @@
           title: "Industry detail panel",
           desc: "When you tap a bar, this panel shows the weekly and annual earnings for that industry, plus the gender pay gap sourced from WGEA.",
         },
+        {
+          targetId: "careerGrid",
+          title: "Next step",
+          desc: "Use the next step card to compare income patterns with suburb-level income data.",
+        },
       ];
     </script>
 
-    <!-- 3. Tutorial engine -->
     <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
   </body>
 </html>

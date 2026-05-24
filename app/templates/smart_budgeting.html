@@ -21,7 +21,6 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/style.css') }}"
     />
-
   </head>
 
   <body>
@@ -39,10 +38,10 @@
         </div>
 
         <div class="nav-links">
+          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
           <a href="{{ url_for('main.dashboard') }}" class="nav-link">
             Dashboard
           </a>
-          <a href="{{ url_for('main.landing') }}" class="nav-link"> Home </a>
         </div>
       </div>
     </nav>
@@ -378,9 +377,13 @@
           </a>
         </div>
 
-        <div class="nav-links">          
-          <button class="footer-modal-link" data-modal-target="absModal">ABS Data Sources</button>
-          <button class="footer-modal-link" data-modal-target="tosModal">Terms of Service</button>
+        <div class="nav-links">
+          <button class="footer-modal-link" data-modal-target="absModal">
+            ABS Data Sources
+          </button>
+          <button class="footer-modal-link" data-modal-target="tosModal">
+            Terms of Service
+          </button>
         </div>
       </div>
     </footer>
