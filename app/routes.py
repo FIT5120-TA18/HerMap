@@ -122,7 +122,7 @@ def login():
 
 
 @main.route("/")
-@access_required
+# @access_required
 def landing():
     """
     Landing page shown after the user has entered the site password.
@@ -135,7 +135,7 @@ def landing():
 # ---------------------------------------------------------------------------
 
 @main.route("/profile_builder", methods=["GET", "POST"])
-@access_required
+# @access_required
 def quick_profile():
     """
     Collect and store the user's profile information in the Flask session.
@@ -365,7 +365,7 @@ Rules:
 # ---------------------------------------------------------------------------
 
 @main.route("/dashboard")
-@access_required
+# @access_required
 def dashboard():
     """
     Dashboard page shown after the user completes the profile builder.
@@ -385,7 +385,7 @@ def dashboard():
 
 
 @main.route("/rent_comparison")
-@access_required
+# @access_required
 def rent_comparison():
     """
     Rent comparison page.
@@ -394,7 +394,7 @@ def rent_comparison():
 
 
 @main.route("/income_comparison")
-@access_required
+# @access_required
 def income_comparison():
     """
     Income comparison page.
@@ -403,7 +403,7 @@ def income_comparison():
 
 
 @main.route("/forecast")
-@access_required
+# @access_required
 def forecast():
     """
     Forecast page.
@@ -416,7 +416,7 @@ def forecast():
 # ---------------------------------------------------------------------------
 
 @main.route("/spending_tracker")
-@access_required
+# @access_required
 def spending_tracker():
     """
     Original spending tracker route.
@@ -427,7 +427,7 @@ def spending_tracker():
 
 
 @main.route("/spending")
-@access_required
+# @access_required
 def spending_input():
     """
     Iteration 3 spending input route.
@@ -438,7 +438,7 @@ def spending_input():
 
 
 @main.route("/api/save-spending-session", methods=["POST"])
-@access_required
+# @access_required
 def save_spending_session():
     """
     Save spending calculator results into the Flask session.
@@ -473,7 +473,7 @@ def save_spending_session():
 
 
 @main.route("/spending_results")
-@access_required
+# @access_required
 def spending_results():
     """
     Original spending results route.
@@ -495,7 +495,7 @@ def spending_results():
 
 
 @main.route("/spending/result")
-@access_required
+# @access_required
 def spending_result():
     """
     Iteration 3 spending results route.
@@ -526,7 +526,7 @@ def spending_result():
 # ---------------------------------------------------------------------------
 
 @main.route("/debt_awareness")
-@access_required
+# @access_required
 def debt_awareness():
     """
     Debt awareness learning module.
@@ -535,7 +535,7 @@ def debt_awareness():
 
 
 @main.route("/debt_projection")
-@access_required
+# @access_required
 def debt_projection():
     """
     Debt projection page.
@@ -544,7 +544,7 @@ def debt_projection():
 
 
 @main.route("/career_aspirations")
-@access_required
+# @access_required
 def career_aspirations():
     """
     Career aspirations module.
@@ -553,7 +553,7 @@ def career_aspirations():
 
 
 @main.route("/knowledge_hub")
-@access_required
+# @access_required
 def knowledge_hub():
     """
     Knowledge hub page.
@@ -562,7 +562,7 @@ def knowledge_hub():
 
 
 @main.route("/tax_payslip_module")
-@access_required
+# @access_required
 def tax_payslip():
     """
     Tax and payslip learning module.
@@ -572,7 +572,7 @@ def tax_payslip():
 
 @main.route("/superannuation_explaination")
 @main.route("/superannuation_explanation")
-@access_required
+# @access_required
 def super_explained():
     """
     Superannuation learning module.
@@ -587,7 +587,7 @@ def super_explained():
 
 
 @main.route("/smart_budgeting")
-@access_required
+# @access_required
 def smart_budget():
     """
     Smart budgeting learning module.
@@ -596,7 +596,7 @@ def smart_budget():
 
 
 @main.route("/tenancy_guide")
-@access_required
+# @access_required
 def tenancy_guide():
     """
     Tenancy guide learning module.
@@ -605,7 +605,7 @@ def tenancy_guide():
 
 
 @main.route("/safe_employment")
-@access_required
+# @access_required
 def safe_employment():
     """
     Safe employment learning module.
@@ -614,7 +614,7 @@ def safe_employment():
 
 
 @main.route("/credit_bnpl")
-@access_required
+# @access_required
 def credit_bnpl():
     """
     Credit and Buy Now Pay Later learning module.
